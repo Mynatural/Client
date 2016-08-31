@@ -8,4 +8,8 @@ export class HomePage {
   constructor(public navCtrl: NavController) {
 
   }
+
+  static async create(name: String): Promise<String> {
+      return _.isNil(name) ? "" : name;
+  }
 }
