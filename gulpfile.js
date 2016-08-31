@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    gulpTypings = require('gulp-typings'),
     gulpWatch = require('gulp-watch'),
     del = require('del'),
     runSequence = require('run-sequence'),
@@ -27,7 +28,7 @@ gulp.task('run:before', [shouldWatch ? 'watch' : 'build']);
  * changes, but you are of course welcome (and encouraged) to customize your
  * build however you see fit.
  */
-var buildBrowserify = require('ionic-gulp-browserify-typescript');
+var webpackBuild = require('ionic-gulp-webpack');
 var buildSass = require('ionic-gulp-sass-build');
 var copyHTML = require('ionic-gulp-html-copy');
 var copyFonts = require('ionic-gulp-fonts-copy');
@@ -42,24 +43,16 @@ gulp.task('watch', ['clean'], function(done){
     function(){
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
-      buildBrowserify({ watch: true }).on('end', done);
+      webpackBuild({ watch: true }).then(done);
     }
   );
 });
 
-gulp.task('build', ['clean'], function(done){
+gulp.task('build', ['clean', 'typings'], function(done){
   runSequence(
     ['sass', 'html', 'fonts', 'scripts'],
     function(){
-      buildBrowserify({
-        minify: isRelease,
-        browserifyOptions: {
-          debug: !isRelease
-        },
-        uglifyOptions: {
-          mangle: false
-        }
-      }).on('end', done);
+        webpackBuild().then(done);
     }
   );
 });
@@ -72,3 +65,11 @@ gulp.task('clean', function(){
   return del('www/build');
 });
 gulp.task('lint', tslint);
+
+gulp.task('clean-typings', function(){
+  return del('typings');
+});
+gulp.task("typings", ['clean-typings'], function(){
+    return gulp.src("./typings.json")
+        .pipe(gulpTypings()); //will install all typingsfiles in pipeline.
+});
