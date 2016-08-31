@@ -41,6 +41,6 @@
     "tslint-ionic-rules": "0.0.4",
     "typescript": "1.8.10"
   },
-  "name": "client",
-  "description": "Client: An Ionic project"
+  "name": "mynatural",
+  "description": "Mynatural: An Ionic project"
 }
