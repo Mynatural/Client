@@ -30,7 +30,6 @@ install:
 - (npm install || npm install) && export PATH="$(npm bin):$PATH"
 - test "$PLATFORM" != "android" || (brew update || brew update) && brew install android && export ANDROID_HOME=$(brew --prefix android)
 script:
-- fastlane enable_crash_reporting
 - fastlane $PLATFORM build
 notifications:
   email: false
