@@ -23,7 +23,7 @@ end
 before_all do
   into_mode
 
-  adjust_buildnum(2000)
+  adjust_buildnum(0)
 
   write_settings
   cache_index
