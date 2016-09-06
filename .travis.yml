@@ -14,6 +14,11 @@ env:
   - PLATFORM=android
   - PLATFORM=ios
 before_install:
+- curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+- sudo apt-get install git-lfs
+- /usr/bin/git-lfs version
+- /usr/bin/git-lfs install
+- /usr/bin/git-lfs pull
 - rvm use 2.2.4 --install --disable-binary
 - sudo easy_install pip && sudo pip install awscli
 - aws s3 cp s3://${AWS_S3_BUCKET}/${PROJECT_REPO_SLUG}/persistent.tar.bz2 - | tar jxf -
