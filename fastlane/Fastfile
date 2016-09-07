@@ -76,6 +76,10 @@ platform :ios do
     end
 
     into_platform do
+      recreate_schemes(
+        project: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcodeproj"
+      )
+
       if ENV["BUILD_NUM"] != nil then
         increment_build_number(
         build_number: ENV["BUILD_NUM"]
