@@ -34,6 +34,7 @@ before_all do
 
   cordova(plugins: [
     'cordova-plugin-crosswalk-webview@~2.0.0',
+    'https://github.com/driftyco/cordova-plugin-wkwebview-engine.git',
     'cordova-plugin-device@~1.1.1',
     'cordova-plugin-console@~1.0.2',
     'cordova-plugin-camera@~2.1.0',
@@ -75,6 +76,10 @@ platform :ios do
     end
 
     into_platform do
+      recreate_schemes(
+        project: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcodeproj"
+      )
+
       if ENV["BUILD_NUM"] != nil then
         increment_build_number(
         build_number: ENV["BUILD_NUM"]

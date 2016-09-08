@@ -13,10 +13,15 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage: any = HomePage;
+    pages: Array<{ title: string, component: any }>;
 
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
+        this.pages = [
+            { title: "Home", component: HomePage }
+        ];
+
         platform.ready().then(async () => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
