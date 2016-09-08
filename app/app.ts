@@ -13,13 +13,13 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage: any = HomePage;
-    pages: Array<{ title: string, component: any }>;
+    pages: Array<{ title: string, icon: string, component: any }>;
 
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
         this.pages = [
-            { title: "Home", component: HomePage }
+            { title: "トップ", icon: "home", component: HomePage },
         ];
 
         platform.ready().then(async () => {
