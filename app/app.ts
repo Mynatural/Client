@@ -3,6 +3,8 @@ import { App, ionicBootstrap, Platform, Nav } from 'ionic-angular';
 import { AppVersion, StatusBar, Splashscreen } from 'ionic-native';
 
 import { HomePage } from './pages/home/home';
+import { HelpPage } from './pages/help/help';
+import { TermsPage } from './pages/terms/terms';
 import { withFabric } from "./util/fabric";
 import { Logger } from "./util/logging";
 
@@ -20,6 +22,8 @@ export class MyApp {
     constructor(private app: App, platform: Platform) {
         this.pages = [
             { title: "トップ", icon: "home", component: HomePage },
+            { title: "サービス案内", icon: "bonfire", component: HelpPage },
+            { title: "利用規約", icon: "contract", component: TermsPage }
         ];
 
         platform.ready().then(async () => {
