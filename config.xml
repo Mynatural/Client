@@ -28,11 +28,12 @@
     <preference name="android-minSdkVersion" value="16"/>
     <preference name="deployment-target" value="9.0"/>
     <preference name="BackupWebStorage" value="none"/>
-    <preference name="SplashScreenDelay" value="30000" />
+    <preference name="SplashScreenDelay" value="3000" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="FadeSplashScreenDuration" value="2000" />
     <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="SplashShowOnlyFirstTime" value="true" />
     <preference name="AndroidPersistentFileLocation" value="Internal" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar"/>
