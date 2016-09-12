@@ -13,10 +13,13 @@
     <div>
         商品一覧
     </div>
-    <ion-slides [options]="slideOptions">
+    <div class="notReady" *ngIf="!items">
+        <ion-spinner></ion-spinner>
+    </div>
+    <ion-slides *ngIf="items" [options]="slideOptions">
         <ion-slide *ngFor="let item of items">
             <h1>{{item.name}}</h1>
-            <s3image [path]="item.image"></s3image>
+            <img [src]="item.image">
         </ion-slide>
     </ion-slides>
 </ion-content>

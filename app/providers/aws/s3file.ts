@@ -1,7 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
+import {SafeUrl, DomSanitizationService} from '@angular/platform-browser';
+import {Storage, LocalStorage} from 'ionic-angular';
 
 import {BootSettings} from "../config/boot_settings";
+import {assert} from "../../util/assertion";
 import {Logger} from "../../util/logging";
 import {Cognito} from "./cognito";
 
@@ -112,5 +115,49 @@ export class S3File {
         } catch (ex) {
             logger.warn(() => `Error on getting url: ${ex}`);
         }
+    }
+}
+
+@Injectable()
+export class S3Image {
+    private local: Storage = new Storage(LocalStorage);
+
+    constructor(private s3: S3File, private sanitizer: DomSanitizationService) { }
+
+    async getUrl(s3path: string): Promise<SafeUrl> {
+        assert("Caching S3 path", s3path);
+        const url = await this.getCached(s3path);
+        return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
+
+    private async getCached(s3path: string): Promise<string> {
+        try {
+            const data = await this.local.get(s3path);
+            if (!_.isNil(data) && await this.checkUrl(data)) {
+                return data;
+            }
+        } catch (ex) {
+            logger.info(() => `Failed to get local data: ${s3path}: ${ex}`);
+        }
+        const blob = await this.s3.download(s3path);
+        const url = URL.createObjectURL(blob);
+        this.local.set(s3path, url);
+        return url;
+    }
+
+    private async checkUrl(url: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            var http = new XMLHttpRequest();
+            http.onload = () => {
+                logger.info(() => `Status of Response: ${http.status}`);
+                resolve(http.status % 100 == 2);
+            };
+            http.onerror = () => {
+                logger.warn(() => `No data on ${url}`);
+                resolve(false);
+            };
+            http.open('GET', url);
+            http.send();
+        });
     }
 }
