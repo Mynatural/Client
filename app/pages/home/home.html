@@ -10,5 +10,13 @@
 </ion-header>
 
 <ion-content padding class="home">
-    Mynatural Home
+    <div>
+        商品一覧
+    </div>
+    <ion-slides [options]="slideOptions">
+        <ion-slide *ngFor="let item of items">
+            <h1>{{item.name}}</h1>
+            <s3image [path]="item.image"></s3image>
+        </ion-slide>
+    </ion-slides>
 </ion-content>
