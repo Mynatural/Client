@@ -149,8 +149,7 @@ export class S3Image {
         return new Promise<boolean>((resolve, reject) => {
             var http = new XMLHttpRequest();
             http.onload = () => {
-                logger.info(() => `Status of Response: ${http.status}`);
-                resolve(http.status % 100 == 2);
+                resolve(_.floor(http.status / 100) == 2);
             };
             http.onerror = () => {
                 logger.warn(() => `No data on ${url}`);
