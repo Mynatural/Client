@@ -15,17 +15,11 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage: any = HomePage;
-    pages: Array<{ title: string, icon: string, component: any }>;
+    pages = [HomePage, HelpPage, TermsPage];
 
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
-        this.pages = [
-            { title: "トップ", icon: "home", component: HomePage },
-            { title: "サービス案内", icon: "bonfire", component: HelpPage },
-            { title: "利用規約", icon: "contract", component: TermsPage }
-        ];
-
         platform.ready().then(async () => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -45,7 +39,7 @@ export class MyApp {
     }
 
     openPage(page) {
-        this.nav.setRoot(page.component);
+        this.nav.setRoot(page);
     }
 }
 

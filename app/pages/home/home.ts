@@ -24,6 +24,10 @@ type Item = {
     providers: [FATHENS_PROVIDERS]
 })
 export class HomePage {
+    static title = "トップ";
+    static icon = "home";
+    title = HomePage.title;
+
     constructor(public navCtrl: NavController, s3image: S3Image) {
         Promise.all(lineup.map(async (item) => {
             return {

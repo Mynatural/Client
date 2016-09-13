@@ -5,11 +5,15 @@ import { NavController } from 'ionic-angular';
   templateUrl: 'build/pages/terms/terms.html'
 })
 export class TermsPage {
-  constructor(public navCtrl: NavController) {
+    static title = "利用規約";
+    static icon = "contract";
+    title = TermsPage.title;
 
-  }
+    constructor(public navCtrl: NavController) {
 
-  static async create(name: String): Promise<String> {
-      return _.isNil(name) ? "" : name;
-  }
+    }
+
+    static async create(name: String): Promise<String> {
+        return _.isNil(name) ? "" : name;
+    }
 }
