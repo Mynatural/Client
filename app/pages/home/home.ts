@@ -7,9 +7,9 @@ import {FATHENS_PROVIDERS} from "../../providers/all";
 import {S3Image} from "../../providers/aws/s3file";
 
 const lineup = [
-    { key: "short-sleeved", name: "半袖", image: "unauthorized/images/short-sleeved.jpg" },
-    { key: "long-sleeved", name: "長袖", image: "unauthorized/images/long-sleeved.jpg" },
-    { key: "no-sleeved", name: "袖無し", image: "unauthorized/images/no-sleeved.jpg" },
+    { key: "short-sleeved", name: "はんそで", image: "unauthorized/images/short-sleeved.jpg" },
+    { key: "long-sleeved", name: "ながそで", image: "unauthorized/images/long-sleeved.jpg" },
+    { key: "no-sleeved", name: "そでなし", image: "unauthorized/images/no-sleeved.jpg" },
 ];
 
 type Item = {
@@ -38,6 +38,10 @@ export class HomePage {
         })).then((list) => {
             this.items = list;
         });
+    }
+
+    get isReady(): boolean {
+        return !_.isNil(this.items);
     }
 
     items: Array<Item>;

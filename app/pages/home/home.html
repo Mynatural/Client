@@ -10,16 +10,22 @@
 </ion-header>
 
 <ion-content padding class="home">
-    <div>
-        商品一覧
+    <div class="top-message">
+        <div>
+            <h1>カスタムメイドの子供服を</h1>
+        </div>
     </div>
-    <div class="notReady" *ngIf="!items">
-        <ion-spinner></ion-spinner>
+    <div class="main">
+        <div class="notReady" *ngIf="!isReady">
+            <ion-spinner></ion-spinner>
+        </div>
+        <ion-slides *ngIf="isReady" [options]="slideOptions">
+            <ion-slide *ngFor="let item of items">
+                <div class="slide-content">
+                    <h1>{{item.name}}</h1>
+                    <img [src]="item.image">
+                </div>
+            </ion-slide>
+        </ion-slides>
     </div>
-    <ion-slides *ngIf="items" [options]="slideOptions">
-        <ion-slide *ngFor="let item of items">
-            <h1>{{item.name}}</h1>
-            <img [src]="item.image">
-        </ion-slide>
-    </ion-slides>
 </ion-content>

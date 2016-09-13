@@ -1,7 +1,22 @@
 .home {
+    .top-message {
+        height: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .notReady {
         display: flex;
         justify-content: center;
-        margin-top: 30%;
+    }
+    .main {
+        height: 70%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .slide-zoom {
+            height: 100%;
+        }
     }
 }
