@@ -33,3 +33,11 @@ $colors: (
   dark:       #222,
   favorite:   #69BB7B
 );
+
+$toolbar-background: #F0FFFF;
+$toolbar-text-color: #FFB4C8;
+$toolbar-md-title-text-color: $toolbar-text-color;
+
+$font-family-base: "Yuzu Pop A [M] Light";
+$font-family-md-base: $font-family-base;
+$font-family-wp-base: $font-family-base;
