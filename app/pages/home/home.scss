@@ -1,6 +1,18 @@
 @import "bourbon";
 
 .home {
+    $bgcolor1: #ffffff;
+    $bgcolor2: #faffff;
+    $bgcolor3: #fffafa;
+    @include background-image(linear-gradient(80deg, $bgcolor1, $bgcolor2, $bgcolor1, $bgcolor3, $bgcolor1, $bgcolor2, $bgcolor1, $bgcolor3, $bgcolor1, $bgcolor2));
+    background-size: 400% 100%;
+    @include animation(grand 30s ease infinite);
+    @include keyframes(grand) {
+        0% { background-position: 0% 0%}
+        50% { background-position: 200% 0%}
+        100% { background-position: 0% 0%}
+    }
+
     .top-message {
         display: flex;
         flex-direction: column;
