@@ -9,7 +9,7 @@
   }
 }
 
-$font-name-normal: 'YuzuPop-';
+$font-name-normal: 'Yuzu Pop A [M] ';
 
 @mixin font-mono($size: "") {
   @include font-spec('Roboto Mono', normal, 300, $size);
