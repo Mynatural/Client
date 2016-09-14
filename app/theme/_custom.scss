@@ -9,22 +9,22 @@
   }
 }
 
-$font-name-normal: 'Yuzu Pop A [M] ';
+$font-name-normal: 'yuzu_pop_a_m_';
 
 @mixin font-mono($size: "") {
   @include font-spec('Roboto Mono', normal, 300, $size);
 }
 @mixin font-light($size: "") {
-  @include font-spec($font-name-normal, "Extra Light", normal, 100, $size);
+  @include font-spec($font-name-normal, "extra_light", normal, normal, $size);
 }
 @mixin font-normal($size: "") {
-  @include font-spec($font-name-normal, "Light", normal, 100, $size);
+  @include font-spec($font-name-normal, "light", normal, normal, $size);
 }
 @mixin font-bold($size: "") {
-  @include font-spec($font-name-normal, "Regular", normal, 100, $size);
+  @include font-spec($font-name-normal, "regular", normal, normal, $size);
 }
 @mixin font-extra-bold($size: "") {
-  @include font-spec($font-name-normal, "Bold", normal, 100, $size);
+  @include font-spec($font-name-normal, "bold", normal, bold, $size);
 }
 
 ion-title {
