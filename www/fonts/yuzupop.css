@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'YuzuPop-Bold';
+  font-style: normal;
+  font-weight: 100;
+  src: url(/fonts/YuzuPopA_M_Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'YuzuPop-Extra_Light';
+  font-style: normal;
+  font-weight: 100;
+  src: url(/fonts/YuzuPopA_M_Extra_Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'YuzuPop-Light';
+  font-style: normal;
+  font-weight: 100;
+  src: url(/fonts/YuzuPopA_M_Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'YuzuPop-Regular';
+  font-style: normal;
+  font-weight: 100;
+  src: url(/fonts/YuzuPopA_M_Regular.ttf) format('truetype');
+}
