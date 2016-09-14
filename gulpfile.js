@@ -57,7 +57,17 @@ gulp.task('build', ['clean', 'typings'], function(done){
   );
 });
 
-gulp.task('sass', buildSass);
+gulp.task('sass', function(){
+    var paths = [
+        'node_modules/ionic-angular',
+        'node_modules/ionicons/dist/scss'
+    ];
+    return buildSass({
+        sassOptions: {
+            includePaths: paths.concat(require("bourbon").includePaths)
+        }
+    });
+});
 gulp.task('html', copyHTML);
 gulp.task('fonts', copyFonts);
 gulp.task('scripts', copyScripts);
