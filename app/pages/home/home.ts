@@ -24,7 +24,7 @@ type Item = {
     providers: [FATHENS_PROVIDERS]
 })
 export class HomePage {
-    static title = "トップ";
+    static title = "ショップ";
     static icon = "home";
     title = HomePage.title;
 

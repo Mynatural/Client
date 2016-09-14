@@ -11,14 +11,11 @@
 
 <ion-content padding class="home">
     <div class="top-message">
-        <div>
-            <h1>カスタムメイドの子供服を</h1>
-        </div>
+        <p class="h1">カスタムメイド</p>
+        <p class="h2">ラインナップ</p>
     </div>
     <div class="main">
-        <div class="notReady" *ngIf="!isReady">
-            <ion-spinner></ion-spinner>
-        </div>
+        <ion-spinner *ngIf="!isReady"></ion-spinner>
         <ion-slides *ngIf="isReady" [options]="slideOptions">
             <ion-slide *ngFor="let item of items">
                 <div class="slide-content">

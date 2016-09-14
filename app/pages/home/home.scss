@@ -2,14 +2,21 @@
 
 .home {
     .top-message {
-        height: 30%;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-    }
-    .notReady {
-        display: flex;
-        justify-content: center;
+        margin-top: 5%;
+        margin-bottom: 10%;
+        p {
+            margin: 1rem;
+            color: #387EF5;
+            &.h1 {
+                @include font-extra-bold(3rem);
+            }
+            &.h2 {
+                @include font-bold(2rem);
+            }
+        }
     }
     .main {
         height: 70%;
