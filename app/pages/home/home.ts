@@ -28,6 +28,11 @@ export class HomePage {
     static icon = "home";
     title = HomePage.title;
 
+    topMessages = [
+        "カスタムメイド",
+        "ラインナップ"
+    ];
+
     constructor(public navCtrl: NavController, s3image: S3Image) {
         Promise.all(lineup.map(async (item) => {
             return {

@@ -11,8 +11,8 @@
 
 <ion-content padding class="home">
     <div class="top-message">
-        <p class="h1">カスタムメイド</p>
-        <p class="h2">ラインナップ</p>
+        <p class="h1">{{topMessages[0]}}</p>
+        <p class="h2">{{topMessages[1]}}</p>
     </div>
     <div class="main">
         <ion-spinner *ngIf="!isReady"></ion-spinner>
