@@ -12,7 +12,7 @@
 $font-name-normal: 'Yuzu Pop A [M] ';
 
 @mixin font-mono($size: "") {
-  @include font-spec('Roboto Mono', normal, 300, $size);
+  @include font-spec('Roboto Mono', '', normal, 300, $size);
 }
 @mixin font-light($size: "") {
   @include font-spec($font-name-normal, "Extra Light", normal, normal, $size);
