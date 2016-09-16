@@ -7,9 +7,10 @@ import {FATHENS_PROVIDERS} from "../../providers/all";
 import {S3Image} from "../../providers/aws/s3file";
 
 const lineup = [
-    { key: "short-sleeved", name: "はんそで", image: "unauthorized/images/short-sleeved.jpg" },
-    { key: "long-sleeved", name: "ながそで", image: "unauthorized/images/long-sleeved.jpg" },
-    { key: "no-sleeved", name: "そでなし", image: "unauthorized/images/no-sleeved.jpg" },
+    { key: "short-sleeved", name: "はんそで" },
+    { key: "long-sleeved", name: "ながそで" },
+    { key: "no-sleeved", name: "そでなし" },
+    { key: "jinbei", name: "じんべい" },
 ];
 
 type Item = {
@@ -38,7 +39,7 @@ export class HomePage {
             return {
                 key: item.key,
                 name: item.name,
-                image: await s3image.getUrl(item.image)
+                image: await s3image.getUrl(`unauthorized/images/lineup/${item.key}.jpg`)
             };
         })).then((list) => {
             this.items = list;
