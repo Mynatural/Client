@@ -16,6 +16,7 @@ export class MyApp {
 
     rootPage: any = HomePage;
     pages = [HomePage, HelpPage, TermsPage];
+    menuTitle = "もくじ";
 
     isDevel: boolean = false;
 
