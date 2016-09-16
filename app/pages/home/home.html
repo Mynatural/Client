@@ -11,8 +11,7 @@
 
 <ion-content padding class="home">
     <div class="top-message">
-        <p class="h1">{{topMessages[0]}}</p>
-        <p class="h2">{{topMessages[1]}}</p>
+        <p *ngFor="let msg of topMessages; let i = index" class="m{{i}}">{{msg}}</p>
     </div>
     <div class="main">
         <ion-spinner *ngIf="!isReady"></ion-spinner>

@@ -31,7 +31,7 @@ export class HomePage {
 
     topMessages = [
         "カスタムメイド",
-        "ラインナップ"
+        "で作っちゃおう！"
     ];
 
     constructor(public navCtrl: NavController, s3image: S3Image) {
