@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
 
+import {GistComponent} from "../../components/gist/gist";
 import {FATHENS_DIRECTIVES} from "../../components/all";
 import {FATHENS_PROVIDERS} from "../../providers/all";
 
@@ -13,4 +13,10 @@ export class TermsPage {
     static title = "利用規約";
     static icon = "contract";
     title = TermsPage.title;
+
+    @ViewChild(GistComponent) gist;
+
+    get isReady() {
+        return this.gist.isReady;
+    }
 }
