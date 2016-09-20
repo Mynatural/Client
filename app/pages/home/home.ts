@@ -2,8 +2,6 @@ import {Component} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
 import {NavController} from "ionic-angular";
 
-import {FATHENS_DIRECTIVES} from "../../components/all";
-import {FATHENS_PROVIDERS} from "../../providers/all";
 import {S3Image} from "../../providers/aws/s3file";
 
 const lineup = [
@@ -20,9 +18,7 @@ type Item = {
 };
 
 @Component({
-    templateUrl: 'build/pages/home/home.html',
-    directives: [FATHENS_DIRECTIVES],
-    providers: [FATHENS_PROVIDERS]
+    templateUrl: 'build/pages/home/home.html'
 })
 export class HomePage {
     static title = "ショップ";

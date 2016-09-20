@@ -1,13 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
 
 import {GistComponent} from "../../components/gist/gist";
-import {FATHENS_DIRECTIVES} from "../../components/all";
-import {FATHENS_PROVIDERS} from "../../providers/all";
 
 @Component({
-    templateUrl: 'build/pages/terms/terms.html',
-    directives: [FATHENS_DIRECTIVES],
-    providers: [FATHENS_PROVIDERS]
+    templateUrl: 'build/pages/terms/terms.html'
 })
 export class TermsPage {
     static title = "利用規約";

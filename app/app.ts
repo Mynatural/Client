@@ -1,7 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, PLATFORM_DIRECTIVES } from '@angular/core';
 import { App, ionicBootstrap, Platform, Nav } from 'ionic-angular';
 import { AppVersion, StatusBar, Splashscreen } from 'ionic-native';
+import {CUSTOM_ICON_DIRECTIVES} from 'ionic2-custom-icons';
 
+import {FATHENS_DIRECTIVES} from "./components/all";
+import {FATHENS_PROVIDERS} from "./providers/all";
 import { HomePage } from './pages/home/home';
 import { HelpPage } from './pages/help/help';
 import { TermsPage } from './pages/terms/terms';
@@ -44,4 +47,11 @@ export class MyApp {
     }
 }
 
-ionicBootstrap(MyApp);
+ionicBootstrap(MyApp, [
+    FATHENS_PROVIDERS,
+    {
+        provide: PLATFORM_DIRECTIVES,
+        useValue: [CUSTOM_ICON_DIRECTIVES, FATHENS_DIRECTIVES],
+        multi: true
+    }
+]);
