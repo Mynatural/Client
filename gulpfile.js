@@ -42,7 +42,7 @@ gulp.task('watch', ['clean'], function(done){
   runSequence(
     ['sass', 'html', 'fonts', 'scripts'],
     function(){
-      gulpWatch('icons/fathens/*.svg', function(){ gulp.start('sass'); });
+      gulpWatch('icons/**/*.svg', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
       webpackBuild({ watch: true }).then(done);
@@ -60,14 +60,14 @@ gulp.task('build', ['clean', 'typings'], function(done){
 });
 
 gulp.task('customIcons', function () {
-    return customIcons([
-        {
-            src: 'icons/fathens/*.svg',
-            name: 'fathens-icons',
-            id: 'fathens',
-            scssTargetRelPath: '../scss/fathens-icons.scss'
-        }
-    ])
+    return customIcons(['fathens'].map((key) => {
+        return {
+            src: 'icons/' + key + '/*.svg',
+            name: key + '-icons',
+            id: key,
+            scssTargetRelPath: '../scss/' + key + '-icons.scss'
+        };
+    }));
 });
 
 gulp.task('sass', ['customIcons'], function(){
