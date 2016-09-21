@@ -19,7 +19,7 @@
             <ion-slide *ngFor="let item of items">
                 <div class="slide-content" (click)="choose(item)">
                     <h1>{{item.name}}</h1>
-                    <img [src]="item.image">
+                    <img [src]="item.imageUrl">
                 </div>
             </ion-slide>
         </ion-slides>

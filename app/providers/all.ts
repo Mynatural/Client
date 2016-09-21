@@ -6,6 +6,7 @@ import {Cognito} from "./aws/cognito";
 import {Dynamo} from "./aws/dynamo/dynamo";
 import {FBConnect} from "./facebook/fb_connect";
 import {FBJSSDK} from "./facebook/fb_jssdk";
+import {Lineups} from "./model/lineup";
 
 export const FATHENS_PROVIDERS = [
     BootSettings,
@@ -16,5 +17,6 @@ export const FATHENS_PROVIDERS = [
     Cognito,
     Dynamo,
     FBConnect,
-    FBJSSDK
+    FBJSSDK,
+    Lineups
 ];

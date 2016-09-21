@@ -3,23 +3,10 @@ import {SafeUrl} from '@angular/platform-browser';
 import {NavController} from "ionic-angular";
 
 import {CustomPage} from "../custom/custom";
-import {S3Image} from "../../providers/aws/s3file";
+import {Lineups, Lineup} from "../../providers/model/lineup";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("HomePage");
-
-const lineup = [
-    { key: "short-sleeved", name: "はんそで" },
-    { key: "long-sleeved", name: "ながそで" },
-    { key: "no-sleeved", name: "そでなし" },
-    { key: "jinbei", name: "じんべい" },
-];
-
-type Item = {
-    key: string,
-    name: string,
-    image: SafeUrl
-};
 
 @Component({
     templateUrl: 'build/pages/home/home.html'
@@ -34,14 +21,8 @@ export class HomePage {
         "で作っちゃおう！"
     ];
 
-    constructor(public nav: NavController, s3image: S3Image) {
-        Promise.all(lineup.map(async (item) => {
-            return {
-                key: item.key,
-                name: item.name,
-                image: await s3image.getUrl(`unauthorized/images/lineup/${item.key}.jpg`)
-            };
-        })).then((list) => {
+    constructor(public nav: NavController, private lineups: Lineups) {
+        lineups.all.then((list) => {
             this.items = list;
         });
     }
@@ -50,7 +31,7 @@ export class HomePage {
         return !_.isNil(this.items);
     }
 
-    items: Array<Item>;
+    items: Array<Lineup>;
     slideOptions = {
         loop: true,
         pager: true,
@@ -58,8 +39,11 @@ export class HomePage {
         speed: 700
     };
 
-    choose(item: Item) {
+    choose(item: Lineup) {
         logger.info(() => `Choose ${item.key}`);
-        this.nav.push(CustomPage, item);
+        this.nav.push(CustomPage, {
+            key: item.key,
+            name: item.name
+        });
     }
 }
