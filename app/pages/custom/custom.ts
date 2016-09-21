@@ -18,4 +18,8 @@ export class CustomPage {
         this.itemKey = params.get('key');
         this.title = params.get('name');
     }
+
+    turn_over() {
+        logger.debug(() => `TurnOver`);
+    }
 }
