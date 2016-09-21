@@ -10,9 +10,40 @@
 </ion-header>
 
 <ion-content class="custom">
-    <div class="main">
-        <button class="turn_over" (click)="turn_over()">
+    <div class="main" *ngIf="isReady">
+        <div id="front" *ngIf="onFront">
+            <div class="image">
+                <img [src]="item.imageUrl">
+            </div>
+            <div class="controllers">
+                <button class="material">
+                    布地
+                </button>
+            </div>
+        </div>
+        <div id="back" *ngIf="!onFront">
+            <div class="image">
+                <img [src]="item.imageUrl">
+            </div>
+            <div class="controllers">
+                <button class="material">
+                    布地
+                </button>
+            </div>
+        </div>
+
+        <button clear secondary (click)="turn_over()">
             <custom-icon set="fathens" name="turn_over"></custom-icon>
         </button>
+    </div>
+    <div class="price">
+        <p class="message">{{priceMessage}}</p>
+        <p class="value">{{priceUnit}}{{price | number}}-</p>
+    </div>
+    <div class="specs">
+        <div *ngFor="let spec of specs" [class]="spec.class">
+            <p>{{spec.name}}</p>
+            <p>{{spec.value}}</p>
+        </div>
     </div>
 </ion-content>
