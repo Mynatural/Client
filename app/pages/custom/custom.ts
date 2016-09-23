@@ -15,6 +15,7 @@ const logger = new Logger("CustomPage");
 
 const stateOn = "active";
 const stateOff = "inactive";
+const turnMotion = "0.5s 0s ease";
 
 @Component({
     templateUrl: 'build/pages/custom/custom.html',
@@ -23,14 +24,14 @@ const stateOff = "inactive";
             state(stateOn, style({display: "flex"})),
             state(stateOff, style({display: "none"})),
             transition(`${stateOn} => ${stateOff}`, [
-                animate("0.5s 0s linear", keyframes([
+                animate(turnMotion, keyframes([
                     style({transform: "rotateY(0)"}),
                     style({transform: "rotateY(90deg)"}),
                     style({transform: "rotateY(90deg)"})
                 ]))
             ]),
             transition(`${stateOff} => ${stateOn}`, [
-                animate("0.5s 0s linear", keyframes([
+                animate(turnMotion, keyframes([
                     style({transform: "rotateY(-90deg)"}),
                     style({transform: "rotateY(-90deg)"}),
                     style({transform: "rotateY(0)"})
