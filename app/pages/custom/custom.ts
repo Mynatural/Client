@@ -42,8 +42,10 @@ const turnMotion = "0.5s 0s ease";
 })
 export class CustomPage {
     title: string;
-    itemKey: string;
     item: Lineup;
+
+    imageFront: SafeUrl;
+    imageBack: SafeUrl;
 
     isFront = true;
 
@@ -52,10 +54,13 @@ export class CustomPage {
     price = 1234;
 
     constructor(private params: NavParams, private lineups: Lineups) {
-        this.itemKey = params.get('key');
         this.title = params.get('name');
-        lineups.get(this.itemKey).then((item) => {
+        lineups.get(params.get('key')).then((item) => {
             this.item = item;
+            item.titleImage.then((url) => {
+                this.imageFront = url;
+                this.imageBack = url;
+            })
         });
     }
 

@@ -23,7 +23,15 @@ export class HomePage {
 
     constructor(public nav: NavController, private lineups: Lineups) {
         lineups.all.then((list) => {
-            this.items = list;
+            Promise.all(list.map(async (lineup) => {
+                return {
+                    key: lineup.key,
+                    name: lineup.name,
+                    imageUrl: await lineup.titleImage
+                }
+            })).then((v) => {
+                this.items = v;
+            })
         });
     }
 
@@ -31,7 +39,11 @@ export class HomePage {
         return !_.isNil(this.items);
     }
 
-    items: Array<Lineup>;
+    items: Array<{
+        key: string,
+        name: string,
+        imageUrl: SafeUrl
+    }>;
     slideOptions = {
         loop: true,
         pager: true,

@@ -1,28 +1,43 @@
 import {Injectable} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
 
-import {S3Image} from "../aws/s3file";
+import {S3File, S3Image} from "../aws/s3file";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("Lineup");
 
-const allList = [
-    { key: "short-sleeved", name: "はんそで" },
-    { key: "long-sleeved", name: "ながそで" },
-    { key: "no-sleeved", name: "そでなし" },
-    { key: "jinbei", name: "じんべい" },
-];
+const rootDir = "unauthorized/lineup/";
 
 @Injectable()
 export class Lineups {
-    constructor(private s3: S3Image) {
-        this.all = Promise.all(allList.map(async (item) => {
-            const url = await s3.getUrl(`unauthorized/images/lineup/${item.key}.jpg`)
-            return new Lineup(item.key, item.name, url);
-        }));
+    all: Promise<Lineup[]>;
+
+    constructor(private s3: S3File, private s3image: S3Image) {
+        this.all = this.getAll();
     }
 
-    all: Promise<Lineup[]>;
+    private async getAll(): Promise<Lineup[]> {
+        const finds = await this.s3.list(rootDir);
+        const dirs = _.filter(finds, (path) => {
+            return _.endsWith(path, "/");
+        });
+        const list = dirs.map(async (dir) => {
+            if (dir === rootDir) return null;
+            try {
+                return await this.load(dir);
+            } catch (ex) {
+                logger.warn(() => `Failed to load '${dir}': ${ex}`);
+                return null;
+            }
+        });
+        return _.filter(await Promise.all(list));
+    }
+
+    private async load(dir: string): Promise<Lineup> {
+        const json = await this.s3.read(`${dir}info.json.encoded`);
+        const info = JSON.parse(decodeURIComponent(json)) as LineupInfo;
+        return new Lineup(dir, info, this.s3image);
+    }
 
     async get(key: string): Promise<Lineup> {
         const list = await this.all;
@@ -30,18 +45,31 @@ export class Lineups {
     }
 }
 
+type LineupInfo = {
+    name: string,
+}
+
 export class Lineup {
-    constructor(private myKey: string, private myName: string, private myUrl: SafeUrl) { }
+    private _key;
+    private cachedTitleImage: Promise<SafeUrl>;
+
+    constructor(private dir: string, private info: LineupInfo, private s3image: S3Image) {
+        this._key = _.last(_.filter(_.split(dir, "/")));
+        logger.info(() => `Lineup: ${this._key}: ${JSON.stringify(info, null, 4)}`);
+    }
 
     get key(): string {
-        return this.myKey;
+        return this._key;
     }
 
     get name(): string {
-        return this.myName;
+        return this.info.name;
     }
 
-    get imageUrl(): SafeUrl {
-        return this.myUrl;
+    get titleImage(): Promise<SafeUrl> {
+        if (_.isNil(this.cachedTitleImage)) {
+            this.cachedTitleImage = this.s3image.getUrl(`${this.dir}title.png`);
+        }
+        return this.cachedTitleImage;
     }
 }
