@@ -9,32 +9,37 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content class="custom">
+<ion-content id="custom-page">
     <div class="main" *ngIf="isReady">
-        <div id="front" *ngIf="onFront">
-            <div class="image">
-                <img [src]="item.imageUrl">
+
+        <div class="reversible">
+            <div id="front" @turnOver="onFront">
+                <div class="image">
+                    <img [src]="item.imageUrl">
+                </div>
+                <div class="controllers">
+                    <button class="material">
+                        布地
+                    </button>
+                </div>
             </div>
-            <div class="controllers">
-                <button class="material">
-                    布地
-                </button>
-            </div>
-        </div>
-        <div id="back" *ngIf="!onFront">
-            <div class="image">
-                <img [src]="item.imageUrl">
-            </div>
-            <div class="controllers">
-                <button class="material">
-                    布地
-                </button>
+            <div id="back" @turnOver="onBack">
+                <div class="image">
+                    <img [src]="item.imageUrl">
+                </div>
+                <div class="controllers">
+                    <button class="material">
+                        後ろの布地
+                    </button>
+                </div>
             </div>
         </div>
 
-        <button clear secondary (click)="turn_over()">
-            <custom-icon set="fathens" name="turn_over"></custom-icon>
-        </button>
+        <div class="fixed-pannel">
+            <button clear secondary (click)="turn_over()">
+                <custom-icon set="fathens" name="turn_over"></custom-icon>
+            </button>
+        </div>
     </div>
     <div class="price">
         <p class="message">{{priceMessage}}</p>
