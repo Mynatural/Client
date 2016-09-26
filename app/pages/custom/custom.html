@@ -10,45 +10,47 @@
 </ion-header>
 
 <ion-content id="custom-page">
-    <div class="main" *ngIf="isReady">
-
-        <div class="reversible">
-            <div id="front" @turnOver="onFront">
-                <div class="image">
-                    <img [src]="item.imageFront">
+    <div *ngIf="isReady">
+        <div class="main">
+            <div class="reversible">
+                <div id="front" @turnOver="onFront">
+                    <div class="image">
+                        <img [src]="item.imageFront">
+                    </div>
+                    <div class="controllers">
+                        <button *ngFor="let spec of specsFront" [class]="spec.key">
+                            {{spec.name}}
+                        </button>
+                    </div>
                 </div>
-                <div class="controllers">
-                    <button class="material">
-                        布地
-                    </button>
+                <div id="back" @turnOver="onBack">
+                    <div class="image">
+                        <img [src]="item.imageBack">
+                    </div>
+                    <div class="controllers">
+                        <button *ngFor="let spec of specsBack" [class]="spec.key">
+                            {{spec.name}}
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div id="back" @turnOver="onBack">
-                <div class="image">
-                    <img [src]="item.imageBack">
-                </div>
-                <div class="controllers">
-                    <button class="material">
-                        後ろの布地
-                    </button>
-                </div>
+
+            <div class="fixed-pannel">
+                <button clear secondary (click)="turn_over()">
+                    <custom-icon set="fathens" name="turn_over"></custom-icon>
+                </button>
             </div>
         </div>
 
-        <div class="fixed-pannel">
-            <button clear secondary (click)="turn_over()">
-                <custom-icon set="fathens" name="turn_over"></custom-icon>
-            </button>
+        <div class="price">
+            <p class="message">{{priceMessage}}</p>
+            <p class="value">{{priceUnit}}{{item.totalPrice | number}}-</p>
         </div>
-    </div>
-    <div class="price">
-        <p class="message">{{priceMessage}}</p>
-        <p class="value">{{priceUnit}}{{price | number}}-</p>
-    </div>
-    <div class="specs">
-        <div *ngFor="let spec of specs" [class]="spec.class">
-            <p>{{spec.name}}</p>
-            <p>{{spec.value}}</p>
+        <div class="specs">
+            <div *ngFor="let spec of specs" [class]="spec.def.key">
+                <p>{{spec.def.name}}</p>
+                <p>{{spec.value.name}}</p>
+            </div>
         </div>
     </div>
 </ion-content>

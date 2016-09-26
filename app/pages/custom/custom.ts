@@ -9,6 +9,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {NavController, NavParams} from "ionic-angular";
 
 import {Lineups, Lineup} from "../../providers/model/lineup";
+import * as Info from "../../providers/model/lineup_info.d";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("CustomPage");
@@ -48,7 +49,6 @@ export class CustomPage {
 
     priceMessage = "現在のお値段";
     priceUnit = "￥";
-    price = 1234;
 
     constructor(private params: NavParams, private lineups: Lineups) {
         this.title = params.get('name');
@@ -58,7 +58,7 @@ export class CustomPage {
     }
 
     get isReady(): boolean {
-        return this.item != null;
+        return !_.isNil(this.item) && !_.isNil(this.item.imageFront)
     }
 
     get onFront(): string {
@@ -73,16 +73,26 @@ export class CustomPage {
         this.isFront = !this.isFront;
     }
 
-    specs = [
-        {
-            class: "bold",
-            name: "胴まわり",
-            value: "70cm"
-        },
-        {
-            class: "sleeve",
-            name: "そでの長さ",
-            value: "20cm"
-        }
-    ];
+    get specs(): {def: Info.Spec, value: Info.SpecValue}[] {
+        return this.item.specKeys.map((key) => {
+            return {
+                def: this.item.getSpec(key),
+                value: this.item.getValue(key)
+            }
+        });
+    }
+
+    private filterSpecs(side: Info.SpecSide): Info.Spec[] {
+        return _.filter(this.item.info.specs, (spec) => {
+            return _.includes(spec.sides, side);
+        });
+    }
+
+    get specsFront(): Info.Spec[] {
+        return this.filterSpecs("FRONT");
+    }
+
+    get specsBack(): Info.Spec[] {
+        return this.filterSpecs("BACK");
+    }
 }
