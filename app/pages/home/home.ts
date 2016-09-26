@@ -3,7 +3,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {NavController} from "ionic-angular";
 
 import {CustomPage} from "../custom/custom";
-import {Lineups, Lineup} from "../../providers/model/lineup";
+import {Lineup, Item} from "../../providers/model/lineup";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("HomePage");
@@ -21,7 +21,7 @@ export class HomePage {
         "で作っちゃおう！"
     ];
 
-    constructor(public nav: NavController, private lineups: Lineups) {
+    constructor(public nav: NavController, private lineups: Lineup) {
         lineups.all.then((list) => {
             Promise.all(list.map(async (lineup) => {
                 return {
@@ -51,7 +51,7 @@ export class HomePage {
         speed: 700
     };
 
-    choose(item: Lineup) {
+    choose(item: Item) {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
             key: item.key,

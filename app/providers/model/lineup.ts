@@ -12,14 +12,14 @@ const rootDirName = "lineup"
 const rootDir = `unauthorized/${rootDirName}/`;
 
 @Injectable()
-export class Lineups {
-    all: Promise<Lineup[]>;
+export class Lineup {
+    all: Promise<Item[]>;
 
     constructor(private s3: S3File, private s3image: S3Image) {
         this.all = this.getAll();
     }
 
-    private async getAll(): Promise<Lineup[]> {
+    private async getAll(): Promise<Item[]> {
         const finds = await this.s3.list(rootDir);
         const dirs = _.filter(finds, (path) => {
             const ps = path.split("/").reverse();
@@ -37,19 +37,19 @@ export class Lineups {
         return _.filter(await Promise.all(list));
     }
 
-    private async load(dir: string): Promise<Lineup> {
+    private async load(dir: string): Promise<Item> {
         const text = await this.s3.read(`${dir}info.json.encoded`);
         const info = Base64.decodeJson(text) as Info.Lineup;
-        return new Lineup(this.s3, this.s3image, dir, info);
+        return new Item(this.s3, this.s3image, dir, info);
     }
 
-    async get(key: string): Promise<Lineup> {
+    async get(key: string): Promise<Item> {
         const list = await this.all;
         return _.find(list, {"key": key});
     }
 }
 
-export class Lineup {
+export class Item {
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
     private imageUrls: {[key: string]: SafeUrl} = {};
@@ -133,5 +133,3 @@ export class Lineup {
         return result;
     }
 }
-
-//// Lineup の info.json の定義

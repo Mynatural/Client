@@ -8,7 +8,7 @@ import {Component,
 import {SafeUrl} from '@angular/platform-browser';
 import {NavController, NavParams} from "ionic-angular";
 
-import {Lineups, Lineup} from "../../providers/model/lineup";
+import {Lineup, Item} from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
 import {Logger} from "../../util/logging";
 
@@ -43,14 +43,14 @@ const turnMotion = "0.5s 0s ease";
 })
 export class CustomPage {
     title: string;
-    item: Lineup;
+    item: Item;
 
     isFront = true;
 
     priceMessage = "現在のお値段";
     priceUnit = "￥";
 
-    constructor(private params: NavParams, private lineups: Lineups) {
+    constructor(private params: NavParams, private lineups: Lineup) {
         this.title = params.get('name');
         lineups.get(params.get('key')).then((item) => {
             this.item = item;
