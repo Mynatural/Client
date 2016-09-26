@@ -46,17 +46,13 @@ export class Lineups {
     }
 }
 
-type LineupInfo = {
-    name: string,
-}
-
 export class Lineup {
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
 
     constructor(private dir: string, private info: LineupInfo, private s3image: S3Image) {
         this._key = _.last(_.filter(_.split(dir, "/")));
-        logger.info(() => `Lineup: ${this._key}: ${JSON.stringify(info, null, 4)}`);
+        logger.info(() => `${this._key}: ${JSON.stringify(info, null, 4)}`);
     }
 
     get key(): string {
@@ -72,5 +68,36 @@ export class Lineup {
             this.cachedTitleImage = this.s3image.getUrl(`${this.dir}title.png`);
         }
         return this.cachedTitleImage;
+    }
+}
+
+//// Lineup の info.json の定義
+
+type LineupInfo = {
+    name: string,
+    price: number,
+    specs: Spec[],
+    measurements: Measurement[]
+}
+
+type Spec = {
+    name: string,
+    key: string,
+    value: {
+        initial: string,
+        availables: {
+            name: string,
+            price: number
+        }[]
+    }
+}
+
+type Measurement = {
+    name: string,
+    illustration: string, // Filename of SVG
+    value: {
+        initial: number,
+        min: number,
+        max: number
     }
 }
