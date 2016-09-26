@@ -136,6 +136,7 @@ type Spec = {
     name: string,
     key: string,
     side: SpecSide[],
+    canSame?: SpecSide,
     value: {
         initial: string,
         availables: SpecValue[]
