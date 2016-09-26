@@ -83,6 +83,7 @@ type LineupInfo = {
 type Spec = {
     name: string,
     key: string,
+    side: string, // "FRONT" or "BACK"
     value: {
         initial: string,
         availables: {
