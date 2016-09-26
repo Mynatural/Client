@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
 
+import * as Info from "./lineup_info.d";
 import {S3File, S3Image} from "../aws/s3file";
 import * as Base64 from "../../util/base64";
 import {Logger} from "../../util/logging";
@@ -38,7 +39,7 @@ export class Lineups {
 
     private async load(dir: string): Promise<Lineup> {
         const text = await this.s3.read(`${dir}info.json.encoded`);
-        const info = Base64.decodeJson(text) as LineupInfo;
+        const info = Base64.decodeJson(text) as Info.Lineup;
         return new Lineup(this.s3, this.s3image, dir, info);
     }
 
@@ -52,9 +53,9 @@ export class Lineup {
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
     private imageUrls: {[key: string]: SafeUrl} = {};
-    private selectedSpecs: {[key: string]: SpecValue} = {};
+    private selectedSpecs: {[key: string]: Info.SpecValue} = {};
 
-    constructor(private s3: S3File, private s3image: S3Image, private dir: string, public info: LineupInfo) {
+    constructor(private s3: S3File, private s3image: S3Image, private dir: string, public info: Info.Lineup) {
         this._key = _.last(_.filter(_.split(dir, "/")));
         logger.info(() => `${this._key}: ${JSON.stringify(info, null, 4)}`);
         info.specs.forEach((spec) => {
@@ -80,25 +81,35 @@ export class Lineup {
 
     private refreshImages() {
         const names = this.info.specs.map((spec) => {
-            const v = this.getSpec(spec.key);
+            const v = this.getValue(spec.key);
             return v ? v.key : spec.value.initial;
         });
         const dir = `${this.dir}specImages/${_.join(names, "/")}/`;
+        logger.debug(() => `Finding side images: ${dir}`);
         this.s3.list(dir).then((list) => {
             list.forEach(async (path) => {
                 if (_.endsWith(path, ".png")) {
                     const side = path.substr(dir.length).replace(/\.png$/, "");
+                    logger.debug(() => `Loading side image [${side}]=${path}`);
                     this.imageUrls[side] = await this.s3image.getUrl(path);
                 }
             });
         });
     }
 
-    getSpec(key: string): SpecValue {
+    get specKeys(): string[] {
+        return _.keys(this.selectedSpecs);
+    }
+
+    getSpec(key: string): Info.Spec {
+        return _.find(this.info.specs, {"key": key});
+    }
+
+    getValue(key: string): Info.SpecValue {
         return this.selectedSpecs[key];
     }
 
-    setSpec(key: string, value: SpecValue) {
+    setValue(key: string, value: Info.SpecValue) {
         this.selectedSpecs[key] = value;
         this.refreshImages();
     }
@@ -114,7 +125,7 @@ export class Lineup {
     get totalPrice(): number {
         var result = this.info.price;
         this.info.specs.forEach((spec) => {
-            const v = this.getSpec(spec.key);
+            const v = this.getValue(spec.key);
             if (v) {
                 result = result + v.price;
             }
@@ -124,39 +135,3 @@ export class Lineup {
 }
 
 //// Lineup の info.json の定義
-
-type LineupInfo = {
-    name: string,
-    price: number,
-    specs: Spec[],
-    measurements: Measurement[]
-}
-
-type Spec = {
-    name: string,
-    key: string,
-    side: SpecSide[],
-    canSame?: SpecSide,
-    value: {
-        initial: string,
-        availables: SpecValue[]
-    }
-}
-
-type SpecSide = "FRONT" | "BACK";
-
-type SpecValue = {
-    name: string,
-    key: string,
-    price: number
-}
-
-type Measurement = {
-    name: string,
-    illustration: string, // Filename of SVG
-    value: {
-        initial: number,
-        min: number,
-        max: number
-    }
-}
