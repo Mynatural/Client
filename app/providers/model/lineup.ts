@@ -7,7 +7,8 @@ import {Logger} from "../../util/logging";
 
 const logger = new Logger("Lineup");
 
-const rootDir = "unauthorized/lineup/";
+const rootDirName = "lineup"
+const rootDir = `unauthorized/${rootDirName}/`;
 
 @Injectable()
 export class Lineups {
@@ -20,7 +21,8 @@ export class Lineups {
     private async getAll(): Promise<Lineup[]> {
         const finds = await this.s3.list(rootDir);
         const dirs = _.filter(finds, (path) => {
-            return _.endsWith(path, "/");
+            const ps = path.split("/").reverse();
+            return ps[0] == "" && ps[2] == rootDirName;
         });
         const list = dirs.map(async (dir) => {
             if (dir === rootDir) return null;
@@ -37,7 +39,7 @@ export class Lineups {
     private async load(dir: string): Promise<Lineup> {
         const text = await this.s3.read(`${dir}info.json.encoded`);
         const info = Base64.decodeJson(text) as LineupInfo;
-        return new Lineup(dir, info, this.s3image);
+        return new Lineup(this.s3, this.s3image, dir, info);
     }
 
     async get(key: string): Promise<Lineup> {
@@ -49,10 +51,16 @@ export class Lineups {
 export class Lineup {
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
+    private imageUrls: {[key: string]: SafeUrl} = {};
+    private selectedSpecs: {[key: string]: SpecValue} = {};
 
-    constructor(private dir: string, private info: LineupInfo, private s3image: S3Image) {
+    constructor(private s3: S3File, private s3image: S3Image, private dir: string, public info: LineupInfo) {
         this._key = _.last(_.filter(_.split(dir, "/")));
         logger.info(() => `${this._key}: ${JSON.stringify(info, null, 4)}`);
+        info.specs.forEach((spec) => {
+            this.selectedSpecs[spec.key] = _.find(spec.value.availables, {"key": spec.value.initial});
+        });
+        this.refreshImages();
     }
 
     get key(): string {
@@ -69,6 +77,50 @@ export class Lineup {
         }
         return this.cachedTitleImage;
     }
+
+    private refreshImages() {
+        const names = this.info.specs.map((spec) => {
+            const v = this.getSpec(spec.key);
+            return v ? v.key : spec.value.initial;
+        });
+        const dir = `${this.dir}specImages/${_.join(names, "/")}/`;
+        this.s3.list(dir).then((list) => {
+            list.forEach(async (path) => {
+                if (_.endsWith(path, ".png")) {
+                    const side = path.substr(dir.length).replace(/\.png$/, "");
+                    this.imageUrls[side] = await this.s3image.getUrl(path);
+                }
+            });
+        });
+    }
+
+    getSpec(key: string): SpecValue {
+        return this.selectedSpecs[key];
+    }
+
+    setSpec(key: string, value: SpecValue) {
+        this.selectedSpecs[key] = value;
+        this.refreshImages();
+    }
+
+    get imageFront(): SafeUrl {
+        return this.imageUrls["FRONT"];
+    }
+
+    get imageBack(): SafeUrl {
+        return this.imageUrls["BACK"];
+    }
+
+    get totalPrice(): number {
+        var result = this.info.price;
+        this.info.specs.forEach((spec) => {
+            const v = this.getSpec(spec.key);
+            if (v) {
+                result = result + v.price;
+            }
+        });
+        return result;
+    }
 }
 
 //// Lineup の info.json の定義
@@ -83,14 +135,19 @@ type LineupInfo = {
 type Spec = {
     name: string,
     key: string,
-    side: string, // "FRONT" or "BACK"
+    side: SpecSide[],
     value: {
         initial: string,
-        availables: {
-            name: string,
-            price: number
-        }[]
+        availables: SpecValue[]
     }
+}
+
+type SpecSide = "FRONT" | "BACK";
+
+type SpecValue = {
+    name: string,
+    key: string,
+    price: number
 }
 
 type Measurement = {

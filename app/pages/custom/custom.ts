@@ -44,9 +44,6 @@ export class CustomPage {
     title: string;
     item: Lineup;
 
-    imageFront: SafeUrl;
-    imageBack: SafeUrl;
-
     isFront = true;
 
     priceMessage = "現在のお値段";
@@ -57,10 +54,6 @@ export class CustomPage {
         this.title = params.get('name');
         lineups.get(params.get('key')).then((item) => {
             this.item = item;
-            item.titleImage.then((url) => {
-                this.imageFront = url;
-                this.imageBack = url;
-            })
         });
     }
 
