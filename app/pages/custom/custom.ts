@@ -6,9 +6,9 @@ import {Component,
   keyframes,
   animate} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
-import {NavController, NavParams} from "ionic-angular";
+import {NavController, NavParams, ModalController} from "ionic-angular";
 
-import {Lineup, Item} from "../../providers/model/lineup";
+import {Lineup, Item, ItemSpec} from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
 import {Logger} from "../../util/logging";
 
@@ -50,7 +50,7 @@ export class CustomPage {
     priceMessage = "現在のお値段";
     priceUnit = "￥";
 
-    constructor(private params: NavParams, private lineups: Lineup) {
+    constructor(params: NavParams, private modal: ModalController, private lineups: Lineup) {
         this.title = params.get('name');
         lineups.get(params.get('key')).then((item) => {
             this.item = item;
@@ -73,15 +73,6 @@ export class CustomPage {
         this.isFront = !this.isFront;
     }
 
-    get specs(): {def: Info.Spec, value: Info.SpecValue}[] {
-        return this.item.specKeys.map((key) => {
-            return {
-                def: this.item.getSpec(key),
-                value: this.item.getValue(key)
-            }
-        });
-    }
-
     private filterSpecs(side: Info.SpecSide): Info.Spec[] {
         return _.filter(this.item.info.specs, (spec) => {
             return _.includes(spec.sides, side);
@@ -94,5 +85,21 @@ export class CustomPage {
 
     get specsBack(): Info.Spec[] {
         return this.filterSpecs("BACK");
+    }
+
+    openSpec(key: string) {
+        logger.debug(() => `Open Spec: ${key}`);
+        this.modal.create(SpecDialog, { spec: this.item.specs[key] }).present();
+    }
+}
+
+@Component({
+    templateUrl: 'build/pages/custom/spec_dialog.html'
+})
+class SpecDialog {
+    spec: ItemSpec;
+
+    constructor(params: NavParams) {
+        this.spec = params["spec"];
     }
 }

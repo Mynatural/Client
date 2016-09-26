@@ -18,7 +18,7 @@
                         <img [src]="item.imageFront">
                     </div>
                     <div class="controllers">
-                        <button *ngFor="let spec of specsFront" [class]="spec.key">
+                        <button *ngFor="let spec of specsFront" [class]="spec.key" (click)="openSpec(spec.key)">
                             {{spec.name}}
                         </button>
                     </div>
@@ -28,7 +28,7 @@
                         <img [src]="item.imageBack">
                     </div>
                     <div class="controllers">
-                        <button *ngFor="let spec of specsBack" [class]="spec.key">
+                        <button *ngFor="let spec of specsBack" [class]="spec.key" (click)="openSpec(spec.key)">
                             {{spec.name}}
                         </button>
                     </div>
@@ -47,9 +47,9 @@
             <p class="value">{{priceUnit}}{{item.totalPrice | number}}-</p>
         </div>
         <div class="specs">
-            <div *ngFor="let spec of specs" [class]="spec.def.key">
-                <p>{{spec.def.name}}</p>
-                <p>{{spec.value.name}}</p>
+            <div *ngFor="let spec of item.specs" [class]="spec.info.key">
+                <p>{{spec.info.name}}</p>
+                <p>{{spec.currentValue.name}}</p>
             </div>
         </div>
     </div>

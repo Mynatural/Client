@@ -50,18 +50,16 @@ export class Lineup {
 }
 
 export class Item {
+    specs: ItemSpec[];
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
+    private imageUrlsAwait: {[key: string]: {path: string, url: Promise<SafeUrl>}} = {};
     private imageUrls: {[key: string]: SafeUrl} = {};
-    private selectedSpecs: {[key: string]: Info.SpecValue} = {};
 
     constructor(private s3: S3File, private s3image: S3Image, private dir: string, public info: Info.Lineup) {
         this._key = _.last(_.filter(_.split(dir, "/")));
         logger.info(() => `${this._key}: ${JSON.stringify(info, null, 4)}`);
-        info.specs.forEach((spec) => {
-            this.selectedSpecs[spec.key] = _.find(spec.value.availables, {"key": spec.value.initial});
-        });
-        this.refreshImages();
+        this.specs = _.map(info.specs, (spec) => new ItemSpec(s3image, this, spec));
     }
 
     get key(): string {
@@ -79,57 +77,66 @@ export class Item {
         return this.cachedTitleImage;
     }
 
-    private refreshImages() {
-        const names = this.info.specs.map((spec) => {
-            const v = this.getValue(spec.key);
-            return v ? v.key : spec.value.initial;
-        });
-        const dir = `${this.dir}specImages/${_.join(names, "/")}/`;
-        logger.debug(() => `Finding side images: ${dir}`);
-        this.s3.list(dir).then((list) => {
-            list.forEach(async (path) => {
-                if (_.endsWith(path, ".png")) {
-                    const side = path.substr(dir.length).replace(/\.png$/, "");
-                    logger.debug(() => `Loading side image [${side}]=${path}`);
-                    this.imageUrls[side] = await this.s3image.getUrl(path);
-                }
+    private getImage(side: string): SafeUrl {
+        const names = _.map(this.specs, (spec) => spec.current);
+        const path = `${this.dir}images/${_.join(names, "/")}/${side}.png`;
+        const c = this.imageUrlsAwait[side];
+        if (_.isNil(c) || !_.isEqual(c.path, path)) {
+            logger.debug(() => `Loading side image [${side}]=${path}`);
+            const p = this.s3image.getUrl(path);
+            this.imageUrlsAwait[side] = {
+                path: path,
+                url: p
+            };
+            p.then((url) => {
+                this.imageUrls[side] = url;
             });
-        });
-    }
-
-    get specKeys(): string[] {
-        return _.keys(this.selectedSpecs);
-    }
-
-    getSpec(key: string): Info.Spec {
-        return _.find(this.info.specs, {"key": key});
-    }
-
-    getValue(key: string): Info.SpecValue {
-        return this.selectedSpecs[key];
-    }
-
-    setValue(key: string, value: Info.SpecValue) {
-        this.selectedSpecs[key] = value;
-        this.refreshImages();
+        }
+        return this.imageUrls[side];
     }
 
     get imageFront(): SafeUrl {
-        return this.imageUrls["FRONT"];
+        return this.getImage["FRONT"];
     }
 
     get imageBack(): SafeUrl {
-        return this.imageUrls["BACK"];
+        return this.getImage["BACK"];
     }
 
     get totalPrice(): number {
         var result = this.info.price;
-        this.info.specs.forEach((spec) => {
-            const v = this.getValue(spec.key);
+        _.forEach(this.specs, (spec, key) => {
+            const v = spec.currentValue;
             if (v) {
                 result = result + v.price;
             }
         });
         return result;
+    }
+}
+
+export class ItemSpec {
+    private images: {[key: string]: SafeUrl} = {};
+    current: string;
+
+    constructor(private s3image: S3Image, public item: Item, public info: Info.Spec) {
+        info.value.availables.forEach(async (a) => {
+            const path = `${rootDir}${item.key}/specs/${info.key}/${a.key}.png`;
+            const url = await this.s3image.getUrl(path);
+            this.images[a.key] = url;
+        });
+        this.current = info.value.initial;
+    }
+
+    getImage(key: string): SafeUrl {
+        return this.images[key];
+    }
+
+    getValue(key: string): Info.SpecValue {
+        return _.find(this.info.value.availables, {"key": key});
+    }
+
+    get currentValue(): Info.SpecValue {
+        return this.getValue(this.current);
     }
 }
