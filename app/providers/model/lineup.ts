@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
 
 import {S3File, S3Image} from "../aws/s3file";
+import * as Base64 from "../../util/base64";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("Lineup");
@@ -34,8 +35,8 @@ export class Lineups {
     }
 
     private async load(dir: string): Promise<Lineup> {
-        const json = await this.s3.read(`${dir}info.json.encoded`);
-        const info = JSON.parse(decodeURIComponent(json)) as LineupInfo;
+        const text = await this.s3.read(`${dir}info.json.encoded`);
+        const info = Base64.decodeJson(text) as LineupInfo;
         return new Lineup(dir, info, this.s3image);
     }
 
