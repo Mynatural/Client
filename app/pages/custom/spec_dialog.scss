@@ -3,10 +3,24 @@
         .loading {
             display: flex;
             justify-content: center;
+            ion-spinner circle {
+                stroke: blue;
+            }
         }
-        .title {
+        .footer {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            align-items: flex-end;
+
+            .price {
+                display: flex;
+                justify-content: space-around;
+                margin-right: 3rem;
+
+                &>p {
+                    @include font-normal(1.8rem);
+                }
+            }
         }
     }
 }

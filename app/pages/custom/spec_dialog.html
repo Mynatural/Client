@@ -14,16 +14,21 @@
 <ion-content id="spec-dialog">
     <ion-list>
         <ion-card *ngFor="let value of values">
-            <div *ngIf="!getImage(value)" class="loading">
+            <div *ngIf="!image(value)" class="loading">
                 <ion-spinner></ion-spinner>
             </div>
-            <img *ngIf="getImage(value)" [src]="getImage(value)">
+            <img *ngIf="image(value)" [src]="image(value)">
             <ion-card-content>
-                <div class="title">
-                    <ion-card-title>{{value.name}}</ion-card-title>
-                    <button (click)="choose(value)">{{textChoose}}</button>
-                </div>
+                <ion-card-title>{{value.name}}</ion-card-title>
                 <p>{{value.description}}</p>
+                <div class="footer">
+                    <div class="price">
+                        <p class="unit">{{priceUnit}}</p>
+                        <p class="value">{{value.price | number}}</p>
+                        <p class="surfix">-</p>
+                    </div>
+                    <button (click)="choose(value)" favorite>{{textChoose}}</button>
+                </div>
             </ion-card-content>
         </ion-card>
     </ion-list>

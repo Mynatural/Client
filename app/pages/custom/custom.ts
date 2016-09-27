@@ -102,6 +102,7 @@ class SpecDialog {
     title: string;
 
     textChoose = "選択";
+    priceUnit = "￥";
 
     constructor(params: NavParams, private viewCtrl: ViewController) {
         this.spec = params.get("spec");
@@ -122,7 +123,7 @@ class SpecDialog {
         return this.spec.info.value.availables;
     }
 
-    getImage(v: Info.SpecValue): SafeUrl {
+    image(v: Info.SpecValue): SafeUrl {
         return this.spec.getImage(v.key);
     }
 }
