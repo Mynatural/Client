@@ -44,8 +44,8 @@ export class Lineup {
     }
 
     async get(key: string): Promise<Item> {
-        const list = await this.all;
-        return _.find(list, {"key": key});
+        const lineup = _.find(await this.all, {"key": key});
+        return lineup.renew();
     }
 }
 
@@ -53,13 +53,17 @@ export class Item {
     specs: ItemSpec[];
     private _key;
     private cachedTitleImage: Promise<SafeUrl>;
-    private imageUrlsAwait: {[key: string]: {path: string, url: Promise<SafeUrl>}} = {};
+    private imageUrlsAwait: {[key: string]: Promise<{[key: string]: SafeUrl}>} = {};
     private imageUrls: {[key: string]: SafeUrl} = {};
 
     constructor(private s3: S3File, private s3image: S3Image, private dir: string, public info: Info.Lineup) {
         this._key = _.last(_.filter(_.split(dir, "/")));
         logger.info(() => `${this._key}: ${JSON.stringify(info, null, 4)}`);
         this.specs = _.map(info.specs, (spec) => new ItemSpec(s3image, this, spec));
+    }
+
+    renew(): Item {
+        return new Item(this.s3, this.s3image, this.dir, this.info);
     }
 
     get key(): string {
@@ -77,30 +81,33 @@ export class Item {
         return this.cachedTitleImage;
     }
 
-    private getImage(side: string): SafeUrl {
+    private refreshImages(): {[key: string]: SafeUrl} {
         const names = _.map(this.specs, (spec) => spec.current);
-        const path = `${this.dir}images/${_.join(names, "/")}/${side}.png`;
-        const c = this.imageUrlsAwait[side];
-        if (_.isNil(c) || !_.isEqual(c.path, path)) {
-            logger.debug(() => `Loading side image [${side}]=${path}`);
-            const p = this.s3image.getUrl(path);
-            this.imageUrlsAwait[side] = {
-                path: path,
-                url: p
-            };
-            p.then((url) => {
-                this.imageUrls[side] = url;
+        const dir = `${this.dir}images/${_.join(names, "/")}/`;
+        if (_.isNil(this.imageUrlsAwait[dir])) {
+            const p = this.s3.list(dir).then(async (list) => {
+                const pngs = _.filter(list, (path) => _.endsWith(path, ".png"));
+                const loads = _.map(pngs, async (path) => {
+                    const side = path.substring(dir.length, path.length - 4);
+                    return [side, await this.s3image.getUrl(path)];
+                });
+                return _.fromPairs(await Promise.all(loads));
+            });
+            this.imageUrlsAwait[dir] = p;
+            p.then((x) => {
+                this.imageUrls = x;
+                logger.debug(() => `Images loaded: ${JSON.stringify(x, null, 4)}`);
             });
         }
-        return this.imageUrls[side];
+        return this.imageUrls;
     }
 
     get imageFront(): SafeUrl {
-        return this.getImage["FRONT"];
+        return this.refreshImages()["FRONT"];
     }
 
     get imageBack(): SafeUrl {
-        return this.getImage["BACK"];
+        return this.refreshImages()["BACK"];
     }
 
     get totalPrice(): number {
@@ -113,23 +120,33 @@ export class Item {
         });
         return result;
     }
+
+    getSpec(key: string): ItemSpec {
+        return _.find(this.specs, (s) => _.isEqual(s.info.key, key));
+    }
 }
 
 export class ItemSpec {
-    private images: {[key: string]: SafeUrl} = {};
+    private images: {[key: string]: SafeUrl};
     current: string;
 
     constructor(private s3image: S3Image, public item: Item, public info: Info.Spec) {
-        info.value.availables.forEach(async (a) => {
-            const path = `${rootDir}${item.key}/specs/${info.key}/${a.key}.png`;
-            const url = await this.s3image.getUrl(path);
-            this.images[a.key] = url;
-        });
         this.current = info.value.initial;
     }
 
+    private refreshImages(): {[key: string]: SafeUrl} {
+        if (_.isNil(this.images)) {
+            this.images = {};
+            const dir = `${rootDir}${this.item.key}/specs/${this.info.key}`;
+            this.info.value.availables.forEach(async (a) => {
+                this.images[a.key] = await this.s3image.getUrl(`${dir}/${a.key}.png`);
+            });
+        }
+        return this.images;
+    }
+
     getImage(key: string): SafeUrl {
-        return this.images[key];
+        return this.refreshImages()[key];
     }
 
     getValue(key: string): Info.SpecValue {

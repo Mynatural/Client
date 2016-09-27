@@ -22,12 +22,13 @@ export type SpecSide = "FRONT" | "BACK";
 export type SpecValue = {
     name: string,
     key: string,
+    description: string,
     price: number
 }
 
 export type Measurement = {
     name: string,
-    illustration: string, // Filename of SVG
+    key: string,
     value: {
         initial: number,
         min: number,

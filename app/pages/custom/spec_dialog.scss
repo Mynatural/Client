@@ -1,0 +1,12 @@
+#spec-dialog {
+    ion-card {
+        .loading {
+            display: flex;
+            justify-content: center;
+        }
+        .title {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}

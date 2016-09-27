@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            {{title}}
+        </ion-title>
+        <ion-buttons start>
+            <button (click)="close()">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content id="spec-dialog">
+    <ion-list>
+        <ion-card *ngFor="let value of values">
+            <div *ngIf="!getImage(value)" class="loading">
+                <ion-spinner></ion-spinner>
+            </div>
+            <img *ngIf="getImage(value)" [src]="getImage(value)">
+            <ion-card-content>
+                <div class="title">
+                    <ion-card-title>{{value.name}}</ion-card-title>
+                    <button (click)="choose(value)">{{textChoose}}</button>
+                </div>
+                <p>{{value.description}}</p>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+</ion-content>

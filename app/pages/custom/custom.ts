@@ -6,7 +6,7 @@ import {Component,
   keyframes,
   animate} from "@angular/core";
 import {SafeUrl} from '@angular/platform-browser';
-import {NavController, NavParams, ModalController} from "ionic-angular";
+import {ViewController, NavParams, ModalController} from "ionic-angular";
 
 import {Lineup, Item, ItemSpec} from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
@@ -50,9 +50,9 @@ export class CustomPage {
     priceMessage = "現在のお値段";
     priceUnit = "￥";
 
-    constructor(params: NavParams, private modal: ModalController, private lineups: Lineup) {
-        this.title = params.get('name');
-        lineups.get(params.get('key')).then((item) => {
+    constructor(params: NavParams, private modal: ModalController, private lineup: Lineup) {
+        this.title = params.get("name");
+        lineup.get(params.get("key")).then((item) => {
             this.item = item;
         });
     }
@@ -73,23 +73,24 @@ export class CustomPage {
         this.isFront = !this.isFront;
     }
 
-    private filterSpecs(side: Info.SpecSide): Info.Spec[] {
-        return _.filter(this.item.info.specs, (spec) => {
-            return _.includes(spec.sides, side);
+    private filterSpecs(side: Info.SpecSide): ItemSpec[] {
+        return _.filter(this.item.specs, (spec) => {
+            return _.includes(spec.info.sides, side);
         });
     }
 
-    get specsFront(): Info.Spec[] {
+    get specsFront(): ItemSpec[] {
         return this.filterSpecs("FRONT");
     }
 
-    get specsBack(): Info.Spec[] {
+    get specsBack(): ItemSpec[] {
         return this.filterSpecs("BACK");
     }
 
     openSpec(key: string) {
-        logger.debug(() => `Open Spec: ${key}`);
-        this.modal.create(SpecDialog, { spec: this.item.specs[key] }).present();
+        const spec = this.item.getSpec(key);
+        logger.debug(() => `Open Spec: ${key}: ${spec}`);
+        this.modal.create(SpecDialog, { spec: spec }).present();
     }
 }
 
@@ -98,8 +99,30 @@ export class CustomPage {
 })
 class SpecDialog {
     spec: ItemSpec;
+    title: string;
 
-    constructor(params: NavParams) {
-        this.spec = params["spec"];
+    textChoose = "選択";
+
+    constructor(params: NavParams, private viewCtrl: ViewController) {
+        this.spec = params.get("spec");
+        this.title = this.spec.info.name;
+    }
+
+    close() {
+        this.viewCtrl.dismiss();
+    }
+
+    choose(v: Info.SpecValue) {
+        logger.info(() => `Choose spec[${this.spec.info.key}]: ${v.key}`);
+        this.spec.current = v.key;
+        this.close();
+    }
+
+    get values(): Info.SpecValue[] {
+        return this.spec.info.value.availables;
+    }
+
+    getImage(v: Info.SpecValue): SafeUrl {
+        return this.spec.getImage(v.key);
     }
 }
