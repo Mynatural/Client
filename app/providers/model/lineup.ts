@@ -14,10 +14,12 @@ const SPEC_VALUE = "spec-value";
 
 @Injectable()
 export class Lineup {
+    private cim: CachedImageMaker;
     all: Promise<Item[]>;
 
-    constructor(private s3: S3File, private cim: CachedImageMaker) {
+    constructor(private s3: S3File, private s3image: S3Image) {
         this.all = this.getAll();
+        this.cim = new CachedImageMaker(s3image);
     }
 
     private async getAll(): Promise<Item[]> {
@@ -62,8 +64,8 @@ export class Item {
     private _titleImage: CachedImage;
     private _images: {[key: string]: CachedImage} = {};
 
-    constructor(private s3: S3File, private cim: CachedImageMaker, public _key: string, public info: Info.Lineup) {
-        logger.info(() => `${_key}: ${JSON.stringify(info, null, 4)}`);
+    constructor(private s3: S3File, private cim: CachedImageMaker, public key: string, public info: Info.Lineup) {
+        logger.info(() => `${key}: ${JSON.stringify(info, null, 4)}`);
         this.specs = _.map(info.specs, (spec) => new ItemSpec(cim, this, spec));
         this.measurements = _.map(info.measurements, (m) => new ItemMeas(cim, this, m));
     }
@@ -72,12 +74,12 @@ export class Item {
         return new Item(this.s3, this.cim, this.dir, this.info);
     }
 
-    get key(): string {
-        return this._key;
+    onChangeSpecValue() {
+        this._images = {};
     }
 
     get dir(): string {
-        return `${ROOT}/${LINEUP}/${this._key}`
+        return `${ROOT}/${LINEUP}/${this.key}`
     }
 
     get name(): string {
@@ -86,30 +88,27 @@ export class Item {
 
     get titleImage(): SafeUrl {
         if (_.isNil(this._titleImage)) {
-            this._titleImage = this.cim.create([`${this.dir}title.png`]);
+            this._titleImage = this.cim.create([`${this.dir}/title.png`]);
         }
         return this._titleImage.url;
     }
 
     private refreshImages(): {[key: string]: CachedImage} {
-        const names = _.map(this.specs, (spec) => spec.current.dir);
-        const dir = `${this.dir}/images/${_.join(names, "/")}/`;
-        const first = _.first(_.values(this._images).map((i) => i.pathList[0]));
-        if (!first.startsWith(dir)) {
-            this._images = {};
-            this.s3.list(dir).then((list) => {
-                const pngs = _.filter(list, (path) => _.endsWith(path, ".png"));
-                const loads = _.map(pngs, (path) => {
-                    const side = path.substring(dir.length, path.length - 4);
-                    this._images[side] = this.cim.create([path]);
-                });
+        if (_.isEmpty(this._images)) {
+            const names = _.map(this.specs, (spec) => spec.current.dir);
+            const dir = `${this.dir}/images/${_.join(names, "/")}/`;
+            const list = ["FRONT", "BACK"];
+            _.forEach(list, (side) => {
+                const path = `${dir}/${side}.png`;
+                this._images[side] = this.cim.create([path]);
             });
         }
         return this._images;
     }
 
     getImage(side: Info.SpecSide): SafeUrl {
-        return this.refreshImages()[side].url;
+        const safe = this.refreshImages()[side];
+        return safe ? safe.url : null;
     }
 
     get totalPrice(): number {
@@ -130,7 +129,7 @@ export class Item {
 
 export class ItemSpec {
     availables: ItemSpecValue[];
-    current: ItemSpecValue;
+    private _current: ItemSpecValue;
 
     constructor(private cim: CachedImageMaker, public item: Item, public info: Info.Spec) {
         this.availables = _.map(info.value.availables, (key) => {
@@ -139,19 +138,38 @@ export class ItemSpec {
         });
         this.current = _.find(this.availables, (a) => _.isEqual(a.info.key, info.value.initial));
     }
+
+    get current(): ItemSpecValue {
+        return this._current;
+    }
+
+    set current(v: ItemSpecValue) {
+        this.item.onChangeSpecValue();
+        this._current = v;
+    }
 }
 
 export class ItemSpecValue {
     options: ItemSpecOption[];
     private _image: CachedImage;
+    private _dir: string;
 
     constructor(private cim: CachedImageMaker, public spec: ItemSpec, public info: Info.SpecValue) {
         this.options = _.map(info.options, (o) => new ItemSpecOption(cim, this, o));
     }
 
+    onChangeOption() {
+        this._dir = null;
+        this.spec.item.onChangeSpecValue();
+    }
+
     get dir(): string {
-        const keys = _.map(this.options, (v) => v.current.info.key);
-        return `${this.info.key}/${_.join(keys, "/")}`
+        if (_.isNil(this._dir)) {
+            const keys = _.map(this.options, (v) => v.current.info.key);
+            logger.debug(() => `Building dir from keys: ${keys}`);
+            this._dir = `${this.info.key}/${_.join(keys, "/")}`
+        }
+        return this._dir;
     }
 
     get image(): SafeUrl {
@@ -166,13 +184,22 @@ export class ItemSpecValue {
 
 export class ItemSpecOption {
     availables: ItemSpecOptionValue[];
-    current: ItemSpecOptionValue;
+    private _current: ItemSpecOptionValue;
 
     constructor(private cim: CachedImageMaker, public specValue: ItemSpecValue, public info: Info.SpecOption) {
         this.availables = _.map(info.value.availables, (a) => {
             return new ItemSpecOptionValue(cim, this, a);
         });
         this.current = _.find(this.availables, (a) => _.isEqual(a.info.key, info.value.initial));
+    }
+
+    get current(): ItemSpecOptionValue {
+        return this._current;
+    }
+
+    set current(v: ItemSpecOptionValue) {
+        this.specValue.onChangeOption();
+        this._current = v;
     }
 }
 
@@ -213,38 +240,43 @@ export class ItemMeas {
     }
 }
 
-@Injectable()
 class CachedImageMaker {
-    constructor(private s3: S3File, private s3image: S3Image) { }
+    constructor(private s3image: S3Image) { }
 
     create(pathList: string[]): CachedImage {
-        return new CachedImage(this.s3, this.s3image, pathList);
+        return new CachedImage(this.s3image, pathList);
     }
 }
 
 class CachedImage {
     private _url: SafeUrl;
 
-    constructor(private s3: S3File, private s3image: S3Image, public pathList: string[]) { }
+    constructor(private s3image: S3Image, public pathList: string[]) {
+        this.refresh(1000 * 60 * 10);
+    }
 
     private async load(path: string): Promise<SafeUrl> {
         try {
-            if (await this.s3.exists(path)) {
-                return await this.s3image.getUrl(path);
-            }
+            return await this.s3image.getUrl(path);
         } catch (ex) {
             logger.warn(() => `Failed to load s3image: ${path}: ${ex}`);
         }
         return null;
     }
 
-    private async refresh() {
-        var url;
-        var i = 0;
-        while (_.isNil(url) && i < this.pathList.length) {
-            url = await this.load(this.pathList[i++]);
+    private async refresh(limit: number) {
+        try {
+            var url;
+            var i = 0;
+            while (_.isNil(url) && i < this.pathList.length) {
+                url = await this.load(this.pathList[i++]);
+            }
+            this._url = url;
+        } finally {
+            setTimeout(() => {
+                this.refresh(limit);
+            }, limit);
         }
-        this._url = url;
     }
 
     isSamePath(pathList: string[]): boolean {
@@ -252,7 +284,6 @@ class CachedImage {
     }
 
     get url(): SafeUrl {
-        this.refresh();
         return this._url;
     }
 }
