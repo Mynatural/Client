@@ -7,6 +7,15 @@
                 stroke: blue;
             }
         }
+        .options {
+            ion-label {
+                flex-grow: 0;
+                flex-basis: auto;
+            }
+            ion-select {
+                position: relative;
+            }
+        }
         .footer {
             display: flex;
             justify-content: flex-end;

@@ -72,6 +72,22 @@
         }
     }
 
+    .measurements, .specs {
+        margin: 0 1rem 0 1rem;
+    }
+
+    .measurements {
+        @include font-normal(1.5rem);
+
+        ion-label {
+            flex-grow: 0;
+            flex-basis: auto;
+        }
+        ion-select {
+            position: relative;
+        }
+    }
+
     .specs {
         display: table;
 
@@ -84,6 +100,12 @@
             &>p {
                 display: table-cell;
                 padding: $fontsize * 0.5;
+                &:first-child {
+                    padding-left: 0;
+                }
+                &:last-child {
+                    padding-right: 0;
+                }
             }
 
             &.bold {

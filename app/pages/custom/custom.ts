@@ -8,7 +8,7 @@ import {Component,
 import {SafeUrl} from '@angular/platform-browser';
 import {ViewController, NavParams, ModalController} from "ionic-angular";
 
-import {Lineup, Item, ItemSpec} from "../../providers/model/lineup";
+import * as Lineup from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
 import {Logger} from "../../util/logging";
 
@@ -43,14 +43,15 @@ const turnMotion = "0.5s 0s ease";
 })
 export class CustomPage {
     title: string;
-    item: Item;
+    item: Lineup.Item;
 
-    isFront = true;
+    sides = ["FRONT", "BACK"];
+    side: Info.SpecSide = "FRONT";
 
     priceMessage = "現在のお値段";
     priceUnit = "￥";
 
-    constructor(params: NavParams, private modal: ModalController, private lineup: Lineup) {
+    constructor(params: NavParams, private modal: ModalController, private lineup: Lineup.Lineup) {
         this.title = params.get("name");
         lineup.get(params.get("key")).then((item) => {
             this.item = item;
@@ -58,38 +59,29 @@ export class CustomPage {
     }
 
     get isReady(): boolean {
-        return !_.isNil(this.item) && !_.isNil(this.item.imageFront)
+        return !_.isNil(this.item) && !_.isNil(this.item.getImage(this.side));
     }
 
-    get onFront(): string {
-        return this.isFront ? stateOn : stateOff;
-    }
-
-    get onBack(): string {
-        return !this.isFront ? stateOn : stateOff;
+    onSide(side: Info.SpecSide): string {
+        return _.isEqual(this.side, side) ? stateOn : stateOff;
     }
 
     turn_over() {
-        this.isFront = !this.isFront;
+        this.side = _.isEqual(this.side, "FRONT") ? "BACK" : "FRONT";
     }
 
-    private filterSpecs(side: Info.SpecSide): ItemSpec[] {
+    private filterSpecs(side: Info.SpecSide): Lineup.ItemSpec[] {
         return _.filter(this.item.specs, (spec) => {
             return _.includes(spec.info.sides, side);
         });
     }
 
-    get specsFront(): ItemSpec[] {
-        return this.filterSpecs("FRONT");
+    getSpecs(side: Info.SpecSide): Lineup.ItemSpec[] {
+        return this.filterSpecs(side);
     }
 
-    get specsBack(): ItemSpec[] {
-        return this.filterSpecs("BACK");
-    }
-
-    openSpec(key: string) {
-        const spec = this.item.getSpec(key);
-        logger.debug(() => `Open Spec: ${key}: ${spec}`);
+    openSpec(spec: Lineup.ItemSpec) {
+        logger.debug(() => `Open Spec: ${spec.info.key}`);
         this.modal.create(SpecDialog, { spec: spec }).present();
     }
 }
@@ -98,7 +90,7 @@ export class CustomPage {
     templateUrl: 'build/pages/custom/spec_dialog.html'
 })
 class SpecDialog {
-    spec: ItemSpec;
+    spec: Lineup.ItemSpec;
     title: string;
 
     textChoose = "選択";
@@ -113,17 +105,9 @@ class SpecDialog {
         this.viewCtrl.dismiss();
     }
 
-    choose(v: Info.SpecValue) {
-        logger.info(() => `Choose spec[${this.spec.info.key}]: ${v.key}`);
-        this.spec.current = v.key;
+    choose(v: Lineup.ItemSpecValue) {
+        logger.info(() => `Choose spec[${this.spec.info.key}]: ${v.info.key}`);
+        this.spec.current = v;
         this.close();
-    }
-
-    get values(): Info.SpecValue[] {
-        return this.spec.info.value.availables;
-    }
-
-    image(v: Info.SpecValue): SafeUrl {
-        return this.spec.getImage(v.key);
     }
 }
