@@ -3,7 +3,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {NavController} from "ionic-angular";
 
 import {CustomPage} from "../custom/custom";
-import {Lineup, Item} from "../../providers/model/lineup";
+import * as Lineup from "../../providers/model/lineup";
 import {Logger} from "../../util/logging";
 
 const logger = new Logger("HomePage");
@@ -15,35 +15,8 @@ export class HomePage {
     static title = "ショップ";
     static icon = "home";
     title = HomePage.title;
+    items: Lineup.Item[];
 
-    topMessages = [
-        "カスタムメイド",
-        "で作っちゃおう！"
-    ];
-
-    constructor(public nav: NavController, private lineups: Lineup) {
-        lineups.all.then((list) => {
-            Promise.all(list.map(async (lineup) => {
-                return {
-                    key: lineup.key,
-                    name: lineup.name,
-                    imageUrl: await lineup.titleImage
-                }
-            })).then((v) => {
-                this.items = v;
-            })
-        });
-    }
-
-    get isReady(): boolean {
-        return !_.isNil(this.items);
-    }
-
-    items: Array<{
-        key: string,
-        name: string,
-        imageUrl: SafeUrl
-    }>;
     slideOptions = {
         loop: true,
         pager: true,
@@ -51,7 +24,22 @@ export class HomePage {
         speed: 700
     };
 
-    choose(item: Item) {
+    topMessages = [
+        "カスタムメイド",
+        "で作っちゃおう！"
+    ];
+
+    constructor(public nav: NavController, private lineups: Lineup.Lineup) {
+        lineups.all.then((list) => {
+            this.items = list;
+        });
+    }
+
+    get isReady(): boolean {
+        return !_.isNil(this.items);
+    }
+
+    choose(item: Lineup.Item) {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
             key: item.key,
