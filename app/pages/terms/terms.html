@@ -1,0 +1,17 @@
+<ion-header>
+    <ion-navbar>
+        <button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            {{title}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding class="terms">
+    <div class="notReady" *ngIf="!isReady">
+        <ion-spinner></ion-spinner>
+    </div>
+    <fathens-gist id="c96241243ad18e2965797e889cb9953d"></fathens-gist>
+</ion-content>

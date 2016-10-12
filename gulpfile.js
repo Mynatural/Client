@@ -34,6 +34,7 @@ var copyHTML = require('ionic-gulp-html-copy');
 var copyFonts = require('ionic-gulp-fonts-copy');
 var copyScripts = require('ionic-gulp-scripts-copy');
 var tslint = require('ionic-gulp-tslint');
+var customIcons = require('ionic2-custom-icons/gulp-plugin');
 
 var isRelease = argv.indexOf('--release') > -1;
 
@@ -41,6 +42,7 @@ gulp.task('watch', ['clean'], function(done){
   runSequence(
     ['sass', 'html', 'fonts', 'scripts'],
     function(){
+      gulpWatch('icons/**/*.svg', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
       webpackBuild({ watch: true }).then(done);
@@ -57,7 +59,30 @@ gulp.task('build', ['clean', 'typings'], function(done){
   );
 });
 
-gulp.task('sass', buildSass);
+gulp.task('customIcons', function () {
+    return customIcons(['fathens'].map((key) => {
+        return {
+            src: 'icons/' + key + '/*.svg',
+            name: key + '-icons',
+            id: key,
+            scssTargetRelPath: '../scss/' + key + '-icons.scss'
+        };
+    }));
+});
+
+gulp.task('sass', ['customIcons'], function(){
+    var paths = [
+        'node_modules/ionic-angular',
+        'node_modules/ionicons/dist/scss',
+        'node_modules/ionic2-custom-icons/directive/lib/scss/',
+        'www/build/scss'
+    ];
+    return buildSass({
+        sassOptions: {
+            includePaths: paths.concat(require("bourbon").includePaths)
+        }
+    });
+});
 gulp.task('html', copyHTML);
 gulp.task('fonts', copyFonts);
 gulp.task('scripts', copyScripts);

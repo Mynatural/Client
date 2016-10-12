@@ -26,10 +26,20 @@
 // are different per mode.
 
 $colors: (
-  primary:    #387ef5,
-  secondary:  #32db64,
-  danger:     #f53d3d,
+  primary:    #64B4FF,
+  secondary:  #50FFB4,
+  danger:     #F56464,
   light:      #f4f4f4,
   dark:       #222,
-  favorite:   #69BB7B
+  favorite:   #FFAAC8
 );
+
+$toolbar-background: #F0FFFF;
+$toolbar-text-color: #FFB4C8;
+$toolbar-ios-title-text-color: $toolbar-text-color;
+$toolbar-md-title-text-color: $toolbar-text-color;
+$toolbar-wp-title-text-color: $toolbar-text-color;
+
+$font-family-base: "Yuzu Pop A [M] Light";
+$font-family-md-base: $font-family-base;
+$font-family-wp-base: $font-family-base;

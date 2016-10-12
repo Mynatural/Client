@@ -1,8 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, PLATFORM_DIRECTIVES } from '@angular/core';
 import { App, ionicBootstrap, Platform, Nav } from 'ionic-angular';
 import { AppVersion, StatusBar, Splashscreen } from 'ionic-native';
+import {CUSTOM_ICON_DIRECTIVES} from 'ionic2-custom-icons';
 
+import {FATHENS_DIRECTIVES} from "./components/all";
+import {FATHENS_PROVIDERS} from "./providers/all";
 import { HomePage } from './pages/home/home';
+import { HelpPage } from './pages/help/help';
+import { TermsPage } from './pages/terms/terms';
 import { withFabric } from "./util/fabric";
 import { Logger } from "./util/logging";
 
@@ -13,15 +18,12 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage: any = HomePage;
-    pages: Array<{ title: string, component: any }>;
+    pages = [HomePage, HelpPage, TermsPage];
+    menuTitle = "もくじ";
 
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
-        this.pages = [
-            { title: "Home", component: HomePage }
-        ];
-
         platform.ready().then(async () => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -41,8 +43,15 @@ export class MyApp {
     }
 
     openPage(page) {
-        this.nav.setRoot(page.component);
+        this.nav.setRoot(page);
     }
 }
 
-ionicBootstrap(MyApp);
+ionicBootstrap(MyApp, [
+    FATHENS_PROVIDERS,
+    {
+        provide: PLATFORM_DIRECTIVES,
+        useValue: [CUSTOM_ICON_DIRECTIVES, FATHENS_DIRECTIVES],
+        multi: true
+    }
+]);

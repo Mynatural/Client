@@ -1,0 +1,35 @@
+#spec-dialog {
+    ion-card {
+        .loading {
+            display: flex;
+            justify-content: center;
+            ion-spinner circle {
+                stroke: blue;
+            }
+        }
+        .options {
+            ion-label {
+                flex-grow: 0;
+                flex-basis: auto;
+            }
+            ion-select {
+                position: relative;
+            }
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+
+            .price {
+                display: flex;
+                justify-content: space-around;
+                margin-right: 3rem;
+
+                &>p {
+                    @include font-normal(1.8rem);
+                }
+            }
+        }
+    }
+}

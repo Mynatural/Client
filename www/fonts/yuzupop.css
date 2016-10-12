@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Yuzu Pop A [M] Bold';
+  src: url(YuzuPopA_M_Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Yuzu Pop A [M] Extra Light';
+  src: url(YuzuPopA_M_Extra_Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Yuzu Pop A [M] Light';
+  src: url(YuzuPopA_M_Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Yuzu Pop A [M] Regular';
+  src: url(YuzuPopA_M_Regular.ttf) format('truetype');
+}
