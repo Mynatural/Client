@@ -1,6 +1,6 @@
+hooks/
 node_modules/
-www/build/
-www/fonts/
+www/
 platforms/
 plugins/
 .DS_Store
@@ -9,3 +9,4 @@ resources/*/
 typings/
 resources/icon.png
 *.lock
+*.log

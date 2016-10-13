@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button icon-only menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            {{title}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="!isReady" class="notReady">
+        <ion-spinner></ion-spinner>
+    </div>
+    <div *ngIf="isReady">
+        <div class="main">
+            <div class="reversible">
+                <div *ngFor="let sd of sides" @turnOver="onSide(sd)" [id]="sd">
+                    <div class="image">
+                        <img [src]="item.getImage(sd)">
+                    </div>
+                    <div class="controllers">
+                        <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key" (click)="openSpec(spec)">
+                            {{spec.info.name}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fixed-pannel">
+                <button ion-button icon-only clear color="secondary" (click)="turn_over()">
+                    <custom-icon set="fathens" name="turn_over"></custom-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="price">
+            <p class="message">{{priceMessage}}</p>
+            <p class="value">{{priceUnit}}{{item.totalPrice | number}}-</p>
+        </div>
+        <div class="measurements">
+            <ion-item *ngFor="let meas of item.measurements" [class]="meas.info.key">
+                <ion-label>{{meas.info.name}}</ion-label>
+                <ion-select [(ngModel)]="meas.current" [selectedText]="meas.current | number">
+                    <ion-option *ngFor="let v of meas.range" [value]="v" [selected]="v == meas.current">
+                        <img [src]="item.imageBack">
+                        {{v | number}}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
+        </div>
+        <div *ngFor="let sd of sides" class="specs">
+            <div *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key">
+                <p>{{spec.info.name}}</p>
+                <p (click)="openSpec(spec.info.key)">{{spec.currentValue.name}}</p>
+            </div>
+        </div>
+    </div>
+</ion-content>
