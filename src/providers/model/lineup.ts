@@ -240,7 +240,7 @@ export class ItemMeas {
     }
 }
 
-class CachedImageMaker {
+export class CachedImageMaker {
     constructor(private s3image: S3Image) { }
 
     create(pathList: string[]): CachedImage {
@@ -248,7 +248,7 @@ class CachedImageMaker {
     }
 }
 
-class CachedImage {
+export class CachedImage {
     private _url: SafeUrl;
 
     constructor(private s3image: S3Image, public pathList: string[]) {

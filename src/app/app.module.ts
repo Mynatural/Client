@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
+import { Storage } from "@ionic/storage";
 import { IonicApp, IonicModule } from 'ionic-angular';
-import { CUSTOM_ICON_DIRECTIVES } from 'ionic2-custom-icons';
+import { CustomIconsModule } from 'ionic2-custom-icons';
 
 import { MyApp } from './app.component';
 
-import { CustomPage, SpecDialog } from '../pages/custom/custom';
+import { CustomPage } from '../pages/custom/custom';
+import { SpecDialog } from '../pages/custom/spec_dialog';
 import { HelpPage } from '../pages/help/help';
 import { HomePage } from '../pages/home/home';
 import { TermsPage } from '../pages/terms/terms';
@@ -32,7 +34,8 @@ import { Lineup } from '../providers/model/lineup';
         TermsPage
     ],
     imports: [
-        IonicModule.forRoot(MyApp)
+        IonicModule.forRoot(MyApp),
+        CustomIconsModule
     ],
     bootstrap: [IonicApp],
     entryComponents: [
@@ -45,7 +48,7 @@ import { Lineup } from '../providers/model/lineup';
         TermsPage
     ],
     providers: [
-        CUSTOM_ICON_DIRECTIVES,
+        Storage,
         BootSettings,
         Configuration,
         Preferences,

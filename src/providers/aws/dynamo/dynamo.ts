@@ -1,7 +1,8 @@
+import { Storage } from "@ionic/storage";
 import { Injectable } from "@angular/core";
 
-import { Pager } from "../../../util/pager";
-import { Logger } from "../../../util/logging";
+import { Pager } from "../../util/pager";
+import { Logger } from "../../util/logging";
 
 import { AWS, requestToPromise } from "../aws";
 import { Cognito } from "../cognito";
@@ -18,7 +19,7 @@ export const LAST_MODIFIED_COLUMN = "LAST_MODIFIED";
 
 @Injectable()
 export class Dynamo {
-    constructor(private cognito: Cognito, private config: Configuration) {
+    constructor(private storage: Storage, private cognito: Cognito, private config: Configuration) {
         this.client = cognito.identity.then((x) =>
             new AWS.DynamoDB.DocumentClient({ dynamoDbCrc32: false }));
     }
@@ -65,6 +66,7 @@ export class Dynamo {
         });
 
         return new DynamoTable(
+            this.storage,
             this.cognito,
             client,
             tableName,
@@ -80,7 +82,7 @@ export function createRandomKey(): string {
     return _.range(32).map((i) => char(_.random(0, 35))).join("");
 }
 
-type DBTableMaker<R extends DC.Item, T extends DBRecord<T>> = (cognito: Cognito) => {
+export type DBTableMaker<R extends DC.Item, T extends DBRecord<T>> = (cognito: Cognito) => {
     tableName: string,
     idColumnName: string,
     reader: RecordReader<R, T>,

@@ -1,5 +1,7 @@
 import { AppVersion } from "ionic-native";
 
+declare const plugin: any;
+
 function padLeft(v: string, d: number, c?: string): string {
     if (v.length > d) return v;
     if (!c) c = " ";

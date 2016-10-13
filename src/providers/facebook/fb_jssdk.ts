@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 
-import { toPromise } from "../../util/promising";
-import { Logger } from "../../util/logging";
+import { FBConnectPlugin, FBConnectToken } from "./fb.d";
+import { toPromise } from "../util/promising";
+import { Logger } from "../util/logging";
 
 const logger = new Logger("FBJSSDK");
 

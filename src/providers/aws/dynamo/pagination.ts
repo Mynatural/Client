@@ -1,5 +1,5 @@
-import { Pager } from "../../../util/pager";
-import { Logger } from "../../../util/logging";
+import { Pager } from "../../util/pager";
+import { Logger } from "../../util/logging";
 
 import * as DC from "./document_client.d";
 import { DBRecord } from "./dynamo";
@@ -29,7 +29,7 @@ export class LastEvaluatedKey {
     }
 }
 
-abstract class DBPager<R extends DC.Item, T extends DBRecord<T>> implements Pager<T> {
+export abstract class DBPager<R extends DC.Item, T extends DBRecord<T>> implements Pager<T> {
     constructor(protected table: DynamoTable<R, T>) { }
     protected last: LastEvaluatedKey = new LastEvaluatedKey();
     private asking: Promise<Array<T>>;

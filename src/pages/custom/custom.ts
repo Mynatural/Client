@@ -8,12 +8,12 @@ import {Component,
 import { SafeUrl } from '@angular/platform-browser';
 import { ViewController, NavParams, ModalController } from "ionic-angular";
 
+import { SpecDialog } from "./spec_dialog";
 import * as Lineup from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
 import { Logger } from "../../util/logging";
 
 const logger = new Logger("CustomPage");
-
 
 @Component({
     selector: 'page-custom',
@@ -81,32 +81,5 @@ export class CustomPage {
     openSpec(spec: Lineup.ItemSpec) {
         logger.debug(() => `Open Spec: ${spec.info.key}`);
         this.modal.create(SpecDialog, { spec: spec }).present();
-    }
-}
-
-@Component({
-    selector: 'page-custom-spec_dialog',
-    templateUrl: 'spec_dialog.html'
-})
-class SpecDialog {
-    spec: Lineup.ItemSpec;
-    title: string;
-
-    textChoose = "選択";
-    priceUnit = "￥";
-
-    constructor(params: NavParams, private viewCtrl: ViewController) {
-        this.spec = params.get("spec");
-        this.title = this.spec.info.name;
-    }
-
-    close() {
-        this.viewCtrl.dismiss();
-    }
-
-    choose(v: Lineup.ItemSpecValue) {
-        logger.info(() => `Choose spec[${this.spec.info.key}]: ${v.info.key}`);
-        this.spec.current = v;
-        this.close();
     }
 }

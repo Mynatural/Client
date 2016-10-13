@@ -2,7 +2,9 @@ import { Logger } from "./logging";
 
 const logger = new Logger("withFabric");
 
-export function withFabric(proc: (f: Fabric) => any): void {
+declare const plugin: any;
+
+export function withFabric(proc: (f: any) => any): void {
     try {
         if (typeof plugin !== "undefined" && plugin.Fabric) {
             proc(plugin.Fabric);

@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Injectable } from "@angular/http";
-import { SafeUrl, DomSanitizationService } from '@angular/platform-browser';
-import { Storage, LocalStorage } from 'ionic-angular';
+import { Http } from "@angular/http";
+import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
+import { Storage } from '@ionic/storage';
 
 import { BootSettings } from "../config/boot_settings";
 import { assert } from "../../util/assertion";
 import { Logger } from "../../util/logging";
 import { Cognito } from "./cognito";
 
-import { AWS, S3, AWSRequest, requestToPromise } from "./aws";
+import { AWS, AWSRequest, requestToPromise } from "./aws";
 
 const logger = new Logger("S3File");
 
@@ -18,7 +18,7 @@ export class S3File {
         this.client = cognito.identity.then((x) => new AWS.S3());
     }
 
-    private client: Promise<S3>;
+    private client: Promise<any>;
 
     private async invoke<R>(proc: (s3client) => AWSRequest): Promise<R> {
         return requestToPromise<R>(proc(await this.client));
@@ -120,9 +120,7 @@ export class S3File {
 
 @Injectable()
 export class S3Image {
-    private local: Storage = new Storage(LocalStorage);
-
-    constructor(private s3: S3File, private sanitizer: DomSanitizationService) { }
+    constructor(private s3: S3File, private local: Storage, private sanitizer: DomSanitizer) { }
 
     async getUrl(s3path: string): Promise<SafeUrl> {
         assert("Caching S3 path", s3path);

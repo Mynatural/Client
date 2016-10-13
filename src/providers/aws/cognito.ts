@@ -1,4 +1,3 @@
-import { Storage, SqlStorage } from "ionic-angular";
 import { Injectable } from "@angular/core";
 
 import { BootSettings } from "../config/boot_settings";
@@ -30,6 +29,8 @@ interface CognitoIdentityCredentials {
         Logins: { [key: string]: string; }
     };
 }
+
+export type ChangedCognitoIdHook = (oldId: string, newId: string) => Promise<void>;
 
 @Injectable()
 export class Cognito {
@@ -151,9 +152,7 @@ export class Cognito {
     }
 }
 
-declare type ChangedCognitoIdHook = (oldId: string, newId: string) => Promise<void>;
-
-class CognitoIdentity {
+export class CognitoIdentity {
     constructor() {
         this.id = getCredentials().identityId;
         this.map = _.merge({}, getCredentials().params.Logins);

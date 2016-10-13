@@ -16,7 +16,7 @@
     <div *ngIf="isReady">
         <div class="main">
             <div class="reversible">
-                <div *ngFor="let sd of sides" @turnOver="onSide(sd)" [id]="sd">
+                <div *ngFor="let sd of sides" [@turnOver]="onSide(sd)" [id]="sd">
                     <div class="image">
                         <img [src]="item.getImage(sd)">
                     </div>
