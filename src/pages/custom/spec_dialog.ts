@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams } from "ionic-angular";
 
 import Lineup from "../../providers/model/lineup";
-import { Logger } from "../../util/logging";
+import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("SpecDialog");
 

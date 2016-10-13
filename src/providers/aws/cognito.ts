@@ -3,8 +3,8 @@ import { Injectable } from "@angular/core";
 import { BootSettings } from "../config/boot_settings";
 import { FBConnect } from "../facebook/fb_connect";
 import { Preferences } from "../config/preferences";
-import { withFabric } from "../../util/fabric";
-import { Logger } from "../../util/logging";
+import { withFabric } from "../util/fabric";
+import { Logger } from "../util/logging";
 
 import { AWS, ClientConfig } from "./aws";
 

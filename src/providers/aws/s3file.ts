@@ -4,8 +4,8 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { Storage } from '@ionic/storage';
 
 import { BootSettings } from "../config/boot_settings";
-import { assert } from "../../util/assertion";
-import { Logger } from "../../util/logging";
+import { assert } from "../util/assertion";
+import { Logger } from "../util/logging";
 import { Cognito } from "./cognito";
 
 import { AWS, AWSRequest, requestToPromise } from "./aws";

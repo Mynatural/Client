@@ -1,8 +1,8 @@
 import { Component, Input } from "@angular/core";
 import { Http, Response, Jsonp } from "@angular/http";
 
-import { toPromise } from "../../util/promising";
-import { Logger } from "../../util/logging";
+import { toPromise } from "../../providers/util/promising";
+import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("GistComponent");
 

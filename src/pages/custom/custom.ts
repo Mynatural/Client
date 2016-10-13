@@ -11,7 +11,7 @@ import { ViewController, NavParams, ModalController } from "ionic-angular";
 import { SpecDialog } from "./spec_dialog";
 import * as Lineup from "../../providers/model/lineup";
 import * as Info from "../../providers/model/lineup_info.d";
-import { Logger } from "../../util/logging";
+import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("CustomPage");
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Device } from "ionic-native";
 
-import { Logger } from "../../util/logging";
+import { Logger } from "../util/logging";
 
 import { FBConnectPlugin, FBConnectToken } from "./fb.d";
 import { FBJSSDK } from "./fb_jssdk";

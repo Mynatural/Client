@@ -1,4 +1,4 @@
-import { Logger } from "../../util/logging";
+import { Logger } from "../util/logging";
 
 export * from "aws-sdk";
 export const AWS = (window as any).AWS;

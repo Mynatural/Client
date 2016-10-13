@@ -3,8 +3,8 @@ import { SafeUrl } from '@angular/platform-browser';
 
 import * as Info from "./lineup_info.d";
 import { S3File, S3Image } from "../aws/s3file";
-import * as Base64 from "../../util/base64";
-import { Logger } from "../../util/logging";
+import * as Base64 from "../util/base64";
+import { Logger } from "../util/logging";
 
 const logger = new Logger("Lineup");
 

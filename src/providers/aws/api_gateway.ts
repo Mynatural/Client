@@ -1,8 +1,8 @@
 import { Http, Headers } from "@angular/http";
 
 import { ApiInfo } from "../config/configuration";
-import { toPromise } from "../../util/promising";
-import { Logger } from "../../util/logging";
+import { toPromise } from "../util/promising";
+import { Logger } from "../util/logging";
 
 const logger = new Logger("ApiGateway");
 

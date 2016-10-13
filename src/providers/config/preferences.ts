@@ -1,7 +1,7 @@
 import { Storage } from "@ionic/storage";
 import { Injectable } from "@angular/core";
 
-import { Logger } from "../../util/logging";
+import { Logger } from "../util/logging";
 
 const logger = new Logger("Preferences");
 

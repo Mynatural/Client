@@ -4,7 +4,7 @@ import { NavController } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";
 import * as Lineup from "../../providers/model/lineup";
-import { Logger } from "../../util/logging";
+import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("HomePage");
 
