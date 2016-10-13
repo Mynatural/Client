@@ -1,0 +1,33 @@
+diff --git a/node_modules/@ionic/app-scripts/config/rollup.config.js b/node_modules/@ionic/app-scripts/config/rollup.config.js
+index eed9dbf..25affa9 100644
+--- a/node_modules/@ionic/app-scripts/config/rollup.config.js
++++ b/node_modules/@ionic/app-scripts/config/rollup.config.js
+@@ -3,6 +3,7 @@ var commonjs = require('rollup-plugin-commonjs');
+ var globals = require('rollup-plugin-node-globals');
+ var builtins = require('rollup-plugin-node-builtins');
+ var json = require('rollup-plugin-json');
++var babel = require('rollup-plugin-babel');
+
+
+ // https://github.com/rollup/rollup/wiki/JavaScript-API
+@@ -46,6 +47,7 @@ var rollupConfig = {
+       extensions: ['.js']
+     }),
+     globals(),
++    babel(),
+     json()
+   ]
+
+diff --git a/node_modules/@ionic/app-scripts/dist/transpile.js b/node_modules/@ionic/app-scripts/dist/transpile.js
+index 42cf066..2a6cb67 100644
+--- a/node_modules/@ionic/app-scripts/dist/transpile.js
++++ b/node_modules/@ionic/app-scripts/dist/transpile.js
+@@ -121,8 +121,6 @@ function getCompilerOptions(rootDir) {
+ }
+ exports.getCompilerOptions = getCompilerOptions;
+ function setCompilerOptionDefaults(compilerOptions) {
+-    compilerOptions.target = 'es5';
+-    compilerOptions.module = 'es2015';
+ }
+ var resolveHost = {
+     directoryExists: function (dirPath) {
