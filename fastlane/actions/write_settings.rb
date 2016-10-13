@@ -2,10 +2,17 @@ module Fastlane
   module Actions
     class WriteSettingsAction < Action
       def self.run(params)
-        require 'yaml'
+        require 'json'
 
-        target = File.join('www', 'settings.yaml')
-        settings = YAML::load_file(target)
+        src = File.join('src', 'assets', 'settings.json')
+        target = File.join('www', 'settings.json')
+        if File.exist?(src) then
+          rewrite(src, target)
+        end
+      end
+
+      def self.rewrite(src, target)
+        settings = JSON.load(src)
 
         settings.each do |key, name|
           m = /^\${(\w+)}$/.match name
@@ -15,7 +22,7 @@ module Fastlane
         end
 
         puts "Rewriting #{target}"
-        File.write(target, settings.to_yaml)
+        File.write(target, JSON.pretty_generate(settings))
       end
 
       #####################################################

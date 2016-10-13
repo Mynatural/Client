@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Http, Response } from "@angular/http";
-import * as yaml from "js-yaml";
 
-import { toPromise } from "../../util/promising";
-import { Logger } from "../../util/logging";
+import { toPromise } from "../util/promising";
+import { Logger } from "../util/logging";
 
 const logger = new Logger("BootSettings");
 
@@ -15,9 +14,9 @@ export class BootSettings {
 
     private async get(key: string): Promise<string> {
         if (_.isNil(BootSettings.src)) {
-            logger.debug(() => `Loading settings.yaml ...`);
-            const res = await toPromise(this.http.get("settings.yaml"));
-            BootSettings.src = yaml.load(res.text());
+            logger.debug(() => `Loading settings.json...`);
+            const res = await toPromise(this.http.get("settings.json"));
+            BootSettings.src = JSON.parse(res.text());
         }
         return BootSettings.src[key];
     }
