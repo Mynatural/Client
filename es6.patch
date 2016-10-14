@@ -14,7 +14,7 @@ index eed9dbf..25affa9 100644
        extensions: ['.js']
      }),
      globals(),
-+    babel(),
++    babel({ exclude: 'node_modules/**'}),
      json()
    ]
 
