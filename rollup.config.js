@@ -37,7 +37,9 @@ var rollupConfig = {
    */
   plugins: [
     builtins(),
-    commonjs(),
+    commonjs({
+      exclude: [ 'node_modules/aws-sdk/**' ]
+    }),
     nodeResolve({
       module: true,
       jsnext: true,
