@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from "@angular/platform-browser";
 import { NavController } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";

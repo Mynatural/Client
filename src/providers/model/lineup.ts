@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from "@angular/platform-browser";
 
 import * as Info from "./lineup_info.d";
 import { S3File, S3Image } from "../aws/s3file";

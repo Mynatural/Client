@@ -1,12 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { App, Platform, Nav } from 'ionic-angular';
-import { AppVersion, StatusBar, Splashscreen } from 'ionic-native';
+import { Component, ViewChild } from "@angular/core";
+import { App, Platform, Nav } from "ionic-angular";
+import { AppVersion, StatusBar, Splashscreen } from "ionic-native";
 
-import { HomePage } from '../pages/home/home';
-import { HelpPage } from '../pages/help/help';
-import { TermsPage } from '../pages/terms/terms';
-import { withFabric } from '../providers/util/fabric';
-import { Logger } from '../providers/util/logging';
+import { HomePage } from "../pages/home/home";
+import { HelpPage } from "../pages/help/help";
+import { TermsPage } from "../pages/terms/terms";
+import { withFabric } from "../providers/util/fabric";
+import { Logger } from "../providers/util/logging";
 
 @Component({
     templateUrl: "app.component.html"

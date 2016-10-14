@@ -5,7 +5,7 @@ import {Component,
   transition,
   keyframes,
   animate} from "@angular/core";
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from "@angular/platform-browser";
 import { ViewController, NavParams, ModalController } from "ionic-angular";
 
 import { SpecDialog } from "./spec_dialog";
