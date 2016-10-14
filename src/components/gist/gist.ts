@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Http, Response, Jsonp } from "@angular/http";
+import { Http, Jsonp } from "@angular/http";
 
 import { toPromise } from "../../providers/util/promising";
 import { Logger } from "../../providers/util/logging";

@@ -1,7 +1,6 @@
 import { Device } from "ionic-native";
 import { Injectable } from "@angular/core";
 
-import { BootSettings } from "./boot_settings";
 import { S3File } from "../aws/s3file";
 import { Logger } from "../util/logging";
 
@@ -15,6 +14,7 @@ export class Configuration {
     constructor(private s3: S3File) { }
 
     private async loadS3(path: string): Promise<{ [key: string]: any }> {
+        logger.info(() => `Loading settings file: ${path}`);
         return JSON.parse(await this.s3.read(path));
     }
 

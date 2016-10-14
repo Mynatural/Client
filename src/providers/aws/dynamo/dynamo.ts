@@ -1,7 +1,6 @@
 import { Storage } from "@ionic/storage";
 import { Injectable } from "@angular/core";
 
-import { Pager } from "../../util/pager";
 import { Logger } from "../../util/logging";
 
 import { AWS, requestToPromise } from "../aws";
