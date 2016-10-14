@@ -15,11 +15,6 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-@import "custom";
-
-@import "ionic2-custom-icons";
-@import "fathens-icons";
-
 @mixin font-spec($name, $surfix, $style, $weight, $size: "") {
   font: {
     family: $name + $surfix;
