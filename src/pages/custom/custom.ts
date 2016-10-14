@@ -19,7 +19,7 @@ const logger = new Logger("CustomPage");
     selector: 'page-custom',
     templateUrl: 'custom.html',
     animations: [
-        trigger("turnOver", [
+        trigger("turnOver", [/*
             state("active", style({display: "flex"})),
             state("inactive", style({display: "none"})),
             transition(`${"active"} => ${"inactive"}`, [
@@ -35,7 +35,7 @@ const logger = new Logger("CustomPage");
                     style({transform: "rotateY(-90deg)"}),
                     style({transform: "rotateY(0)"})
                 ]))
-            ])
+            ])*/
         ])
     ]
 })
