@@ -1,5 +1,7 @@
 {
   "rules": {
+    "indent": [true, "spaces"],
+    "eofline": true,
     "no-duplicate-variable": true,
     "no-unused-variable": [
       true
