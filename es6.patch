@@ -17,17 +17,3 @@ index eed9dbf..25affa9 100644
 +    babel({ exclude: 'node_modules/**'}),
      json()
    ]
-
-diff --git a/node_modules/@ionic/app-scripts/dist/transpile.js b/node_modules/@ionic/app-scripts/dist/transpile.js
-index 42cf066..2a6cb67 100644
---- a/node_modules/@ionic/app-scripts/dist/transpile.js
-+++ b/node_modules/@ionic/app-scripts/dist/transpile.js
-@@ -121,8 +121,6 @@ function getCompilerOptions(rootDir) {
- }
- exports.getCompilerOptions = getCompilerOptions;
- function setCompilerOptionDefaults(compilerOptions) {
--    compilerOptions.target = 'es5';
--    compilerOptions.module = 'es2015';
- }
- var resolveHost = {
-     directoryExists: function (dirPath) {
