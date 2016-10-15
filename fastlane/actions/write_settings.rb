@@ -12,7 +12,10 @@ module Fastlane
       end
 
       def self.rewrite(src, target)
-        settings = JSON.load(src)
+        settings = nil
+        File.open(src) do |file|
+          settings = JSON.load(file)
+        end
 
         settings.each do |key, name|
           m = /^\${(\w+)}$/.match name
