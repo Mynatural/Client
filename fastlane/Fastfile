@@ -26,7 +26,7 @@ before_all do
   adjust_buildnum(0)
 
   Dir.chdir('..') do
-    sh("gulp build")
+    sh("ionic build")
   end
 
   write_settings
