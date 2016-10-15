@@ -53,11 +53,3 @@ ion-menu {
         @include font-bold();
     }
 }
-
-@import "../components/gist/gist";
-
-@import "../pages/home/home";
-@import "../pages/help/help";
-@import "../pages/terms/terms";
-@import "../pages/custom/custom";
-@import "../pages/custom/spec_dialog";

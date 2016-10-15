@@ -8,6 +8,7 @@ import { Logger } from "../../providers/util/logging";
 const logger = new Logger("HomePage");
 
 @Component({
+    selector: 'page-home',
     templateUrl: 'home.html'
 })
 export class HomePage {

@@ -3,6 +3,7 @@ import { Component, ViewChild } from "@angular/core";
 import { GistComponent } from "../../components/gist/gist";
 
 @Component({
+    selector: 'page-terms',
     templateUrl: 'terms.html'
 })
 export class TermsPage {
