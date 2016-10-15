@@ -4,7 +4,7 @@ module Fastlane
       def self.run(params)
         require 'json'
 
-        src = File.join('src', 'assets', 'settings.json')
+        src = File.join('src', 'settings.json')
         target = File.join('www', 'settings.json')
         if File.exist?(src) then
           rewrite(src, target)
