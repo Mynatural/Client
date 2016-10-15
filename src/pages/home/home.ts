@@ -2,7 +2,8 @@ import { Component } from "@angular/core";
 import { NavController } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";
-import * as Lineup from "../../providers/model/lineup";
+import { LineupController } from "../../providers/model/lineup/lineup";
+import { ItemGroup, Item } from "../../providers/model/lineup/item";
 import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("HomePage");
@@ -15,7 +16,7 @@ export class HomePage {
     static title = "ショップ";
     static icon = "home";
     title = HomePage.title;
-    items: Lineup.Item[];
+    items: Item[];
 
     slideOptions = {
         loop: true,
@@ -29,9 +30,9 @@ export class HomePage {
         "で作っちゃおう！"
     ];
 
-    constructor(public nav: NavController, private lineups: Lineup.Lineup) {
-        lineups.all.then((list) => {
-            this.items = list;
+    constructor(public nav: NavController, lineup: LineupController) {
+        ItemGroup.byAll(lineup).then((group) => {
+            this.items = group.availables;
         });
     }
 
@@ -39,7 +40,7 @@ export class HomePage {
         return !_.isNil(this.items);
     }
 
-    choose(item: Lineup.Item) {
+    choose(item: Item) {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
             key: item.key,
