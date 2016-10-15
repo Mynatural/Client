@@ -31,20 +31,23 @@ var rollupConfig = {
    */
   dest: 'main.js',
 
+  globals: {
+    'aws-sdk': 'AWS'
+  },
+
   /**
    * plugins: Array of plugin objects, or a single plugin object.
    * See https://github.com/rollup/rollup/wiki/Plugins for more info.
    */
   plugins: [
     builtins(),
-    commonjs({
-      exclude: [ 'node_modules/aws-sdk/**' ]
-    }),
+    commonjs(),
     nodeResolve({
       module: true,
       jsnext: true,
       main: true,
       browser: true,
+      skip: ['aws-sdk'],
       extensions: ['.js']
     }),
     globals(),
