@@ -2,8 +2,10 @@ import { Component, trigger } from "@angular/core";
 import { NavParams, ModalController } from "ionic-angular";
 
 import { SpecDialog } from "./spec_dialog";
-import * as Lineup from "../../providers/model/lineup";
-import * as Info from "../../providers/model/lineup_info.d";
+import { SPEC_SIDES } from "../../providers/model/lineup/lineup";
+import { Item } from "../../providers/model/lineup/item";
+import { SpecGroup } from "../../providers/model/lineup/spec";
+import * as Info from "../../providers/model/lineup/_info.d";
 import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("CustomPage");
@@ -18,19 +20,17 @@ const logger = new Logger("CustomPage");
 })
 export class CustomPage {
     title: string;
-    item: Lineup.Item;
+    item: Item;
 
-    sides = ["FRONT", "BACK"];
+    sides = SPEC_SIDES.toArray();
     side: Info.SpecSide = "FRONT";
 
     priceMessage = "現在のお値段";
     priceUnit = "￥";
 
-    constructor(params: NavParams, private modal: ModalController, private lineup: Lineup.Lineup) {
+    constructor(params: NavParams, private modal: ModalController) {
         this.title = params.get("name");
-        lineup.get(params.get("key")).then((item) => {
-            this.item = item;
-        });
+        this.item = params.get("key");
     }
 
     get isReady(): boolean {
@@ -45,18 +45,18 @@ export class CustomPage {
         this.side = _.isEqual(this.side, "FRONT") ? "BACK" : "FRONT";
     }
 
-    private filterSpecs(side: Info.SpecSide): Lineup.ItemSpec[] {
-        return _.filter(this.item.specs, (spec) => {
-            return _.includes(spec.info.sides, side);
+    private filterSpecs(side: Info.SpecSide): SpecGroup[] {
+        return _.filter(this.item.specGroups, (sg) => {
+            return _.isEqual(sg.side, side);
         });
     }
 
-    getSpecs(side: Info.SpecSide): Lineup.ItemSpec[] {
+    getSpecs(side: Info.SpecSide): SpecGroup[] {
         return this.filterSpecs(side);
     }
 
-    openSpec(spec: Lineup.ItemSpec) {
-        logger.debug(() => `Open Spec: ${spec.info.key}`);
+    openSpec(spec: SpecGroup) {
+        logger.debug(() => `Open Spec: ${spec.key}`);
         this.modal.create(SpecDialog, { spec: spec }).present();
     }
 }

@@ -1,13 +1,10 @@
-import {Injectable} from "@angular/core";
-
 import * as Json from "./_info.d";
-import {LineupController} from "./lineup";
-import {SpecGroup, Spec} from "./spec";
-import {Measure} from "./measure";
-import {S3Image, CachedImage} from "../../aws/s3file";
-import {InputInterval} from "../../../util/input_interval";
-import * as Base64 from "../../../util/base64";
-import {Logger} from "../../../util/logging";
+import { LineupController } from "./lineup";
+import { SpecGroup } from "./spec";
+import { Measure } from "./measure";
+import { CachedImage } from "../../aws/s3file";
+import { InputInterval } from "../../util/input_interval";
+import { Logger } from "../../util/logging";
 
 const logger = new Logger("Lineup.Item");
 
