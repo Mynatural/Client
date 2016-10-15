@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button icon-only menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            {{title}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding class="home">
+    <div class="top-message">
+        <p *ngFor="let msg of topMessages; let i = index" class="m{{i}}">{{msg}}</p>
+    </div>
+    <div class="main">
+        <ion-spinner *ngIf="!isReady"></ion-spinner>
+        <ion-slides *ngIf="isReady" [options]="slideOptions">
+            <ion-slide *ngFor="let item of items">
+                <div class="slide-content" (click)="choose(item)">
+                    <h1>{{item.name}}</h1>
+                    <ion-spinner *ngIf="!item.titleImage"></ion-spinner>
+                    <img *ngIf="item.titleImage" [src]="item.titleImage">
+                </div>
+            </ion-slide>
+        </ion-slides>
+    </div>
+</ion-content>

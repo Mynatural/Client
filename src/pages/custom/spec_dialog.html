@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            {{title}}
+        </ion-title>
+        <ion-buttons start>
+            <button ion-button icon-only (click)="close()">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content id="spec-dialog">
+    <ion-list>
+        <ion-card *ngFor="let value of spec.availables">
+            <div *ngIf="!value.image" class="loading">
+                <ion-spinner></ion-spinner>
+            </div>
+            <img *ngIf="value.image" [src]="value.image">
+            <ion-card-content>
+                <ion-card-title>{{value.info.name}}</ion-card-title>
+                <p>{{value.info.description}}</p>
+                <ion-list class="options">
+                    <ion-item *ngFor="let o of value.options">
+                        <ion-label>{{o.info.name}}</ion-label>
+                        <ion-select [(ngModel)]="o.current" [selectedText]="o.current.info.name">
+                            <ion-option *ngFor="let a of o.availables" [value]="a" [selected]="a.info.key == o.current.info.key">
+                                {{a.info.name}}
+                                <img [src]="a.image">
+                            </ion-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-list>
+                <div class="footer">
+                    <div class="price">
+                        <p class="unit">{{priceUnit}}</p>
+                        <p class="value">{{value.price | number}}</p>
+                        <p class="surfix">-</p>
+                    </div>
+                    <button ion-button (click)="choose(value)" color="favorite">{{textChoose}}</button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+</ion-content>
