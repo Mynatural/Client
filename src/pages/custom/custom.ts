@@ -41,7 +41,6 @@ const logger = new Logger("CustomPage");
     ]
 })
 export class CustomPage {
-    title: string;
     item: Item;
 
     sides = SPEC_SIDES.toArray();
@@ -51,8 +50,11 @@ export class CustomPage {
     priceUnit = "￥";
 
     constructor(params: NavParams, private modal: ModalController) {
-        this.title = params.get("name");
-        this.item = params.get("key");
+        this.item = params.get("item");
+    }
+
+    get title(): string {
+        return this.item.name;
     }
 
     get isReady(): boolean {

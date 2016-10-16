@@ -43,8 +43,7 @@ export class HomePage {
     choose(item: Item) {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
-            key: item.key,
-            name: item.name
+            item: item
         });
     }
 }
