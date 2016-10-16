@@ -24,14 +24,14 @@ const logger = new Logger("CustomPage");
             state("active", style({display: "flex"})),
             state("inactive", style({display: "none"})),
             transition("active => inactive", [
-                animate("0.5s 0s ease";, keyframes([
+                animate("0.5s 0s ease", keyframes([
                     style({transform: "rotateY(0)"}),
                     style({transform: "rotateY(90deg)"}),
                     style({transform: "rotateY(90deg)"})
                 ]))
             ]),
             transition("inactive => active", [
-                animate("0.5s 0s ease";, keyframes([
+                animate("0.5s 0s ease", keyframes([
                     style({transform: "rotateY(-90deg)"}),
                     style({transform: "rotateY(-90deg)"}),
                     style({transform: "rotateY(0)"})
