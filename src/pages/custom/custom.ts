@@ -1,4 +1,10 @@
-import { Component, trigger } from "@angular/core";
+import { Component,
+        trigger,
+        state,
+        style,
+        transition,
+        keyframes,
+        animate } from "@angular/core";
 import { NavParams, ModalController } from "ionic-angular";
 
 import { SpecDialog } from "./spec_dialog";
@@ -15,6 +21,22 @@ const logger = new Logger("CustomPage");
     templateUrl: 'custom.html',
     animations: [
         trigger("turnOver", [
+            state("active", style({display: "flex"})),
+            state("inactive", style({display: "none"})),
+            transition("active => inactive", [
+                animate("0.5s 0s ease", keyframes([
+                    style({transform: "rotateY(0)"}),
+                    style({transform: "rotateY(90deg)"}),
+                    style({transform: "rotateY(90deg)"})
+                ]))
+            ]),
+            transition("inactive => active", [
+                animate("0.5s 0s ease", keyframes([
+                    style({transform: "rotateY(-90deg)"}),
+                    style({transform: "rotateY(-90deg)"}),
+                    style({transform: "rotateY(0)"})
+                ]))
+            ])
         ])
     ]
 })
