@@ -21,8 +21,8 @@
                         <img [src]="item.getImage(sd)">
                     </div>
                     <div class="controllers">
-                        <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key" (click)="openSpec(spec)">
-                            {{spec.info.name}}
+                        <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.key" (click)="openSpec(spec)">
+                            {{spec.name}}
                         </button>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
             <p class="value">{{priceUnit}}{{item.totalPrice | number}}-</p>
         </div>
         <div class="measurements">
-            <ion-item *ngFor="let meas of item.measurements" [class]="meas.info.key">
-                <ion-label>{{meas.info.name}}</ion-label>
+            <ion-item *ngFor="let meas of item.measurements" [class]="meas.key">
+                <ion-label>{{meas.name}}</ion-label>
                 <ion-select [(ngModel)]="meas.current" [selectedText]="meas.current | number">
                     <ion-option *ngFor="let v of meas.range" [value]="v" [selected]="v == meas.current">
                         <img [src]="item.imageBack">
@@ -51,9 +51,9 @@
             </ion-item>
         </div>
         <div *ngFor="let sd of sides" class="specs">
-            <div *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key">
-                <p>{{spec.info.name}}</p>
-                <p (click)="openSpec(spec.info.key)">{{spec.currentValue.name}}</p>
+            <div *ngFor="let spec of getSpecs(sd)" [class]="spec.key">
+                <p>{{spec.name}}</p>
+                <p (click)="openSpec(spec.key)">{{spec.current.name}}</p>
             </div>
         </div>
     </div>
