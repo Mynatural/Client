@@ -1,10 +1,10 @@
-import {Component,
-  trigger,
-  state,
-  style,
-  transition,
-  keyframes,
-  animate} from "@angular/core";
+import { Component,
+        trigger,
+        state,
+        style,
+        transition,
+        keyframes,
+        animate } from "@angular/core";
 import { NavParams, ModalController } from "ionic-angular";
 
 import { SpecDialog } from "./spec_dialog";
