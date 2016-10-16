@@ -192,7 +192,7 @@ function combinations(lists: any[][]): any[][] {
     }
 }
 
-class Illustration {
+export class Illustration {
     constructor(private s3image: S3Image) { }
 
     private async upload(pathList: string[], file: File): Promise<void> {
@@ -248,7 +248,7 @@ class Illustration {
     }
 }
 
-type DoThru = () => Promise<void>;
+export type DoThru = () => Promise<void>;
 
 async function refresh(item: Item): Promise<void> {
     await item.writeInfo();
@@ -267,7 +267,7 @@ async function refresh(item: Item): Promise<void> {
     });
 }
 
-class OnChanging {
+export class OnChanging {
     constructor(private s3: S3File) { }
 
     private async moveFiles(srcList: string[], dstList: string[]): Promise<boolean> {
@@ -377,7 +377,7 @@ class OnChanging {
     }
 }
 
-class OnRemoving {
+export class OnRemoving {
     constructor(private s3: S3File) { }
 
     async removeFiles(list: string[]): Promise<void> {
