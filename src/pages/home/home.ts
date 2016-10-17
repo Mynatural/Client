@@ -15,15 +15,11 @@ const logger = new Logger("HomePage");
 export class HomePage {
     static title = "ショップ";
     static icon = "home";
-    title = HomePage.title;
-    items: Item[];
 
-    slideOptions = {
-        loop: true,
-        pager: true,
-        autoplay: 3000,
-        speed: 700
-    };
+    readonly title = HomePage.title;
+    itemGroup: ItemGroup;
+    items: Item[];
+    slideOptions;
 
     topMessages = [
         "カスタムメイド",
@@ -32,12 +28,21 @@ export class HomePage {
 
     constructor(public nav: NavController, lineup: LineupController) {
         ItemGroup.byAll(lineup).then((group) => {
-            this.items = group.availables;
+            this.itemGroup = group;
         });
     }
 
     get isReady(): boolean {
-        return !_.isNil(this.items);
+        if (!_.isNil(this.itemGroup) && _.every(this.itemGroup.availables, (item) => !item.titleImage.isLoading) && _.isNil(this.slideOptions)) {
+            this.items = _.filter(this.itemGroup.availables, (item) => item.titleImage.url);
+            this.slideOptions = {
+                loop: _.size(this.items) > 1 ? true : false,
+                pager: true,
+                autoplay: 3000,
+                speed: 700
+            };
+        }
+        return !_.isNil(this.slideOptions);
     }
 
     choose(item: Item) {
