@@ -21,7 +21,7 @@
                         <fathens-cached_image [target]="item.getImage(sd)"></fathens-cached_image>
                     </div>
                     <div class="controllers">
-                        <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.key" (click)="openSpec(spec)">
+                        <button ion-button *ngFor="let spec of getSpecs(sd)" [id]="spec.key" (click)="openSpec(spec)">
                             {{spec.name}}
                         </button>
                     </div>
