@@ -12,6 +12,7 @@ import { HomePage } from "../pages/home/home";
 import { TermsPage } from "../pages/terms/terms";
 
 import { GistComponent } from "../components/gist/gist";
+import { CachedImageComponent } from "../components/cached_image/cached_image";
 
 import { BootSettings } from "../providers/config/boot_settings";
 import { Configuration } from "../providers/config/configuration";
@@ -27,6 +28,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
     declarations: [
         MyApp,
         GistComponent,
+        CachedImageComponent,
         CustomPage,
         SpecDialog,
         HelpPage,

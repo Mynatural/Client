@@ -18,7 +18,7 @@
             <div class="reversible">
                 <div *ngFor="let sd of sides" [@turnOver]="onSide(sd)" [id]="sd">
                     <div class="image">
-                        <img [src]="item.getImage(sd).url">
+                        <fathens-cached_image [target]="item.getImage(sd)"></fathens-cached_image>
                     </div>
                     <div class="controllers">
                         <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.key" (click)="openSpec(spec)">

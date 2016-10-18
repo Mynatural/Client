@@ -17,7 +17,7 @@
             <div *ngIf="!value.image" class="loading">
                 <ion-spinner></ion-spinner>
             </div>
-            <img *ngIf="value.image" [src]="value.image">
+            <fathens-cached_image [target]="value.image"></fathens-cached_image>
             <ion-card-content>
                 <ion-card-title>{{value.name}}</ion-card-title>
                 <p>{{value.description}}</p>
@@ -27,7 +27,7 @@
                         <ion-select [(ngModel)]="o.current" [selectedText]="o.current.name">
                             <ion-option *ngFor="let a of o.availables" [value]="a" [selected]="a.key == o.current.key">
                                 {{a.name}}
-                                <img [src]="a.image.url">
+                                <fathens-cached_image [target]="a.image"></fathens-cached_image>
                             </ion-option>
                         </ion-select>
                     </ion-item>
