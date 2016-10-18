@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { NavController } from "ionic-angular";
+import { Component, ViewChild } from "@angular/core";
+import { NavController, Slides } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";
 import { LineupController } from "../../providers/model/lineup/lineup";
@@ -20,6 +20,7 @@ export class HomePage {
     itemGroup: ItemGroup;
     items: Item[];
     slideOptions;
+    @ViewChild('slides') slides: Slides;
 
     topMessages = [
         "カスタムメイド",
@@ -45,8 +46,11 @@ export class HomePage {
         return !_.isNil(this.slideOptions);
     }
 
-    choose(item: Item) {
-        logger.info(() => `Choose ${item.key}`);
+    choose() {
+        const active = this.slides.getActiveIndex();
+        const index = (active - 1) % _.size(this.items);
+        const item = this.items[index];
+        logger.info(() => `Choose ${item.key} at ${index}(${active})`);
         this.nav.push(CustomPage, {
             item: item
         });

@@ -15,9 +15,9 @@
     </div>
     <div class="main">
         <ion-spinner *ngIf="!isReady"></ion-spinner>
-        <ion-slides *ngIf="isReady" [options]="slideOptions">
+        <ion-slides #slides *ngIf="isReady" [options]="slideOptions" (click)="choose()">
             <ion-slide *ngFor="let item of items">
-                <div class="slide-content" (click)="choose(item)">
+                <div class="slide-content">
                     <h1>{{item.name}}</h1>
                     <img [src]="item.titleImage.url">
                 </div>
