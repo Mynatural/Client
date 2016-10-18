@@ -21,9 +21,11 @@
                         <fathens-cached_image [target]="item.getImage(sd)"></fathens-cached_image>
                     </div>
                     <div class="controllers">
-                        <button ion-button *ngFor="let spec of getSpecs(sd)" [id]="spec.key" (click)="openSpec(spec)">
-                            {{spec.name}}
-                        </button>
+                        <div *ngFor="let spec of getSpecs(sd)" [id]="spec.key">
+                            <button ion-button (click)="openSpec(spec)">
+                                {{spec.name}}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,9 +52,9 @@
             </ion-item>
         </div>
         <div *ngFor="let sd of sides" class="specs">
-            <div *ngFor="let spec of getSpecs(sd)" [class]="spec.key">
+            <div *ngFor="let spec of getSpecs(sd)" [id]="spec.key">
                 <p>{{spec.name}}</p>
-                <p (click)="openSpec(spec.key)">{{spec.current.name}}</p>
+                <p (click)="openSpec(spec)">{{spec.current.name}}</p>
             </div>
         </div>
     </div>
