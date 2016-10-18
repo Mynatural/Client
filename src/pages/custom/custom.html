@@ -18,7 +18,7 @@
             <div class="reversible">
                 <div *ngFor="let sd of sides" [@turnOver]="onSide(sd)" [id]="sd">
                     <div class="image">
-                        <img [src]="item.getImage(sd)">
+                        <img [src]="item.getImage(sd).url">
                     </div>
                     <div class="controllers">
                         <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.key" (click)="openSpec(spec)">
@@ -44,7 +44,6 @@
                 <ion-label>{{meas.name}}</ion-label>
                 <ion-select [(ngModel)]="meas.current" [selectedText]="meas.current | number">
                     <ion-option *ngFor="let v of meas.range" [value]="v" [selected]="v == meas.current">
-                        <img [src]="item.imageBack">
                         {{v | number}}
                     </ion-option>
                 </ion-select>
