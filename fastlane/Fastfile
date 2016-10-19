@@ -26,7 +26,7 @@ before_all do
   adjust_buildnum(0)
 
   Dir.chdir('..') do
-    sh("ionic build")
+    sh("npm run build")
   end
 
   write_settings
