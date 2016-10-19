@@ -29,6 +29,7 @@ before_install:
 install:
 - gem install bundler --no-document
 - bundle install
+- pod repo update --verbose
 - (npm install || npm install) && npm install -g ionic cordova
 - test "$PLATFORM" != "android" || brew install android && export ANDROID_HOME=$(brew --prefix android)
 script:
