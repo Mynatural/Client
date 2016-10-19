@@ -17,17 +17,17 @@
             <div *ngIf="!value.image" class="loading">
                 <ion-spinner></ion-spinner>
             </div>
-            <img *ngIf="value.image" [src]="value.image">
+            <fathens-cached_image [target]="value.image"></fathens-cached_image>
             <ion-card-content>
-                <ion-card-title>{{value.info.name}}</ion-card-title>
-                <p>{{value.info.description}}</p>
+                <ion-card-title>{{value.name}}</ion-card-title>
+                <p>{{value.description}}</p>
                 <ion-list class="options">
                     <ion-item *ngFor="let o of value.options">
-                        <ion-label>{{o.info.name}}</ion-label>
-                        <ion-select [(ngModel)]="o.current" [selectedText]="o.current.info.name">
-                            <ion-option *ngFor="let a of o.availables" [value]="a" [selected]="a.info.key == o.current.info.key">
-                                {{a.info.name}}
-                                <img [src]="a.image">
+                        <ion-label>{{o.name}}</ion-label>
+                        <ion-select [(ngModel)]="o.current" [selectedText]="o.current.name">
+                            <ion-option *ngFor="let a of o.availables" [value]="a" [selected]="a.key == o.current.key">
+                                {{a.name}}
+                                <fathens-cached_image [target]="a.image"></fathens-cached_image>
                             </ion-option>
                         </ion-select>
                     </ion-item>

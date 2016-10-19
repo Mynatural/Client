@@ -1,0 +1,11 @@
+fathens-cached_image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .no-image {
+        color: red;
+        font-family: "Helvetica";
+    }
+}

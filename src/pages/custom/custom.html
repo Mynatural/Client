@@ -18,12 +18,14 @@
             <div class="reversible">
                 <div *ngFor="let sd of sides" [@turnOver]="onSide(sd)" [id]="sd">
                     <div class="image">
-                        <img [src]="item.getImage(sd)">
+                        <fathens-cached_image [target]="item.getImage(sd)"></fathens-cached_image>
                     </div>
                     <div class="controllers">
-                        <button ion-button *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key" (click)="openSpec(spec)">
-                            {{spec.info.name}}
-                        </button>
+                        <div *ngFor="let spec of getSpecs(sd)" [id]="spec.key">
+                            <button ion-button (click)="openSpec(spec)">
+                                {{spec.name}}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -40,20 +42,19 @@
             <p class="value">{{priceUnit}}{{item.totalPrice | number}}-</p>
         </div>
         <div class="measurements">
-            <ion-item *ngFor="let meas of item.measurements" [class]="meas.info.key">
-                <ion-label>{{meas.info.name}}</ion-label>
+            <ion-item *ngFor="let meas of item.measurements" [class]="meas.key">
+                <ion-label>{{meas.name}}</ion-label>
                 <ion-select [(ngModel)]="meas.current" [selectedText]="meas.current | number">
                     <ion-option *ngFor="let v of meas.range" [value]="v" [selected]="v == meas.current">
-                        <img [src]="item.imageBack">
                         {{v | number}}
                     </ion-option>
                 </ion-select>
             </ion-item>
         </div>
         <div *ngFor="let sd of sides" class="specs">
-            <div *ngFor="let spec of getSpecs(sd)" [class]="spec.info.key">
-                <p>{{spec.info.name}}</p>
-                <p (click)="openSpec(spec.info.key)">{{spec.currentValue.name}}</p>
+            <div *ngFor="let spec of getSpecs(sd)" [id]="spec.key">
+                <p>{{spec.name}}</p>
+                <p (click)="openSpec(spec)">{{spec.current.name}}</p>
             </div>
         </div>
     </div>
