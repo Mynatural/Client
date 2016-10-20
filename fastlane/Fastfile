@@ -25,13 +25,12 @@ before_all do
 
   adjust_buildnum(0)
 
-  Dir.chdir('..') do
-    if !File.exist? 'www' then
+  if !File.exist? 'www' then
+    Dir.chdir('..') do
       sh("npm run build")
-
-      write_settings
-      cache_index
     end
+    write_settings
+    cache_index
   end
 
   cordova(plugins: [
