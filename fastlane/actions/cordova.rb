@@ -9,9 +9,6 @@ module Fastlane
       end
 
       def self.cordova(plugins)
-        puts "Checking Cordova ..."
-        system('cordova -v')
-
         dirs = [Pathname('plugins'), Pathname('platforms')/ENV["FASTLANE_PLATFORM_NAME"]]
         if !dirs.all? { |x| x.exist? } then
           dirs.each do |dir|
@@ -29,9 +26,6 @@ module Fastlane
       end
 
       def self.ionic
-        puts "Checking ionic ..."
-        system('ionic -v')
-
         dir = Pathname('resources')
         if !(dir/ENV["FASTLANE_PLATFORM_NAME"]).exist? then
           use_png(dir, 'icon')
