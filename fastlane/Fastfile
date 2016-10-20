@@ -1,13 +1,13 @@
-require 'xcodeproj'
+require 'pathname'
 
 fastlane_version "1.39.0"
 
 def persistent(*paths)
-  File.absolute_path(File.join('persistent', *paths))
+  Pathname('persistent').join(*paths).realpath
 end
 
 def into_platform &block
-  dir = File.join('..', 'platforms', ENV["FASTLANE_PLATFORM_NAME"], 'fastlane')
+  dir = Pathname('..')/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]/'fastlane'
   FileUtils.mkdir_p dir
   Dir.chdir(dir) do
     block.call
@@ -20,18 +20,23 @@ def adjust_buildnum(offset)
   puts "Adjusted BuildNum: #{ENV['BUILD_NUM']}"
 end
 
-before_all do
-  into_mode
-
-  adjust_buildnum(0)
-
-  if !File.exist? 'www' then
-    Dir.chdir('..') do
+def createWWW
+  base = Pathname('..')
+  if !(base/'www').exist? then
+    Dir.chdir(base) do
       sh("npm run build")
     end
     write_settings
     cache_index
   end
+end
+
+before_all do
+  into_mode
+
+  adjust_buildnum(0)
+
+  createWWW
 
   cordova(plugins: [
     'cordova-plugin-crosswalk-webview@~2.0.0',
@@ -119,7 +124,7 @@ platform :ios do
 
           Dir.chdir('..') do
             command = [
-              File.join('Pods', 'Crashlytics', 'submit'),
+              Pathname('Pods')/'Crashlytics'/'submit',
               ENV["FABRIC_API_KEY"],
               ENV["FABRIC_BUILD_SECRET"],
               "-ipaPath '#{ENV["APPLICATION_DISPLAY_NAME"]}.ipa'",
@@ -175,7 +180,7 @@ platform :android do
 
         into_platform do
           crashlytics(
-          apk_path: File.join('build', 'outputs', 'apk', 'android-release.apk'),
+          apk_path: Pathname('build')/'outputs'/'apk'/'android-release.apk',
           api_token: ENV["FABRIC_API_KEY"],
           build_secret: ENV["FABRIC_BUILD_SECRET"],
           notes_path: ENV["RELEASE_NOTE_PATH"],
@@ -185,9 +190,9 @@ platform :android do
       when "release"
         ['armv7', 'x86'].each do |arch|
           begin
-            apk = File.join('..', 'platforms', 'android', 'build', 'outputs', 'apk', "android-#{arch}-release.apk")
+            apk = Pathname('..')/'platforms'/'android'/'build'/'outputs'/'apk'/"android-#{arch}-release.apk"
             supply(
-            apk: File.absolute_path(apk),
+            apk: apk.realpath,
             package_name: ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'],
             track: 'beta',
             skip_upload_metadata: true,
