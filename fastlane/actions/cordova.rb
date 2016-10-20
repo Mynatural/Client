@@ -1,3 +1,5 @@
+require 'pathname'
+
 module Fastlane
   module Actions
     class CordovaAction < Action
@@ -10,8 +12,8 @@ module Fastlane
         puts "Checking Cordova ..."
         system('cordova -v')
 
-        dirs = ['plugins', File.join('platforms', ENV["FASTLANE_PLATFORM_NAME"])]
-        if !dirs.all? { |x| File.exist? x } then
+        dirs = [Pathname('plugins'), Pathname('platforms')/ENV["FASTLANE_PLATFORM_NAME"]]
+        if !dirs.all? { |x| x.exist? } then
           dirs.each do |dir|
             puts "Deleting dir: #{dir}"
             FileUtils.rm_rf dir
@@ -30,16 +32,18 @@ module Fastlane
         puts "Checking ionic ..."
         system('ionic -v')
 
-        use_png('icon')
-        use_png('splash')
-        system("ionic resources")
+        dir = Pathname('resources')
+        if !(dir/ENV["FASTLANE_PLATFORM_NAME"]).exist? then
+          use_png(dir, 'icon')
+          use_png(dir, 'splash')
+          system("ionic resources")
+        end
       end
 
-      def self.use_png(prefix)
-        dir = File.join('resources')
-        src = File.join(dir, "#{prefix}-#{ENV["FASTLANE_PLATFORM_NAME"]}.png")
-        if File.exist?(src) then
-          FileUtils.copy(src, File.join(dir, "#{prefix}.png"))
+      def self.use_png(dir, prefix)
+        src = dir/"#{prefix}-#{ENV["FASTLANE_PLATFORM_NAME"]}.png"
+        if src.exist? then
+          FileUtils.copy(src, dir/"#{prefix}.png")
         end
       end
 

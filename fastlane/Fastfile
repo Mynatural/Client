@@ -26,11 +26,13 @@ before_all do
   adjust_buildnum(0)
 
   Dir.chdir('..') do
-    sh("npm run build")
-  end
+    if !File.exist? 'www' then
+      sh("npm run build")
 
-  write_settings
-  cache_index
+      write_settings
+      cache_index
+    end
+  end
 
   cordova(plugins: [
     'cordova-plugin-crosswalk-webview@~2.0.0',
