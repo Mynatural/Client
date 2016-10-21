@@ -2,12 +2,15 @@ require 'pathname'
 
 fastlane_version "1.39.0"
 
+$PROJECT_DIR = Pathname('..')
+$PERSISTENT_DIR = Pathname('persistent')
+
 def persistent(*paths)
-  Pathname('persistent').join(*paths).realpath
+  $PERSISTENT_DIR.join(*paths).realpath
 end
 
 def into_platform &block
-  dir = Pathname('..')/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]/'fastlane'
+  dir = $PROJECT_DIR/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]/'fastlane'
   FileUtils.mkdir_p dir
   Dir.chdir(dir) do
     block.call
@@ -21,9 +24,8 @@ def adjust_buildnum(offset)
 end
 
 def createWWW
-  base = Pathname('..')
-  if !(base/'www').exist? then
-    Dir.chdir(base) do
+  if !($PROJECT_DIR/'www').exist? then
+    Dir.chdir($PROJECT_DIR) do
       sh("npm run build")
     end
     write_settings
@@ -122,7 +124,7 @@ platform :ios do
         when "beta", "debug"
           release_note
 
-          Dir.chdir('..') do
+          Dir.chdir($PROJECT_DIR) do
             command = [
               Pathname('Pods')/'Crashlytics'/'submit',
               ENV["FABRIC_API_KEY"],
@@ -190,7 +192,7 @@ platform :android do
       when "release"
         ['armv7', 'x86'].each do |arch|
           begin
-            apk = Pathname('..')/'platforms'/'android'/'build'/'outputs'/'apk'/"android-#{arch}-release.apk"
+            apk = $PROJECT_DIR/'platforms'/'android'/'build'/'outputs'/'apk'/"android-#{arch}-release.apk"
             supply(
             apk: apk.to_s,
             package_name: ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'],
