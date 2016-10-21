@@ -41,7 +41,26 @@ def createWWW
   end
 end
 
-before_all do
+def clean
+  def del(*path)
+    dir = $PROJECT_DIR.join(*path)
+    if dir.exist? then
+      puts "Deleting #{dir.realpath}"
+      FileUtils.rm_rf dir
+    end
+  end
+  del('config.xml')
+  del('resources', ENV["FASTLANE_PLATFORM_NAME"])
+  del('platforms')
+  del('plugins')
+  del('www')
+end
+
+def prepare(app_id)
+  copy_config
+
+  set_app_id(id: app_id)
+
   into_mode
 
   adjust_buildnum(0)
@@ -74,12 +93,12 @@ before_all do
 end
 
 platform :ios do
-  before_all do
-    copy_config
-    set_app_id(id: ENV['IOS_BUNDLE_ID'])
+  lane :clean do
+    clean
   end
 
   lane :build do
+    prepare(ENV['IOS_BUNDLE_ID'])
     sh('cordova prepare ios')
 
     if is_ci?
@@ -161,12 +180,13 @@ platform :ios do
 end
 
 platform :android do
-  before_all do
-    copy_config
-    set_app_id(id: ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'])
+  lane :clean do
+    clean
   end
 
   lane :build do
+    prepare(ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'])
+
     def is_multi?
       ["release"].include? ENV['BUILD_MODE']
     end
