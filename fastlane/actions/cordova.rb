@@ -4,8 +4,17 @@ module Fastlane
   module Actions
     class CordovaAction < Action
       def self.run(params)
+        copy_config
         cordova(params[:plugins] || [])
         ionic
+      end
+
+      def self.copy_config
+        src = Pathname('cordova.config.xml')
+        dst = Pathname('config.xml')
+        if src.exist? && !dst.exist? then
+          FileUtils.copy(src, dst)
+        end
       end
 
       def self.cordova(plugins)
