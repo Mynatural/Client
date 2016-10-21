@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 
 import { CachedImage } from "../../providers/aws/s3file";
 
-type Status = "NO_IMAGE" | "LOADING" | "LOADED";
+export type Status = "NO_IMAGE" | "LOADING" | "LOADED";
 
 @Component({
     selector: "fathens-cached_image",

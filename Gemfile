@@ -1,5 +1,5 @@
 source "https://rubygems.org"
 
+gem "cocoapods"
 gem "fastlane"
-gem "cocoapods", "~> 0.39.0"
 gem "nokogiri"

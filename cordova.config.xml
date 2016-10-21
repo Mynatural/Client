@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Mynatural</name>
+    <description>An Ionic Framework and Cordova project.</description>
+    <author email="mynatural+devel@fathens.org" href="http://www.fathens.org/">Office f:athens</author>
+    <content src="index.html"/>
+    <access origin="*"/>
+    <allow-intent href="http://*/*"/>
+    <allow-intent href="https://*/*"/>
+    <allow-intent href="tel:*"/>
+    <allow-intent href="sms:*"/>
+    <allow-intent href="mailto:*"/>
+    <allow-intent href="geo:*"/>
+
+    <engine name='android' spec='~5.2.0'/>
+    <engine name='ios' spec='~4.2.0'/>
+
+    <platform name="android">
+        <allow-intent href="market:*"/>
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*"/>
+        <allow-intent href="itms-apps:*"/>
+    </platform>
+
+    <preference name="Orientation" value="portrait" />
+    <preference name="webviewbounce" value="false"/>
+    <preference name="UIWebViewBounce" value="false"/>
+    <preference name="DisallowOverscroll" value="true"/>
+    <preference name="android-minSdkVersion" value="16"/>
+    <preference name="deployment-target" value="9.0"/>
+    <preference name="BackupWebStorage" value="none"/>
+    <preference name="SplashScreenDelay" value="30000" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="FadeSplashScreenDuration" value="2000" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="AndroidPersistentFileLocation" value="Internal" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar"/>
+    </feature>
+</widget>

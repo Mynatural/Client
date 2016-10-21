@@ -10,3 +10,4 @@ typings/
 resources/icon.png
 *.lock
 *.log
+/config.xml
