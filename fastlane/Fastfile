@@ -43,10 +43,19 @@ end
 
 def clean
   def del(*path)
-    dir = $PROJECT_DIR.join(*path)
-    if dir.exist? then
-      puts "Deleting #{dir.realpath}"
-      FileUtils.rm_rf dir
+    target = $PROJECT_DIR.join(*path)
+    if target.exist? then
+      if target.directory? then
+        if !(target/'.keep').exist? then
+          puts "Deleting dir: #{target.realpath}"
+          FileUtils.rm_rf target
+        end
+      else
+        if !Pathname("#{target.to_s}.keep").exist? then
+          puts "Deleting file: #{target.realpath}"
+          target.delete
+        end
+      end
     end
   end
   del('config.xml')
