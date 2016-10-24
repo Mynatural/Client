@@ -3,7 +3,7 @@
     <name>Mynatural</name>
     <description>An Ionic Framework and Cordova project.</description>
     <author email="mynatural+devel@fathens.org" href="http://www.fathens.org/">Office f:athens</author>
-    <content src="index.html"/>
+    <content src="http://localhost:54321" />
     <access origin="*"/>
     <allow-intent href="http://*/*"/>
     <allow-intent href="https://*/*"/>
@@ -11,6 +11,9 @@
     <allow-intent href="sms:*"/>
     <allow-intent href="mailto:*"/>
     <allow-intent href="geo:*"/>
+
+    <allow-navigation href="gap://ready" />
+    <allow-navigation href="http://localhost:*" />
 
     <engine name='android' spec='~5.2.0'/>
     <engine name='ios' spec='~4.2.0'/>
@@ -37,7 +40,14 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Internal" />
+    <preference name="AlternateContentSrc" value="index.html" />
+
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar"/>
     </feature>
+    <feature name="CDVWKWebViewEngine">
+        <param name="ios-package" value="CDVWKWebViewEngine" />
+    </feature>
+
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
 </widget>
