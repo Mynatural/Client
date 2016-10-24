@@ -78,7 +78,7 @@ def prepare(app_id)
 
   cordova(plugins: [
     'cordova-plugin-crosswalk-webview@~2.0.0',
-    'https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost',
+    'https://github.com/driftyco/cordova-plugin-wkwebview-engine.git',
     'cordova-plugin-device@~1.1.1',
     'cordova-plugin-console@~1.0.2',
     'cordova-plugin-sqlite-2@~1.0.4',
