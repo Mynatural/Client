@@ -113,7 +113,6 @@ platform :ios do
     if is_ci?
       keychainName = sh("security default-keychain").match(/.*\/([^\/]+)\"/)[1]
       puts "Using keychain: #{keychainName}"
-      import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "Distribution.cer").to_s
       import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
     end
 
@@ -140,11 +139,11 @@ platform :ios do
       gym(
       scheme: ENV["APPLICATION_DISPLAY_NAME"],
       configuration: "Release",
-      use_legacy_build_api: true,
+      #use_legacy_build_api: true,
       include_bitcode: false,
-      silent: true,
+      #silent: true,
       xcargs: {
-        PROVISIONING_PROFILE: lane_context[SharedValues::SIGH_UDID],
+        #PROVISIONING_PROFILE: lane_context[SharedValues::SIGH_UDID],
         PRODUCT_BUNDLE_IDENTIFIER: ENV['IOS_BUNDLE_ID']
       }.map { |k, v| "#{k.to_s.shellescape}=#{v.shellescape}" }.join(' ')
       )
