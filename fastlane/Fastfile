@@ -2,15 +2,18 @@ require 'pathname'
 
 fastlane_version "1.39.0"
 
-$PROJECT_DIR = Pathname('..')
-$PERSISTENT_DIR = Pathname('persistent')
+$PROJECT_DIR = Pathname('..').realpath
+
+def dirPlatform
+  $PROJECT_DIR/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]
+end
 
 def persistent(*paths)
-  $PERSISTENT_DIR.join(*paths).realpath
+  ($PROJECT_DIR/'persistent').join(*paths)
 end
 
 def into_platform &block
-  dir = $PROJECT_DIR/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]/'fastlane'
+  dir = dirPlatform/'fastlane'
   FileUtils.mkdir_p dir
   Dir.chdir(dir) do
     block.call
@@ -137,16 +140,24 @@ platform :ios do
       adhoc: is_adhoc?
       )
 
+      profile = FastlaneCore::ProvisioningProfile.parse lane_context[:SIGH_PROFILE_PATH]
+      UI.message "Using profile: #{profile}"
+      signId = "iPhone Distribution: #{profile['TeamName']} (#{profile['TeamIdentifier'].first})"
+
+      open(dirPlatform/'cordova'/'build-extras.xcconfig', 'a') { |f|
+        f.puts "CODE_SIGN_IDENTITY[sdk=iphoneos*] ="
+      }
+
       gym(
+      workspace: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcworkspace",
       scheme: ENV["APPLICATION_DISPLAY_NAME"],
       configuration: "Release",
-      #use_legacy_build_api: true,
       include_bitcode: false,
-      #silent: true,
       xcargs: {
-        #PROVISIONING_PROFILE: lane_context[SharedValues::SIGH_UDID],
+        CODE_SIGN_IDENTITY: signId,
+        PROVISIONING_PROFILE_SPECIFIER: profile['Name'],
         PRODUCT_BUNDLE_IDENTIFIER: ENV['IOS_BUNDLE_ID']
-      }.map { |k, v| "#{k.to_s.shellescape}=#{v.shellescape}" }.join(' ')
+      }.map { |k, v| "#{k.to_s.shellescape}='#{v}'" }.join(' ')
       )
 
       if is_ci? then
