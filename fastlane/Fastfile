@@ -9,7 +9,7 @@ def dirPlatform
 end
 
 def persistent(*paths)
-  ($PROJECT_DIR/'persistent').join(*paths)
+  ($PROJECT_DIR/'fastlane'/'persistent').join(*paths)
 end
 
 def into_platform &block
