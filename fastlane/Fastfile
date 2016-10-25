@@ -9,7 +9,7 @@ def dirPlatform
 end
 
 def persistent(*paths)
-  ($PROJECT_DIR/'fastlane'/'persistent').join(*paths)
+  ($PROJECT_DIR/'fastlane'/'persistent'/ENV["FASTLANE_PLATFORM_NAME"]).join(*paths)
 end
 
 def into_platform &block
@@ -116,8 +116,8 @@ platform :ios do
     if is_ci?
       keychainName = sh("security default-keychain").match(/.*\/([^\/]+)\"/)[1]
       puts "Using keychain: #{keychainName}"
-      import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "Distribution.cer").to_s
-      import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
+      import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.cer").to_s
+      import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
     end
 
     def is_adhoc?
@@ -206,7 +206,7 @@ platform :android do
     end
 
     android_build(
-    keystore: persistent('android', 'keystore'),
+    keystore: persistent('keystore'),
     multi_apks: is_multi?,
     sdks: [
       'platform-tools',
@@ -244,7 +244,7 @@ platform :android do
             skip_upload_images: true,
             skip_upload_screenshots: true,
             issuer: ENV['ANDROID_GOOGLEPLAY_SERVICE_ACCOUNT_EMAIL'],
-            key: persistent('android', 'service_account_key.p12')
+            key: persistent('service_account_key.p12')
             )
           rescue => ex
             puts ex.message
