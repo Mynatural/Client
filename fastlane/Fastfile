@@ -110,7 +110,7 @@ platform :ios do
   end
 
   lane :build do
-    prepare(ENV['IOS_BUNDLE_ID'])
+    prepare(ENV["APP_IDENTIFIER"] = ENV['IOS_BUNDLE_ID'])
     sh('cordova prepare ios')
 
     if is_ci?
@@ -136,7 +136,6 @@ platform :ios do
       end
 
       sigh(
-      app_identifier: ENV['IOS_BUNDLE_ID'],
       adhoc: is_adhoc?
       )
 
@@ -155,7 +154,6 @@ platform :ios do
       include_bitcode: false,
       xcargs: {
         PROVISIONING_PROFILE_SPECIFIER: profile['Name'],
-        PRODUCT_BUNDLE_IDENTIFIER: ENV['IOS_BUNDLE_ID']
       }.map { |k, v| "#{k.to_s.shellescape}='#{v}'" }.join(' ')
       )
 
@@ -181,7 +179,6 @@ platform :ios do
           release_note(line_format: '%s')
 
           pilot(
-          app_identifier: ENV['IOS_BUNDLE_ID'],
           skip_submission: true,
           distribute_external: false,
           changelog: File.open(ENV['RELEASE_NOTE_PATH']).read
