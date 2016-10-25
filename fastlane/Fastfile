@@ -164,7 +164,7 @@ platform :ios do
         when "beta", "debug"
           release_note
 
-          Dir.chdir($PROJECT_DIR) do
+          Dir.chdir(dirPlatform) do
             command = [
               Pathname('Pods')/'Crashlytics'/'submit',
               ENV["FABRIC_API_KEY"],
@@ -218,13 +218,14 @@ platform :android do
     ])
 
     if is_ci? then
+      dirApk = dirPlatform/'build'/'outputs'/'apk'
       case ENV['BUILD_MODE']
       when "beta", "debug"
         release_note
 
         into_platform do
           crashlytics(
-          apk_path: (Pathname('build')/'outputs'/'apk'/'android-release.apk').to_s,
+          apk_path: (dirApk/'android-release.apk').to_s,
           api_token: ENV["FABRIC_API_KEY"],
           build_secret: ENV["FABRIC_BUILD_SECRET"],
           notes_path: ENV["RELEASE_NOTE_PATH"],
@@ -234,7 +235,7 @@ platform :android do
       when "release"
         ['armv7', 'x86'].each do |arch|
           begin
-            apk = $PROJECT_DIR/'platforms'/'android'/'build'/'outputs'/'apk'/"android-#{arch}-release.apk"
+            apk = dirApk/"android-#{arch}-release.apk"
             supply(
             apk: apk.to_s,
             package_name: ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'],
