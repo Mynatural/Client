@@ -136,6 +136,7 @@ platform :ios do
       end
 
       sigh(
+      app_identifier: ENV['APP_IDENTIFIER'],
       adhoc: is_adhoc?
       )
 
@@ -179,6 +180,7 @@ platform :ios do
           release_note(line_format: '%s')
 
           pilot(
+          app_identifier: ENV['APP_IDENTIFIER'],
           skip_submission: true,
           distribute_external: false,
           changelog: File.open(ENV['RELEASE_NOTE_PATH']).read
