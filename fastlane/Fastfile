@@ -145,6 +145,7 @@ platform :ios do
       signId = "iPhone Distribution: #{profile['TeamName']} (#{profile['TeamIdentifier'].first})"
 
       open(dirPlatform/'cordova'/'build-extras.xcconfig', 'a') { |f|
+        f.puts "CODE_SIGN_IDENTITY = #{signId}"
         f.puts "CODE_SIGN_IDENTITY[sdk=iphoneos*] = #{signId}"
       }
 
@@ -153,7 +154,6 @@ platform :ios do
       configuration: "Release",
       include_bitcode: false,
       xcargs: {
-        CODE_SIGN_IDENTITY: signId,
         PROVISIONING_PROFILE_SPECIFIER: profile['Name'],
         PRODUCT_BUNDLE_IDENTIFIER: ENV['IOS_BUNDLE_ID']
       }.map { |k, v| "#{k.to_s.shellescape}='#{v}'" }.join(' ')
