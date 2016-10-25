@@ -149,7 +149,6 @@ platform :ios do
       }
 
       gym(
-      workspace: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcworkspace",
       scheme: ENV["APPLICATION_DISPLAY_NAME"],
       configuration: "Release",
       include_bitcode: false,
