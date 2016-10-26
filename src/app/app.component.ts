@@ -24,7 +24,7 @@ export class MyApp {
         platform.ready().then(async () => {
             Splashscreen.hide();
             if (true || platform.is('android')) {
-                StatusBar.backgroundColorByHexString("#000");
+                StatusBar.backgroundColorByName("black");
             }
             await Logger.setLebelByVersionNumber();
             try {
