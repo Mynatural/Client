@@ -243,6 +243,8 @@ def deploy_beta(path)
     ipa_path = path.to_s
   when "android"
     apk_path = path.to_s
+  else
+    raise "Unsupported platform: #{ENV["FASTLANE_PLATFORM_NAME"]}"
   end
   crashlytics(
   ipa_path: ipa_path,
