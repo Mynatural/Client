@@ -8,6 +8,8 @@ import { TermsPage } from "../pages/terms/terms";
 import { withFabric } from "../providers/util/fabric";
 import { Logger } from "../providers/util/logging";
 
+const logger = new Logger("MyApp");
+
 @Component({
     templateUrl: "app.component.html"
 })
@@ -23,6 +25,10 @@ export class MyApp {
     constructor(private app: App, platform: Platform) {
         platform.ready().then(async () => {
             Splashscreen.hide();
+            if (platform.is('android')) {
+                logger.debug(() => `Changing status bar ...`);
+                StatusBar.backgroundColorByName("gray");
+            }
             await Logger.setLebelByVersionNumber();
             try {
                 const version: string = await AppVersion.getVersionNumber();
