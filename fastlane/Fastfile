@@ -2,15 +2,18 @@ require 'pathname'
 
 fastlane_version "1.39.0"
 
-$PROJECT_DIR = Pathname('..')
-$PERSISTENT_DIR = Pathname('persistent')
+$PROJECT_DIR = Pathname('..').realpath
+
+def dirPlatform
+  $PROJECT_DIR/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]
+end
 
 def persistent(*paths)
-  $PERSISTENT_DIR.join(*paths).realpath
+  ($PROJECT_DIR/'fastlane'/'persistent'/ENV["FASTLANE_PLATFORM_NAME"]).join(*paths)
 end
 
 def into_platform &block
-  dir = $PROJECT_DIR/'platforms'/ENV["FASTLANE_PLATFORM_NAME"]/'fastlane'
+  dir = dirPlatform/'fastlane'
   FileUtils.mkdir_p dir
   Dir.chdir(dir) do
     block.call
@@ -43,10 +46,19 @@ end
 
 def clean
   def del(*path)
-    dir = $PROJECT_DIR.join(*path)
-    if dir.exist? then
-      puts "Deleting #{dir.realpath}"
-      FileUtils.rm_rf dir
+    target = $PROJECT_DIR.join(*path)
+    if target.exist? then
+      if target.directory? then
+        if !(target/'.keep').exist? then
+          puts "Deleting dir: #{target.realpath}"
+          FileUtils.rm_rf target
+        end
+      else
+        if !Pathname("#{target.to_s}.keep").exist? then
+          puts "Deleting file: #{target.realpath}"
+          target.delete
+        end
+      end
     end
   end
   del('config.xml')
@@ -78,7 +90,7 @@ def prepare(app_id)
     'cordova-plugin-splashscreen@~3.1.0',
     'cordova-plugin-statusbar@~2.1.0',
     'cordova-plugin-geolocation@~2.1.0',
-    'cordova-plugin-whitelist@~1.2.1',
+    'cordova-plugin-whitelist@~1.3.0',
     'cordova-plugin-dialogs@~1.2.0',
     'cordova-plugin-country@~1.0.2',
     'cordova-plugin-globalization@~1.0.2',
@@ -98,14 +110,13 @@ platform :ios do
   end
 
   lane :build do
-    prepare(ENV['IOS_BUNDLE_ID'])
+    prepare(ENV["APP_IDENTIFIER"] = ENV['IOS_BUNDLE_ID'])
     sh('cordova prepare ios')
 
     if is_ci?
       keychainName = sh("security default-keychain").match(/.*\/([^\/]+)\"/)[1]
       puts "Using keychain: #{keychainName}"
-      import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "AppleWWDRCA.cer").to_s
-      import_certificate keychain_name: keychainName, certificate_path: persistent('ios', "Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
+      import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
     end
 
     def is_adhoc?
@@ -124,26 +135,26 @@ platform :ios do
       end
 
       sigh(
-      app_identifier: ENV['IOS_BUNDLE_ID'],
+      app_identifier: ENV['APP_IDENTIFIER'],
       adhoc: is_adhoc?
       )
 
-      update_project_provisioning(
-      xcodeproj: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcodeproj",
-      target_filter: ".*",
-      build_configuration: "Release"
-      )
+      profile = FastlaneCore::ProvisioningProfile.parse lane_context[:SIGH_PROFILE_PATH]
+      UI.message "Using profile: #{profile}"
+      signId = "iPhone Distribution: #{profile['TeamName']} (#{profile['TeamIdentifier'].first})"
+
+      open(dirPlatform/'cordova'/'build-extras.xcconfig', 'a') { |f|
+        f.puts "CODE_SIGN_IDENTITY[sdk=iphoneos*] = #{signId}"
+      }
 
       gym(
       scheme: ENV["APPLICATION_DISPLAY_NAME"],
       configuration: "Release",
-      use_legacy_build_api: true,
       include_bitcode: false,
-      silent: true,
+      codesigning_identity: signId,
       xcargs: {
-        PROVISIONING_PROFILE: lane_context[SharedValues::SIGH_UDID],
-        PRODUCT_BUNDLE_IDENTIFIER: ENV['IOS_BUNDLE_ID']
-      }.map { |k, v| "#{k.to_s.shellescape}=#{v.shellescape}" }.join(' ')
+        PROVISIONING_PROFILE_SPECIFIER: profile['Name'],
+      }.map { |k, v| "#{k.to_s.shellescape}='#{v}'" }.join(' ')
       )
 
       if is_ci? then
@@ -151,7 +162,7 @@ platform :ios do
         when "beta", "debug"
           release_note
 
-          Dir.chdir($PROJECT_DIR) do
+          Dir.chdir(dirPlatform) do
             command = [
               Pathname('Pods')/'Crashlytics'/'submit',
               ENV["FABRIC_API_KEY"],
@@ -168,7 +179,7 @@ platform :ios do
           release_note(line_format: '%s')
 
           pilot(
-          app_identifier: ENV['IOS_BUNDLE_ID'],
+          app_identifier: ENV['APP_IDENTIFIER'],
           skip_submission: true,
           distribute_external: false,
           changelog: File.open(ENV['RELEASE_NOTE_PATH']).read
@@ -192,7 +203,7 @@ platform :android do
     end
 
     android_build(
-    keystore: persistent('android', 'keystore'),
+    keystore: persistent('keystore'),
     multi_apks: is_multi?,
     sdks: [
       'platform-tools',
@@ -205,13 +216,14 @@ platform :android do
     ])
 
     if is_ci? then
+      dirApk = dirPlatform/'build'/'outputs'/'apk'
       case ENV['BUILD_MODE']
       when "beta", "debug"
         release_note
 
         into_platform do
           crashlytics(
-          apk_path: (Pathname('build')/'outputs'/'apk'/'android-release.apk').to_s,
+          apk_path: (dirApk/'android-release.apk').to_s,
           api_token: ENV["FABRIC_API_KEY"],
           build_secret: ENV["FABRIC_BUILD_SECRET"],
           notes_path: ENV["RELEASE_NOTE_PATH"],
@@ -221,16 +233,15 @@ platform :android do
       when "release"
         ['armv7', 'x86'].each do |arch|
           begin
-            apk = $PROJECT_DIR/'platforms'/'android'/'build'/'outputs'/'apk'/"android-#{arch}-release.apk"
             supply(
-            apk: apk.to_s,
+            apk: (dirApk/"android-#{arch}-release.apk").to_s,
             package_name: ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'],
             track: 'beta',
             skip_upload_metadata: true,
             skip_upload_images: true,
             skip_upload_screenshots: true,
             issuer: ENV['ANDROID_GOOGLEPLAY_SERVICE_ACCOUNT_EMAIL'],
-            key: persistent('android', 'service_account_key.p12')
+            key: persistent('service_account_key.p12')
             )
           rescue => ex
             puts ex.message
