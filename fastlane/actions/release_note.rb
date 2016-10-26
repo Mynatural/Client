@@ -18,11 +18,12 @@ module Fastlane
         else
           logs << obj.log(format)
         end
+        notes = logs.join("\n")
 
-        UI.message "#### RELEASE_NOTE ####\n" + logs.join("\n")
-        if !logs.empty? then
+        UI.message "#### RELEASE_NOTE ####\n" + notes
+        if !notes.empty? then
           target = Pathname('.release_note')
-          target.write logs.join("\n")
+          target.write notes
           ENV["RELEASE_NOTE_PATH"] = target.realpath.to_s
         end
       end
