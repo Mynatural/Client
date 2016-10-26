@@ -4,7 +4,7 @@ module Fastlane
       def self.run(params)
         format = params[:line_format]
         format ||= '[%h] %s'
-        
+
         last = last_tag
         logs = []
         obj = CommitObj.new('HEAD')
@@ -18,13 +18,13 @@ module Fastlane
         else
           logs << obj.log(format)
         end
-        note = logs.join("\n")
+        notes = logs.join("\n")
 
-        puts "#### RELEASE_NOTE ####\n" + note
-        if note && !note.empty? then
-          target = '.release_note'
-          File.write(target, note)
-          ENV["RELEASE_NOTE_PATH"] = File.absolute_path target
+        UI.message "#### RELEASE_NOTE ####\n" + notes
+        if !notes.empty? then
+          target = Pathname('.release_note')
+          target.write notes
+          ENV["RELEASE_NOTE_PATH"] = target.realpath.to_s
         end
       end
 
@@ -41,7 +41,10 @@ module Fastlane
           end
         end
         prefix = "deployed/#{ENV['FASTLANE_PLATFORM_NAME']}/#{ENV['BUILD_MODE']}/"
-        sh("git tag -l | grep '#{prefix}' || echo").split("\n").sort.last
+        num = sh("git tag -l | grep '#{prefix}' || echo").split("\n").map { |line|
+          line.match(/.*\/([0-9]+)$/)[1].to_i
+        }.sort.last
+        "#{prefix}#{num}"
       end
 
       class CommitObj

@@ -22,10 +22,10 @@ export class MyApp {
 
     constructor(private app: App, platform: Platform) {
         platform.ready().then(async () => {
-            // Okay, so the platform is ready and our plugins are available.
-            // Here you can do any higher level native things you might need.
-            StatusBar.styleDefault();
             Splashscreen.hide();
+            if (platform.is('android')) {
+                StatusBar.backgroundColorByHexString("#000");
+            }
             await Logger.setLebelByVersionNumber();
             try {
                 const version: string = await AppVersion.getVersionNumber();
