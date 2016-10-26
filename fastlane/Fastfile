@@ -110,10 +110,7 @@ platform :ios do
   end
 
   lane :build do
-    open($PROJECT_DIR/'.fastlane'/'Appfile', 'w') do |f|
-      f.puts "app_identifier '#{ENV['IOS_BUNDLE_ID']}'"
-    end
-    prepare(CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier))
+    prepare(ENV["APP_IDENTIFIER"] = ENV['IOS_BUNDLE_ID'])
     sh('cordova prepare ios')
 
     if is_ci?
@@ -139,6 +136,7 @@ platform :ios do
       end
 
       sigh(
+      app_identifier: ENV['APP_IDENTIFIER'],
       adhoc: is_adhoc?
       )
 
@@ -182,6 +180,7 @@ platform :ios do
           release_note(line_format: '%s')
 
           pilot(
+          app_identifier: ENV['APP_IDENTIFIER'],
           skip_submission: true,
           distribute_external: false,
           changelog: File.open(ENV['RELEASE_NOTE_PATH']).read
