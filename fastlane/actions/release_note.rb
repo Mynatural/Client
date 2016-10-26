@@ -19,7 +19,7 @@ module Fastlane
           logs << obj.log(format)
         end
 
-        puts "#### RELEASE_NOTE ####\n" + logs.join("\n")
+        UI.message "#### RELEASE_NOTE ####\n" + logs.join("\n")
         if !logs.empty? then
           target = Pathname('.release_note').realpath
           target.write logs.join("\n")
