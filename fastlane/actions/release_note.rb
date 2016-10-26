@@ -21,9 +21,9 @@ module Fastlane
 
         UI.message "#### RELEASE_NOTE ####\n" + logs.join("\n")
         if !logs.empty? then
-          target = Pathname('.release_note').realpath
+          target = Pathname('.release_note')
           target.write logs.join("\n")
-          ENV["RELEASE_NOTE_PATH"] = target.to_s
+          ENV["RELEASE_NOTE_PATH"] = target.realpath.to_s
         end
       end
 
