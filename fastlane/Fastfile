@@ -241,7 +241,9 @@ def deploy_beta(path)
   case ENV["FASTLANE_PLATFORM_NAME"]
   when "ios"
     ipa_path = path.to_s
+    apk_path = nil
   when "android"
+    ipa_path = nil
     apk_path = path.to_s
   end
   crashlytics(
