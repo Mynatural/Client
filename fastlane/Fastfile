@@ -116,7 +116,6 @@ platform :ios do
     if is_ci?
       keychainName = sh("security default-keychain").match(/.*\/([^\/]+)\"/)[1]
       puts "Using keychain: #{keychainName}"
-      import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.cer").to_s
       import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
     end
 
