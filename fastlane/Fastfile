@@ -249,7 +249,7 @@ def deploy_beta(path)
   apk_path: apk_path,
   api_token: ENV["FABRIC_API_KEY"],
   build_secret: ENV["FABRIC_BUILD_SECRET"],
-  notes_path: dirPlatform/ENV["RELEASE_NOTE_PATH"],
+  notes_path: (dirPlatform/ENV["RELEASE_NOTE_PATH"]).to_s,
   groups: ENV["FABRIC_CRASHLYTICS_GROUPS"],
   notifications: false,
   debug: false
