@@ -4,7 +4,7 @@ module Fastlane
       def self.run(params)
         format = params[:line_format]
         format ||= '[%h] %s'
-        
+
         last = last_tag
         logs = []
         obj = CommitObj.new('HEAD')
@@ -18,13 +18,12 @@ module Fastlane
         else
           logs << obj.log(format)
         end
-        note = logs.join("\n")
 
         puts "#### RELEASE_NOTE ####\n" + note
-        if note && !note.empty? then
-          target = '.release_note'
-          File.write(target, note)
-          ENV["RELEASE_NOTE_PATH"] = File.absolute_path target
+        if !logs.empty? then
+          target = Pathname('.release_note').realpath
+          target.write logs.join("\n")
+          ENV["RELEASE_NOTE_PATH"] = target.to_s
         end
       end
 
