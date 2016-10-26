@@ -23,7 +23,8 @@ export class MyApp {
     constructor(private app: App, platform: Platform) {
         platform.ready().then(async () => {
             Splashscreen.hide();
-            if (true || platform.is('android')) {
+            if (platform.is('android')) {
+                StatusBar.overlaysWebView(false);
                 StatusBar.backgroundColorByName("black");
             }
             await Logger.setLebelByVersionNumber();
