@@ -23,8 +23,8 @@ export class HomePage {
     @ViewChild('slides') slides: Slides;
 
     topMessages = [
-        "カスタムメイド",
-        "で作っちゃおう！"
+        "カスタムメイドで",
+        "オリジナル服を作ろう！"
     ];
 
     constructor(public nav: NavController, lineup: LineupController) {
