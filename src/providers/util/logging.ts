@@ -1,4 +1,5 @@
 import { AppVersion } from "ionic-native";
+import Im from "immutable";
 
 declare const plugin: any;
 
@@ -20,11 +21,11 @@ function dateString(now?: Date): string {
 
 export type Level = "DEBUG" | "INFO" | "WARN" | "FATAL";
 
-const levels: Array<Level> = ["DEBUG", "INFO", "WARN", "FATAL"];
-const maxLenOfLevels = _.max(_.map(levels, (l) => l.length));
+const levels = Im.List.of<Level>("DEBUG", "INFO", "WARN", "FATAL");
+const maxLenOfLevels = levels.map((l) => l.length).max();
 
 function indexLevel(level: Level): number {
-    return _.indexOf(levels, level);
+    return levels.indexOf(level);
 }
 
 export class Logger {
