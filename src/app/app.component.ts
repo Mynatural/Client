@@ -23,14 +23,18 @@ export class MyApp {
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
-        platform.ready().then(async () => {
-            Splashscreen.hide();
-            if (platform.is('android') && StatusBar.isVisible) {
-                logger.debug(() => `Changing status bar ...`);
-                StatusBar.backgroundColorByName("gray");
-            }
-            this.isDevel = await Logger.isDevel();
-        });
+        this.init();
+    }
+
+    private async init() {
+        Splashscreen.hide();
+        await platform.ready()
+
+        if (platform.is('android') && StatusBar.isVisible) {
+            logger.debug(() => `Changing status bar ...`);
+            StatusBar.backgroundColorByName("gray");
+        }
+        this.isDevel = await Logger.isDevel();
     }
 
     crash() {
