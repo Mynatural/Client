@@ -18,7 +18,7 @@
 
 </ion-menu>
 
-<div *ngIf="!isReady" style="display: flex; justify-content: center; align-items: center;">
+<div *ngIf="!isReady" style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center;">
     <ion-spinner></ion-spinner>
 </div>
-<ion-nav *ngIf="isReady" #content swipeBackEnabled="false"></ion-nav>
+<ion-nav #content swipeBackEnabled="false"></ion-nav>
