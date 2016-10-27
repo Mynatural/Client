@@ -2,7 +2,17 @@ module Fastlane
   module Actions
     class ReleaseNoteAction < Action
       def self.run(params)
-        format = params[:line_format]
+        notes = logs(params[:line_format]).join("\n")
+
+        UI.message "#### RELEASE_NOTE ####\n" + notes
+        if !notes.empty? then
+          target = Pathname('.release_note')
+          target.write notes
+          ENV["RELEASE_NOTE_PATH"] = target.realpath.to_s
+        end
+      end
+
+      def self.logs(format)
         format ||= '[%h] %s'
 
         last = last_tag
@@ -18,14 +28,7 @@ module Fastlane
         else
           logs << obj.log(format)
         end
-        notes = logs.join("\n")
-
-        UI.message "#### RELEASE_NOTE ####\n" + notes
-        if !notes.empty? then
-          target = Pathname('.release_note')
-          target.write notes
-          ENV["RELEASE_NOTE_PATH"] = target.realpath.to_s
-        end
+        logs
       end
 
       def self.last_tag
