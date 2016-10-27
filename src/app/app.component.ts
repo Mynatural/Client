@@ -27,7 +27,7 @@ export class MyApp {
             Splashscreen.hide();
             if (platform.is('android')) {
                 logger.debug(() => `Changing status bar ...`);
-                StatusBar.backgroundColorByName("gray");
+                StatusBar.hide();
             }
             this.isDevel = await Logger.isDevel();
         });
