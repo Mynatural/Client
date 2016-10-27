@@ -27,9 +27,8 @@ export class MyApp {
     }
 
     private async init() {
-        Splashscreen.hide();
-
         await this.platform.ready()
+        Splashscreen.hide();
         this.nav.setRoot(HomePage);
         this.isReady = true;
 
