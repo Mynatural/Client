@@ -19,18 +19,46 @@ function dateString(now?: Date): string {
     return `${date} ${time}.${pad(3)(now.getMilliseconds())}`;
 }
 
-export type Level = "DEBUG" | "INFO" | "WARN" | "FATAL";
+export class LogLevel {
+    static readonly None = new LogLevel(null);
+    static readonly DEBUG = new LogLevel("DEBUG");
+    static readonly INFO = new LogLevel("INFO");
+    static readonly WARN = new LogLevel("WARN");
+    static readonly FATAL = new LogLevel("FATAL");
 
-const levels = Im.List.of<Level>("DEBUG", "INFO", "WARN", "FATAL");
-const maxLenOfLevels = levels.map((l) => l.length).max();
+    static readonly all = Im.List.of<LogLevel>(LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.FATAL);
+    private static maxLenOfNames = LogLevel.all.map((l) => l.name.length).max();
 
-function indexLevel(level: Level): number {
-    return levels.indexOf(level);
+    private constructor(private _name: string | null) {
+    }
+
+    toString(): string {
+        return this.name;
+    }
+
+    get name(): string {
+        return this._name || "None";
+    }
+
+    get isNone(): boolean {
+        return _.isNil(this._name);
+    }
+
+    get mark(): string {
+        if (this.isNone) {
+            return _.padStart("", LogLevel.maxLenOfNames, "-");
+        }
+        return _.padStart(this._name, LogLevel.maxLenOfNames);
+    }
+
+    get index(): number {
+        return LogLevel.all.indexOf(this);
+    }
 }
 
 export class Logger {
     private static _isDebel: Promise<boolean>;
-    private static _level: Promise<Level>;
+    private static _level: Promise<LogLevel>;
 
     static async isDevel(): Promise<boolean> {
         if (_.isNil(Logger._isDebel)) {
@@ -48,10 +76,10 @@ export class Logger {
         return await Logger._isDebel;
     }
 
-    static async getDefaultLevel(): Promise<Level> {
+    static async getDefaultLevel(): Promise<LogLevel> {
         if (_.isNil(Logger._level)) {
             async function obtain() {
-                return await Logger.isDevel() ? "DEBUG" : "INFO";
+                return await Logger.isDevel() ? LogLevel.DEBUG : LogLevel.INFO;
             }
             Logger._level = obtain();
         }
@@ -72,12 +100,12 @@ export class Logger {
     constructor(private tag: string) {
     }
 
-    private _level: Level;
+    private _level: LogLevel;
     get level() {
         return this._level;
     }
-    set level(v: Level) {
-        this.output(null, () => `Set log level: ${v}`);
+    set level(v: LogLevel) {
+        this.output(LogLevel.None, () => `Set log level: ${v}`);
         this._level = v;
         this._limit = null;
     }
@@ -86,9 +114,9 @@ export class Logger {
     private async getLimit(): Promise<number> {
         if (_.isNil(this._level)) {
             this._level = await Logger.getDefaultLevel();
-            this.output(null, () => `Using default log level: ${this._level}`);
+            this.output(LogLevel.None, () => `Using default log level: ${this._level}`);
         }
-        return indexLevel(this.level);
+        return this.level.index;
     }
     private get limit(): Promise<number> {
         if (_.isNil(this._limit)) {
@@ -97,28 +125,25 @@ export class Logger {
         return this._limit;
     }
 
-    private async output(level: Level, msg: () => string) {
-        if (_.isNil(level) || await this.limit <= indexLevel(level)) {
-            const lm = _.isNil(level) ?
-                    _.padStart("", maxLenOfLevels, "-") :
-                    _.padStart(level, maxLenOfLevels);
-            Logger.output(`${dateString()}: ${lm}: ${this.tag}: ${msg()}`);
+    private async output(level: LogLevel, msg: () => string) {
+        if (level.isNone || await this.limit <= level.index) {
+            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${msg()}`);
         }
     }
 
     public debug(msg: () => string) {
-        this.output("DEBUG", msg);
+        this.output(LogLevel.DEBUG, msg);
     }
 
     public info(msg: () => string) {
-        this.output("INFO", msg);
+        this.output(LogLevel.INFO, msg);
     }
 
     public warn(msg: () => string) {
-        this.output("WARN", msg);
+        this.output(LogLevel.WARN, msg);
     }
 
     public fatal(msg: () => string) {
-        this.output("FATAL", msg);
+        this.output(LogLevel.FATAL, msg);
     }
 }
