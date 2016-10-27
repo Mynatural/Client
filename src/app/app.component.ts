@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { App, Platform, Nav } from "ionic-angular";
-import { AppVersion, StatusBar, Splashscreen } from "ionic-native";
+import { StatusBar, Splashscreen } from "ionic-native";
 
 import { HomePage } from "../pages/home/home";
 import { HelpPage } from "../pages/help/help";
@@ -29,12 +29,7 @@ export class MyApp {
                 logger.debug(() => `Changing status bar ...`);
                 StatusBar.backgroundColorByName("gray");
             }
-            await Logger.setLebelByVersionNumber();
-            try {
-                const version: string = await AppVersion.getVersionNumber();
-                const v = parseInt(_.last(version.match(/[0-9]/g)));
-                this.isDevel = v % 2 !== 0;
-            } catch (ex) { }
+            this.isDevel = await Logger.isDevel();
         });
     }
 
