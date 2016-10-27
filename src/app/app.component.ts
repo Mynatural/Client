@@ -16,10 +16,10 @@ const logger = new Logger("MyApp");
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = HomePage;
     pages = [HomePage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
+    isReady: boolean = false;
     isDevel: boolean = false;
 
     constructor(private app: App, platform: Platform) {
@@ -28,7 +28,10 @@ export class MyApp {
 
     private async init() {
         Splashscreen.hide();
+
         await platform.ready()
+        this.nav.setRoot(HomePage);
+        this.isReady = true;
 
         if (platform.is('android') && StatusBar.isVisible) {
             logger.debug(() => `Changing status bar ...`);
