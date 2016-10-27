@@ -19,8 +19,8 @@ export class MyApp {
     pages = [HomePage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
-    isReady: boolean = false;
-    isDevel: boolean = false;
+    isReady = false;
+    isDevel = false;
 
     constructor(private app: App, platform: Platform) {
         this.init();
