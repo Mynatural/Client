@@ -36,10 +36,8 @@ export class MyApp {
         this.isDevel = await Logger.isDevel();
 
         if (this.platform.is('android') && StatusBar.isVisible) {
-            setTimeout(() => {
-                logger.debug(() => `Changing status bar ...`);
-                StatusBar.backgroundColorByName("gray");
-            }, 100);
+            logger.debug(() => `Changing status bar ...`);
+            StatusBar.backgroundColorByName("gray");
         }
     }
 
