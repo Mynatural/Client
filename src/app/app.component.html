@@ -12,6 +12,14 @@
                 <ion-icon name="{{p.icon}}" item-left></ion-icon>
                 {{p.title}}
             </ion-item>
+            <ion-item>
+                <ion-label>StatusBar Color</ion-label>
+                <ion-select [(ngModel)]="statusbar_color">
+                    <ion-option *ngFor="let c of colors" [selected]="statusbar_color === c" [value]="c">
+                        {{c}}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
             <button danger ion-item *ngIf="isDevel" (click)="crash()">Crash</button>
         </ion-list>
     </ion-content>

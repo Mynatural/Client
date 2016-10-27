@@ -19,6 +19,19 @@ export class MyApp {
     pages = [HomePage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
+    colors = ["black","darkGray","lightGray","white","gray","red","green","blue","cyan","yellow","magenta","orange","purple","brown"];
+    private _statusbar_color = "gray";
+    get statusbar_color(): string {
+        return this._statusbar_color;
+    }
+    set statusbar_color(v: string) {
+        this._statusbar_color = v;
+        if (this.platform.is('android') && StatusBar.isVisible) {
+            logger.debug(() => `Changing status bar ...`);
+            StatusBar.backgroundColorByName(this.statusbar_color);
+        }
+    }
+
     isReady = false;
     isDevel = false;
 
@@ -33,11 +46,7 @@ export class MyApp {
         this.isReady = true;
 
         this.isDevel = await Logger.isDevel();
-
-        if (this.platform.is('android') && StatusBar.isVisible) {
-            logger.debug(() => `Changing status bar ...`);
-            StatusBar.backgroundColorByName("gray");
-        }
+        this.statusbar_color = "gray";
     }
 
     crash() {
