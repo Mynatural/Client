@@ -22,18 +22,18 @@ export class MyApp {
     isReady = false;
     isDevel = false;
 
-    constructor(private app: App, platform: Platform) {
+    constructor(private app: App, private platform: Platform) {
         this.init();
     }
 
     private async init() {
         Splashscreen.hide();
 
-        await platform.ready()
+        await this.platform.ready()
         this.nav.setRoot(HomePage);
         this.isReady = true;
 
-        if (platform.is('android') && StatusBar.isVisible) {
+        if (this.platform.is('android') && StatusBar.isVisible) {
             logger.debug(() => `Changing status bar ...`);
             StatusBar.backgroundColorByName("gray");
         }
