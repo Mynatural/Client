@@ -33,9 +33,7 @@ export class MyApp {
         this.isDevel = await Logger.isDevel();
 
         if (StatusBar.isVisible) {
-            if (this.platform.is('ios')) {
-                StatusBar.styleDefault();
-            }
+            StatusBar.styleDefault();
             if (this.platform.is('android')) {
                 logger.debug(() => `Changing status bar ...`);
                 StatusBar.backgroundColorByName("black");
