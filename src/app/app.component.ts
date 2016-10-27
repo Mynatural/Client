@@ -16,10 +16,10 @@ const logger = new Logger("MyApp");
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
+    rootPage = HomePage;
     pages = [HomePage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
-    isReady = false;
     isDevel = false;
 
     constructor(private app: App, private platform: Platform) {
@@ -29,8 +29,6 @@ export class MyApp {
     private async init() {
         await this.platform.ready()
         Splashscreen.hide();
-        this.nav.setRoot(HomePage);
-        this.isReady = true;
 
         this.isDevel = await Logger.isDevel();
 
