@@ -33,11 +33,14 @@ export class MyApp {
         this.nav.setRoot(HomePage);
         this.isReady = true;
 
-        if (this.platform.is('android') && StatusBar.isVisible) {
-            logger.debug(() => `Changing status bar ...`);
-            StatusBar.backgroundColorByName("gray");
-        }
         this.isDevel = await Logger.isDevel();
+
+        if (this.platform.is('android') && StatusBar.isVisible) {
+            setTimeout(() => {
+                logger.debug(() => `Changing status bar ...`);
+                StatusBar.backgroundColorByName("gray");
+            }, 100);
+        }
     }
 
     crash() {
