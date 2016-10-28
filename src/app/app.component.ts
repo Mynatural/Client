@@ -36,8 +36,9 @@ export class MyApp {
             StatusBar.styleDefault();
         }
         if (this.platform.is('android')) {
-            logger.debug(() => `Changing status bar ...`);
-            StatusBar.backgroundColorByName("black");
+            setTimeout(() => {
+                StatusBar.backgroundColorByName("black");
+            }, 100);
         }
     }
 
