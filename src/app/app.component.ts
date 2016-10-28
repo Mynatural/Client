@@ -36,9 +36,11 @@ export class MyApp {
             StatusBar.styleDefault();
         }
         if (this.platform.is('android')) {
-            setTimeout(() => {
-                StatusBar.backgroundColorByName("black");
-            }, 100);
+            [0, 10, 100].forEach((after) => {
+                setTimeout(() => {
+                    StatusBar.backgroundColorByName("black");
+                }, after);
+            });
         }
     }
 
