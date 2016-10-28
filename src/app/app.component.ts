@@ -32,15 +32,14 @@ export class MyApp {
 
         this.isDevel = await Logger.isDevel();
 
-        if (this.platform.is('ios')) {
-            StatusBar.styleDefault();
-        }
         if (this.platform.is('android')) {
             [0, 10, 100].forEach((after) => {
                 setTimeout(() => {
                     StatusBar.backgroundColorByName("black");
                 }, after);
             });
+        } else {
+            StatusBar.styleDefault();
         }
     }
 
