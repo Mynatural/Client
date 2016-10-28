@@ -19,9 +19,6 @@
         <preference name="android-minSdkVersion" value="16"/>
         <preference name="AndroidPersistentFileLocation" value="Internal" />
 
-        <preference name="StatusBarOverlaysWebView" value="false" />
-        <preference name="StatusBarBackgroundColor" value="#000000" />
-
         <preference name="SplashMaintainAspectRatio" value="true" />
         <preference name="SplashShowOnlyFirstTime" value="false" />
 
@@ -51,4 +48,7 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="FadeSplashScreenDuration" value="700" />
+
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
 </widget>
