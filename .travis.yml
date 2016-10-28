@@ -22,7 +22,7 @@ before_install:
 - aws s3 cp s3://${AWS_S3_BUCKET}/${PROJECT_REPO_SLUG}/persistent.tar.bz2 - | tar jxf -
 install:
 - gem install bundler --no-document
-- bundle install
+- bundle install && cat Gemfile.lock
 - (npm install || npm install) && npm install -g ionic cordova
 - test "$PLATFORM" != "ios" || pod repo update --silent
 - test "$PLATFORM" != "android" || brew install android && export ANDROID_HOME=$(brew --prefix android)
