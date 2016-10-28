@@ -18,7 +18,10 @@
     <platform name="android">
         <preference name="android-minSdkVersion" value="16"/>
         <preference name="AndroidPersistentFileLocation" value="Internal" />
+
+        <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarBackgroundColor" value="#000000" />
+
         <preference name="SplashMaintainAspectRatio" value="true" />
         <preference name="SplashShowOnlyFirstTime" value="false" />
 
@@ -27,8 +30,9 @@
 
     <platform name="ios">
         <preference name="deployment-target" value="9.0"/>
-        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
         <preference name="BackupWebStorage" value="none"/>
+
+        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
 
         <feature name="StatusBar">
             <param name="ios-package" onload="true" value="CDVStatusBar"/>
@@ -40,7 +44,6 @@
         <allow-intent href="itms:*"/>
         <allow-intent href="itms-apps:*"/>
     </platform>
-
 
     <preference name="Orientation" value="portrait" />
     <preference name="DisallowOverscroll" value="true"/>
