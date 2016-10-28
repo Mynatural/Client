@@ -35,6 +35,7 @@ export class MyApp {
         if (this.platform.is('android')) {
             [0, 10, 100].forEach((after) => {
                 setTimeout(() => {
+                    logger.debug(() => `Changing statusbar...`);
                     StatusBar.backgroundColorByName("black");
                 }, after);
             });
