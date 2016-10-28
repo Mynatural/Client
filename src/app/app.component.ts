@@ -27,7 +27,9 @@ export class MyApp {
     }
 
     private async init() {
-        await this.platform.ready()
+        await this.platform.ready();
+        logger.info(() => `Platform is ready.`);
+
         Splashscreen.hide();
         StatusBar.styleDefault();
 
