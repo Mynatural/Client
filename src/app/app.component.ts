@@ -29,19 +29,9 @@ export class MyApp {
     private async init() {
         await this.platform.ready()
         Splashscreen.hide();
+        StatusBar.styleDefault();
 
         this.isDevel = await Logger.isDevel();
-
-        if (this.platform.is('android')) {
-            [0, 10, 100].forEach((after) => {
-                setTimeout(() => {
-                    logger.debug(() => `Changing statusbar...`);
-                    StatusBar.backgroundColorByName("black");
-                }, after);
-            });
-        } else {
-            StatusBar.styleDefault();
-        }
     }
 
     crash() {

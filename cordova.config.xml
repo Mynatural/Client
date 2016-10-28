@@ -17,6 +17,7 @@
 
     <platform name="android">
         <allow-intent href="market:*"/>
+        <preference name="StatusBarBackgroundColor" value="#000000" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*"/>
