@@ -34,6 +34,7 @@
     <preference name="BackupWebStorage" value="none"/>
     <preference name="AndroidPersistentFileLocation" value="Internal" />
 
+    <preference name="SplashScreenDelay" value="30000" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="FadeSplashScreenDuration" value="700" />
