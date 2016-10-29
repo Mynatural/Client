@@ -31,7 +31,9 @@ export class MyApp {
         logger.info(() => `Platform is ready.`);
 
         Splashscreen.hide();
-        StatusBar.styleDefault();
+        if (!this.platform.is("android")) {
+            StatusBar.styleDefault();
+        }
 
         this.isDevel = await Logger.isDevel();
     }
