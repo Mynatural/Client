@@ -49,6 +49,5 @@
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="FadeSplashScreenDuration" value="700" />
 
-    <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
 </widget>
