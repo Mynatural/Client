@@ -119,10 +119,6 @@ platform :ios do
       import_certificate keychain_name: keychainName, certificate_path: persistent("Distribution.p12").to_s, certificate_password: ENV["IOS_DISTRIBUTION_KEY_PASSWORD"]
     end
 
-    def is_adhoc?
-      !["release"].include? ENV['BUILD_MODE']
-    end
-
     into_platform do
       recreate_schemes(
         project: "#{ENV["APPLICATION_DISPLAY_NAME"]}.xcodeproj"
@@ -136,7 +132,7 @@ platform :ios do
 
       sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
-      adhoc: is_adhoc?
+      adhoc: !is_release?
       )
 
       profile = FastlaneCore::ProvisioningProfile.parse lane_context[:SIGH_PROFILE_PATH]
@@ -186,13 +182,9 @@ platform :android do
   lane :build do
     prepare(ENV['ANDROID_GOOGLEPLAY_PACKAGE_NAME'])
 
-    def is_multi?
-      ["release"].include? ENV['BUILD_MODE']
-    end
-
     android_build(
     keystore: persistent('keystore'),
-    multi_apks: is_multi?,
+    multi_apks: is_release?,
     sdks: [
       'platform-tools',
       'tools',
