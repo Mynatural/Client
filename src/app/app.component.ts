@@ -31,7 +31,13 @@ export class MyApp {
         logger.info(() => `Platform is ready.`);
 
         Splashscreen.hide();
-        if (!this.platform.is("android")) {
+        if (this.platform.is("android")) {
+            _.forEach(_.flatten([0, _.map(_.range(10), (i) => 100)]), (n) => {
+                setTimeout(() => {
+                    StatusBar.backgroundColorByName("black");
+                }, n);
+            });
+        } else {
             StatusBar.styleDefault();
         }
 
