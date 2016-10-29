@@ -26,6 +26,10 @@ def adjust_buildnum(offset)
   puts "Adjusted BuildNum: #{ENV['BUILD_NUM']}"
 end
 
+def is_release?
+  ["release"].include? ENV['BUILD_MODE']
+end
+
 def copy_config
   src = $PROJECT_DIR/'cordova.config.xml'
   dst = $PROJECT_DIR/'config.xml'
@@ -83,7 +87,7 @@ def prepare(app_id)
     'cordova-plugin-crosswalk-webview@~2.1.0',
     'https://github.com/driftyco/cordova-plugin-wkwebview-engine.git',
     'cordova-plugin-device@~1.1.1',
-    'cordova-plugin-console@~1.0.2',
+    is_release? ? nil : 'cordova-plugin-console@~1.0.2',
     'cordova-plugin-splashscreen@~4.0.0',
     'cordova-plugin-statusbar@~2.2.0',
     'cordova-plugin-geolocation@~2.4.0',
