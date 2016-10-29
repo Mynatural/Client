@@ -1,16 +1,11 @@
 import { AppVersion } from "ionic-native";
+import Im from "immutable";
 
 declare const plugin: any;
 
-function padLeft(v: string, d: number, c?: string): string {
-    if (v.length > d) return v;
-    if (!c) c = " ";
-    return `${c.repeat(d)}${v}`.slice(-d);
-}
-
 function dateString(now?: Date): string {
     if (!now) now = new Date();
-    const pad = (d: number) => (v: number) => padLeft(v.toString(), d, "0");
+    const pad = (d: number) => (v: number) => _.padStart(v.toString(), d, "0");
     const date = [
         now.getFullYear(),
         now.getMonth(),
@@ -24,85 +19,129 @@ function dateString(now?: Date): string {
     return `${date} ${time}.${pad(3)(now.getMilliseconds())}`;
 }
 
-export type Lebel = "DEBUG" | "INFO" | "WARN" | "FATAL";
+export class LogLevel {
+    static readonly None = new LogLevel(null);
+    static readonly DEBUG = new LogLevel("DEBUG");
+    static readonly INFO = new LogLevel("INFO");
+    static readonly WARN = new LogLevel("WARN");
+    static readonly FATAL = new LogLevel("FATAL");
 
-const lebels: Array<Lebel> = ["DEBUG", "INFO", "WARN", "FATAL"];
+    static readonly all = Im.List.of<LogLevel>(LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.FATAL);
+    private static maxLenOfNames = LogLevel.all.map((l) => l.name.length).max();
 
-let isDEVEL: boolean = true;
-
-async function versionDevel() {
-    try {
-        const version: string = await AppVersion.getVersionNumber();
-        output(`Checking version number: ${version}`);
-        const last = _.last(version.match(/[0-9]/g));
-        const v = parseInt(last);
-        isDEVEL = v % 2 !== 0;
-    } catch (ex) {
-        isDEVEL = true;
+    private constructor(private _name: string | null) {
     }
-}
-versionDevel();
 
-function output(text: string) {
-    if (typeof plugin !== "undefined" && plugin.Fabric) {
-        plugin.Fabric.Crashlytics.log(text);
-        if (isDEVEL) console.log(text);
-    } else {
-        console.log(text);
+    toString(): string {
+        return this.name;
+    }
+
+    get name(): string {
+        return this._name || "None";
+    }
+
+    get isNone(): boolean {
+        return _.isNil(this._name);
+    }
+
+    get mark(): string {
+        if (this.isNone) {
+            return _.padStart("", LogLevel.maxLenOfNames, "-");
+        }
+        return _.padStart(this._name, LogLevel.maxLenOfNames);
+    }
+
+    get index(): number {
+        return LogLevel.all.indexOf(this);
     }
 }
 
 export class Logger {
-    static lebel: Lebel = lebels[0];
-    static async setLebelByVersionNumber() {
-        await versionDevel();
-        this.lebel = isDEVEL ? "DEBUG" : "INFO";
-        output(`Set log lebel: ${this.lebel}`);
+    private static _isDebel: Promise<boolean>;
+    private static _level: Promise<LogLevel>;
+
+    static async isDevel(): Promise<boolean> {
+        if (_.isNil(Logger._isDebel)) {
+            async function obtain() {
+                try {
+                    const version: string = await AppVersion.getVersionNumber();
+                    const last = _.last(version.match(/[0-9]/g));
+                    return _.toInteger(last) % 2 !== 0;
+                } catch (ex) {
+                    return true;
+                }
+            }
+            Logger._isDebel = obtain();
+        }
+        return await Logger._isDebel;
+    }
+
+    static async getDefaultLevel(): Promise<LogLevel> {
+        if (_.isNil(Logger._level)) {
+            async function obtain() {
+                return await Logger.isDevel() ? LogLevel.DEBUG : LogLevel.INFO;
+            }
+            Logger._level = obtain();
+        }
+        return await Logger._level;
+    }
+
+    static async output(text: string) {
+        if (!_.isEqual(typeof plugin, "undefined") && !_.isNil(plugin.Fabric)) {
+            plugin.Fabric.Crashlytics.log(text);
+        }
+        if (!_.isEqual(typeof console, "undefined")) {
+            console.log(text);
+        }
     }
 
     constructor(private tag: string) {
-        this.lebel = Logger.lebel;
     }
 
-    private _lebel: Lebel;
-    get lebel() {
-        return this._lebel;
+    private _level: LogLevel;
+    get level() {
+        return this._level;
     }
-    set lebel(v: Lebel) {
-        this._lebel = v;
+    set level(v: LogLevel) {
+        this.output(LogLevel.None, () => `Set log level: ${v}`);
+        this._level = v;
         this._limit = null;
     }
 
-    private _limit: number;
-    private get limit() {
-        if (!this._limit) this._limit = _.findIndex(lebels, (x) => x === this.lebel);
+    private _limit: Promise<number>;
+    private async getLimit(): Promise<number> {
+        if (_.isNil(this._level)) {
+            this._level = await Logger.getDefaultLevel();
+            this.output(LogLevel.None, () => `Using default log level: ${this._level}`);
+        }
+        return this.level.index;
+    }
+    private get limit(): Promise<number> {
+        if (_.isNil(this._limit)) {
+            this._limit = this.getLimit();
+        }
         return this._limit;
     }
 
-    private checkLebel(l: Lebel): boolean {
-        const n = _.findIndex(lebels, (x) => x === l);
-        return this.limit <= n;
-    }
-
-    private output(lebel: Lebel, msg: () => string) {
-        if (this.checkLebel(lebel)) {
-            output(`${dateString()}: ${padLeft(lebel, 5)}: ${this.tag}: ${msg()}`);
+    private async output(level: LogLevel, msg: () => string) {
+        if (level.isNone || await this.limit <= level.index) {
+            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${msg()}`);
         }
     }
 
     public debug(msg: () => string) {
-        this.output("DEBUG", msg);
+        this.output(LogLevel.DEBUG, msg);
     }
 
     public info(msg: () => string) {
-        this.output("INFO", msg);
+        this.output(LogLevel.INFO, msg);
     }
 
     public warn(msg: () => string) {
-        this.output("WARN", msg);
+        this.output(LogLevel.WARN, msg);
     }
 
     public fatal(msg: () => string) {
-        this.output("FATAL", msg);
+        this.output(LogLevel.FATAL, msg);
     }
 }

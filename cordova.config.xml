@@ -16,34 +16,36 @@
     <engine name='ios' spec='~4.2.0'/>
 
     <platform name="android">
+        <preference name="android-minSdkVersion" value="16"/>
+        <preference name="AndroidPersistentFileLocation" value="Internal" />
+
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="SplashShowOnlyFirstTime" value="false" />
+
         <allow-intent href="market:*"/>
     </platform>
+
     <platform name="ios">
+        <preference name="deployment-target" value="9.0"/>
+        <preference name="BackupWebStorage" value="none"/>
+
+        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+
+        <feature name="StatusBar">
+            <param name="ios-package" onload="true" value="CDVStatusBar"/>
+        </feature>
+        <feature name="CDVWKWebViewEngine">
+            <param name="ios-package" value="CDVWKWebViewEngine" />
+        </feature>
+
         <allow-intent href="itms:*"/>
         <allow-intent href="itms-apps:*"/>
     </platform>
 
     <preference name="Orientation" value="portrait" />
-    <preference name="webviewbounce" value="false"/>
-    <preference name="UIWebViewBounce" value="false"/>
     <preference name="DisallowOverscroll" value="true"/>
-    <preference name="android-minSdkVersion" value="16"/>
-    <preference name="deployment-target" value="9.0"/>
-    <preference name="BackupWebStorage" value="none"/>
-    <preference name="SplashScreenDelay" value="30000" />
+
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="true" />
-    <preference name="FadeSplashScreenDuration" value="2000" />
-    <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="SplashShowOnlyFirstTime" value="false" />
-    <preference name="AndroidPersistentFileLocation" value="Internal" />
-
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar"/>
-    </feature>
-    <feature name="CDVWKWebViewEngine">
-        <param name="ios-package" value="CDVWKWebViewEngine" />
-    </feature>
-
-    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    <preference name="FadeSplashScreenDuration" value="700" />
 </widget>

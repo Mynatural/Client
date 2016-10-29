@@ -20,7 +20,7 @@ module Fastlane
           system("cordova platform add #{ENV["FASTLANE_PLATFORM_NAME"]}")
 
           plugins.each do |line|
-            system("cordova plugin add #{line}")
+            system("cordova plugin add #{line}") if line
           end
         end
       end

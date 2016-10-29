@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { App, Platform, Nav } from "ionic-angular";
-import { AppVersion, StatusBar, Splashscreen } from "ionic-native";
+import { StatusBar, Splashscreen } from "ionic-native";
 
 import { HomePage } from "../pages/home/home";
 import { HelpPage } from "../pages/help/help";
@@ -8,31 +8,40 @@ import { TermsPage } from "../pages/terms/terms";
 import { withFabric } from "../providers/util/fabric";
 import { Logger } from "../providers/util/logging";
 
+const logger = new Logger("MyApp");
+
 @Component({
     templateUrl: "app.component.html"
 })
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = HomePage;
+    rootPage = HomePage;
     pages = [HomePage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
-    isDevel: boolean = false;
+    isDevel = false;
 
-    constructor(private app: App, platform: Platform) {
-        platform.ready().then(async () => {
-            Splashscreen.hide();
-            if (platform.is('android')) {
-                StatusBar.backgroundColorByHexString("#000");
-            }
-            await Logger.setLebelByVersionNumber();
-            try {
-                const version: string = await AppVersion.getVersionNumber();
-                const v = parseInt(_.last(version.match(/[0-9]/g)));
-                this.isDevel = v % 2 !== 0;
-            } catch (ex) { }
-        });
+    constructor(private app: App, private platform: Platform) {
+        this.init();
+    }
+
+    private async init() {
+        await this.platform.ready();
+        logger.info(() => `Platform is ready.`);
+
+        Splashscreen.hide();
+        if (this.platform.is("android")) {
+            _.forEach(_.flatten([0, _.map(_.range(10), (i) => 100)]), (n) => {
+                setTimeout(() => {
+                    StatusBar.backgroundColorByName("black");
+                }, n);
+            });
+        } else {
+            StatusBar.styleDefault();
+        }
+
+        this.isDevel = await Logger.isDevel();
     }
 
     crash() {
