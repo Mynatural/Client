@@ -89,10 +89,8 @@ export class Logger {
     static async output(text: string) {
         if (!_.isEqual(typeof plugin, "undefined") && !_.isNil(plugin.Fabric)) {
             plugin.Fabric.Crashlytics.log(text);
-            if (await Logger.isDevel()) {
-                console.log(text);
-            }
-        } else {
+        }
+        if (!_.isEqual(typeof console, "undefined")) {
             console.log(text);
         }
     }
