@@ -17,7 +17,7 @@
 
 @mixin font-spec($name, $surfix, $style, $weight, $size: "") {
   font: {
-    family: $name + $surfix;
+    family: $name;
     style: $style;
     weight: $weight;
     @if $size != "" {
@@ -26,7 +26,7 @@
   }
 }
 
-$font-name-normal: 'Yuzu Pop A [M] ';
+$font-name-normal: 'Harenosora';
 
 @mixin font-mono($size: "") {
   @include font-spec('Roboto Mono', '', normal, 300, $size);
