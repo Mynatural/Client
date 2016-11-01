@@ -15,13 +15,28 @@
     </div>
     <div class="main">
         <ion-spinner *ngIf="!isReady"></ion-spinner>
-        <ion-slides #slides *ngIf="isReady" [options]="slideOptions" (click)="choose()">
-            <ion-slide *ngFor="let item of items">
-                <div class="slide-content">
+        <div *ngIf="isReady" class="lineup">
+            <ion-list class="news">
+                <button ion-item *ngFor="let item of news" class="item" (click)="choose(item)">
+                    <ion-thumbnail item-left>
+                        <img [src]="item.titleImage.url">
+                    </ion-thumbnail>
+                    <h1 top>{{item.name}}</h1>
+                    <p>{{item.description}}</p>
+                </button>
+            </ion-list>
+            <ion-list class="girls">
+                <div *ngFor="let item of girls" class="item" (click)="choose(item)">
                     <h1>{{item.name}}</h1>
                     <img [src]="item.titleImage.url">
                 </div>
-            </ion-slide>
-        </ion-slides>
+            </ion-list>
+            <ion-list class="boys">
+                <div *ngFor="let item of boys" class="item" (click)="choose(item)">
+                    <h1>{{item.name}}</h1>
+                    <img [src]="item.titleImage.url">
+                </div>
+            </ion-list>
+        </div>
     </div>
 </ion-content>
