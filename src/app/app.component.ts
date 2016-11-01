@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Component, ViewChild } from "@angular/core";
 import { App, Platform, Nav } from "ionic-angular";
 import { StatusBar, Splashscreen } from "ionic-native";
