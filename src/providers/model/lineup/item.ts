@@ -9,25 +9,30 @@ import { Logger } from "../../util/logging";
 const logger = new Logger("Lineup.Item");
 
 export class ItemGroup {
+    private static all: ItemGroup;
+
     static async byAll(ctrl: LineupController): Promise<ItemGroup> {
-        const itemGroup = new ItemGroup(ctrl, []);
+        if (_.isNil(ItemGroup.all)) {
+            const itemGroup = new ItemGroup(ctrl, []);
 
-        const keys = await ctrl.findItems();
-        logger.debug(() => `Found items key: ${JSON.stringify(keys, null, 4)}`);
-        itemGroup.availables = _.filter(await Promise.all(_.map(keys, async (key) => {
-            try {
-                const json = await ctrl.loadItem(key);
-                return Item.byJSON(ctrl, itemGroup, key, json);
-            } catch (ex) {
-                logger.warn(() => `Failed to load '${key}': ${ex}`);
-                return null;
-            }
-        })));
+            const keys = await ctrl.findItems();
+            logger.debug(() => `Found items key: ${JSON.stringify(keys, null, 4)}`);
+            itemGroup.availables = _.filter(await Promise.all(_.map(keys, async (key) => {
+                try {
+                    const json = await ctrl.loadItem(key);
+                    return Item.byJSON(ctrl, itemGroup, key, json);
+                } catch (ex) {
+                    logger.warn(() => `Failed to load '${key}': ${ex}`);
+                    return null;
+                }
+            })));
 
-        return itemGroup;
+            ItemGroup.all = itemGroup;
+        }
+        return ItemGroup.all;
     }
 
-    constructor(private ctrl: LineupController, public availables: Item[]) { }
+    private constructor(private ctrl: LineupController, public availables: Item[]) { }
 
     get(key: string): Item {
         return _.find(this.availables, {"key": key});
@@ -41,7 +46,7 @@ export class ItemGroup {
 
     async createNew(): Promise<Item> {
         const key = await this.ctrl.createNewKey("new_created", async (key) => _.find(this.availables, {key: key}));
-        const one = new Item(this.ctrl, this, key, "新しいラインナップ", "", 500, [], []);
+        const one = new Item(this.ctrl, this, key, {}, "新しいラインナップ", "", 500, [], []);
         this.availables.unshift(one);
         return one;
     }
@@ -50,7 +55,7 @@ export class ItemGroup {
 export class Item {
     static async byJSON(ctrl: LineupController, itemGroup: ItemGroup, key: string, json: Json.Item): Promise<Item> {
         logger.info(() => `${key}: ${JSON.stringify(json, null, 4)}`);
-        const result = new Item(ctrl, itemGroup, key, json.name, json.description, json.price, [], []);
+        const result = new Item(ctrl, itemGroup, key, json.flags || {}, json.name, json.description, json.price, [], []);
 
         result.specGroups = await SpecGroup.byJSONs(ctrl, result, json.specGroups, json.specs);
         result.measurements = await Promise.all(_.map(json.measurements, (j) => Measure.byJSON(ctrl, result, j)));
@@ -65,6 +70,7 @@ export class Item {
     constructor(private ctrl: LineupController,
             public itemGroup: ItemGroup,
             private _key: string,
+            public flags: {[key: string]: string},
             public name: string,
             public description: string,
             public price: number,
@@ -80,6 +86,7 @@ export class Item {
             key: this.key,
             name: this.name,
             price: this.price,
+            flags: this.flags,
             description: this.description,
             specGroups: _.map(this.specGroups, (o) => o.asJSON),
             specs: _.map(localSpecs, (o) => o.asJSON),
