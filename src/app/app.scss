@@ -15,9 +15,13 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-@mixin font-spec($name, $surfix, $style, $weight, $size: "") {
+@mixin font-spec($name, $style, $weight, $size: "") {
     font: {
-        family: $name;
+        @if $name != "" {
+            family: $name
+        } @else {
+            family: sans-serif;
+        }
         style: $style;
         weight: $weight;
         @if $size != "" {
@@ -26,26 +30,27 @@
     }
 }
 
-$font-name-normal: 'Harenosora';
-
 @mixin font-mono($size: "") {
-    @include font-spec('Roboto Mono', '', normal, 300, $size);
+    @include font-spec('Roboto Mono', normal, 300, $size);
 }
 @mixin font-light($size: "") {
-    @include font-spec($font-name-normal, "Extra Light", normal, normal, $size);
+    @include font-spec('', normal, 100, $size);
 }
 @mixin font-normal($size: "") {
-    @include font-spec($font-name-normal, "Light", normal, normal, $size);
+    @include font-spec('', normal, 300, $size);
 }
 @mixin font-bold($size: "") {
-    @include font-spec($font-name-normal, "Regular", normal, normal, $size);
+    @include font-spec('', normal, 500, $size);
 }
 @mixin font-extra-bold($size: "") {
-    @include font-spec($font-name-normal, "Bold", normal, bold, $size);
+    @include font-spec('', normal, 700, $size);
+}
+@mixin font-mincho($size: "") {
+    @include font-spec('Harenosora', normal, 100, $size);
 }
 
 ion-title {
-    @include font-extra-bold();
+    @include font-mincho();
 }
 
 ion-menu {
