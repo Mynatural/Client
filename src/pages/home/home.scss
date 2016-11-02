@@ -1,3 +1,6 @@
+@mixin price($size) {
+}
+
 page-home {
     .scroll-content {
         background-image: linear-gradient(lightcyan, white);
@@ -8,56 +11,91 @@ page-home {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin-bottom: 2rem;
+        padding: 2rem;
         p {
             margin: 0rem;
             color: #387EF5;
-            &.m0 {
-                @include font-mincho(3rem);
-            }
-            &.m1 {
-                @include font-mincho(3rem);
-            }
+            @include font-mincho(3rem);
         }
     }
+
     .main {
         display: flex;
 
-        &>ion-spinner {
+        ion-spinner {
             margin: 5rem auto 0 auto;
             * {
                 stroke: lightpink;
             }
         }
+
         .lineup {
             display: flex;
+            flex-direction: column;
             width: 100%;
+
+            h1 {
+                color: #444;
+                word-wrap: normal;
+            }
+            p.price {
+                word-wrap: normal;
+                color: pink;
+                @include font-normal(1rem);
+                .value {
+                    @include font-bold(1.1rem);
+                }
+            }
 
             .news {
                 width: 100%;
                 .item {
+                    &:first-child {
+                        border: none;
+                    }
+                    background: transparent;
+
                     h1 {
                         @include font-mincho(2rem);
                     }
-                    p {
+                    p.desc {
+                        @include font-light(1.2rem);
+                        white-space: normal;
                     }
                 }
             }
 
-            .girls, .boys {
-                .item {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    width: 30%;
-                    margin: 0.5rem 1.5% 0 1.5%;
-                    border: solid 1px lightgray;
-                    background: white;
-                    padding: 0.3rem;
+            .selector {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
 
-                    &>h1 {
-                        @include font-mincho(1.5rem);
-                        margin: 0;
+            .gender {
+                display: flex;
+                justify-content: space-around;
+
+                .girls, .boys {
+                    &>ion-item {
+                        border: none;
+                        h1 {
+                            padding-left: 3rem;
+                            @include font-pop(2rem);
+                        }
+                    }
+                    &>button {
+                        ion-thumbnail {
+                            min-width: 3rem;
+                            min-height: 3rem;
+                            margin-right: 8px;
+                            img {
+                                max-width: 6rem;
+                            }
+                        }
+
+                        h1 {
+                            @include font-mincho(1.5rem);
+                            margin-bottom: 4px;
+                        }
                     }
                 }
             }

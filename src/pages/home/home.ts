@@ -1,9 +1,13 @@
 import _ from "lodash";
+import Im from "immutable";
+
 import { Component } from "@angular/core";
 import { NavController } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";
+import { S3File } from "../../providers/aws/s3file";
 import { LineupController } from "../../providers/model/lineup/lineup";
+import { Category } from "../../providers/model/lineup/category";
 import { ItemGroup, Item } from "../../providers/model/lineup/item";
 import { Logger } from "../../providers/util/logging";
 
@@ -18,38 +22,45 @@ export class HomePage {
     static icon = "home";
 
     readonly title = HomePage.title;
-    itemGroup: ItemGroup;
-    items: Item[];
-    news: Item[];
-    girls: Item[];
-    boys: Item[];
+    private itemGroup: ItemGroup;
+    private _isReady = false;
 
-    topMessages = [
-        "冬の新作ラインナップ"
-    ];
+    news: Category;
+    genders: Category[];
+    categories: Category[];
 
-    constructor(public nav: NavController, lineup: LineupController) {
+    priceName = "ベース価格";
+    priceUnit = "￥";
+
+    constructor(public nav: NavController, private s3file: S3File, lineup: LineupController) {
         ItemGroup.byAll(lineup).then((group) => {
             this.itemGroup = group;
         });
     }
 
     get isReady(): boolean {
-        if (_.isNil(this.items) && !_.isNil(this.itemGroup) && _.every(this.itemGroup.availables, (item) => !item.titleImage.isLoading)) {
-            this.items = _.filter(this.itemGroup.availables, (item) => item.titleImage.url);
-
-            this.news = this.filter("news", undefined);
-            this.girls = this.filter("gender", undefined);
-            this.boys = this.filter("gender", undefined);
+        if (!this._isReady && !_.isNil(this.itemGroup)) {
+            if (_.every(this.itemGroup.availables, (item) => !item.titleImage.isLoading)) {
+                this.categorize(_.filter(this.itemGroup.availables, (item) => item.titleImage.url));
+                this._isReady = true;
+            }
         }
-        return !_.isNil(this.items);
+        return this._isReady;
     }
 
-    private filter(flagName: string, flagValue: string): Item[] {
-        return _.filter(this.items, (item) => {
-            const value = item.flags[flagName];
-            return _.isEqual(value, flagValue);
-        });
+    private async categorize(items: Item[]) {
+        const allItems = Im.List(items);
+
+        this.news = new Category("news", "冬の新作ラインナップ", Im.Map({
+            priority: "news"
+        }), allItems);
+
+        this.genders = [
+            new Category("girls", "女の子", Im.Map({ gender: "girls" }), allItems),
+            new Category("boys", "男の子", Im.Map({ gender: "boys" }), allItems)
+        ];
+
+        this.categories = await Category.byAll(this.s3file);
     }
 
     choose(item) {

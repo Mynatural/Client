@@ -9,34 +9,47 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
     <div class="top-message">
-        <p *ngFor="let msg of topMessages; let i = index" class="m{{i}}">{{msg}}</p>
+        <p>{{ news.title }}</p>
     </div>
     <div class="main">
         <ion-spinner *ngIf="!isReady"></ion-spinner>
         <div *ngIf="isReady" class="lineup">
             <ion-list class="news">
-                <button ion-item *ngFor="let item of news" class="item" (click)="choose(item)">
+                <ion-spinner *ngIf="!news.items"></ion-spinner>
+                <button ion-item *ngFor="let item of news.items" (click)="choose(item)">
                     <ion-thumbnail item-left>
                         <img [src]="item.titleImage.url">
                     </ion-thumbnail>
-                    <h1 top>{{item.name}}</h1>
-                    <p>{{item.description}}</p>
+                    <h1>{{item.name}}</h1>
+                    <p class="desc">{{item.description}}</p>
+                    <p class="price" text-right>
+                        {{priceName}}
+                        <span class="value">
+                            {{priceUnit}}{{item.price | number}}
+                        </span>
+                    </p>
                 </button>
             </ion-list>
-            <ion-list class="girls">
-                <div *ngFor="let item of girls" class="item" (click)="choose(item)">
-                    <h1>{{item.name}}</h1>
-                    <img [src]="item.titleImage.url">
-                </div>
-            </ion-list>
-            <ion-list class="boys">
-                <div *ngFor="let item of boys" class="item" (click)="choose(item)">
-                    <h1>{{item.name}}</h1>
-                    <img [src]="item.titleImage.url">
-                </div>
-            </ion-list>
+
+            <div class="gender">
+                <ion-list *ngFor="let gender of genders" [class]="gender.key">
+                    <ion-item>
+                        <h1>{{ gender.title }}</h1>
+                    </ion-item>
+                    <ion-item *ngIf="!gender.items">
+                        <ion-spinner></ion-spinner>
+                    </ion-item>
+                    <button ion-item *ngFor="let item of gender.items" (click)="choose(item)">
+                        <ion-thumbnail item-left>
+                            <img [src]="item.titleImage.url">
+                        </ion-thumbnail>
+                        <h1>{{item.name}}</h1>
+                        <p class="price" text-right>{{priceName}} {{priceUnit}}{{item.price | number}}</p>
+                    </button>
+                </ion-list>
+            </div>
         </div>
     </div>
 </ion-content>
