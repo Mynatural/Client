@@ -48,6 +48,9 @@
 @mixin font-mincho($size: "") {
     @include font-spec('Harenosora', normal, 100, $size);
 }
+@mixin font-pop($size: "") {
+    @include font-spec('Guzuri', normal, 100, $size);
+}
 
 ion-title {
     @include font-mincho();
