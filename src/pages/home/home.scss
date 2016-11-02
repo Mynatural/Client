@@ -7,17 +7,6 @@ page-home {
         background-size: 100vw 50vw;
         background-repeat: no-repeat;
     }
-    .top-message {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 2rem;
-        p {
-            margin: 0rem;
-            color: #387EF5;
-            @include font-mincho(3rem);
-        }
-    }
 
     .main {
         display: flex;
@@ -49,6 +38,17 @@ page-home {
 
             .news {
                 width: 100%;
+                .top-message {
+                    padding: 2rem;
+                    * {
+                        border: none;
+                    }
+                    p {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(3rem);
+                    }
+                }
                 .item {
                     &:first-child {
                         border: none;

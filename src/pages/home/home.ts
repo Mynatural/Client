@@ -29,6 +29,9 @@ export class HomePage {
     genders: Category[];
     categories: Category[];
 
+    titleCategorySelect = "カテゴリー";
+    selectedCategory: Category;
+
     priceName = "ベース価格";
     priceUnit = "￥";
 
@@ -60,7 +63,7 @@ export class HomePage {
             new Category("boys", "男の子", Im.Map({ gender: "boys" }), allItems)
         ];
 
-        this.categories = await Category.byAll(this.s3file);
+        this.categories = (await Category.byAll(this.s3file, allItems)).toArray();
     }
 
     choose(item) {
