@@ -61,5 +61,6 @@ export type Categories = {
 
 export type Category = {
     title: string,
+    message: string,
     flags: {[key: string]: string}
 }

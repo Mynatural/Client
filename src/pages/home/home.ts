@@ -54,16 +54,31 @@ export class HomePage {
     private async categorize(items: Item[]) {
         const allItems = Im.List(items);
 
-        this.news = new Category("news", "冬の新作ラインナップ", Im.Map({
-            priority: "news"
-        }), allItems);
+        const news = new Promise(async (resolve, reject) => {
+            try {
+                this.news = await Category.news(this.s3file, allItems);
+                resolve();
+            } catch (ex) {
+                logger.warn(() => `Failed to load News: ${ex}`);
+                reject(ex);
+            }
+        });
+        const cates = new Promise(async (resolve, reject) => {
+            try {
+                this.categories = (await Category.byAll(this.s3file, allItems)).toArray();
+                resolve();
+            } catch (ex) {
+                this.categories = [];
+                resolve();
+            }
+        });
 
         this.genders = [
-            new Category("girls", "女の子", Im.Map({ gender: "girls" }), allItems),
-            new Category("boys", "男の子", Im.Map({ gender: "boys" }), allItems)
+            new Category("girls", "女の子", "", Im.Map({ gender: "girls" }), allItems),
+            new Category("boys", "男の子", "", Im.Map({ gender: "boys" }), allItems)
         ];
 
-        this.categories = (await Category.byAll(this.s3file, allItems)).toArray();
+        await Promise.all([news, cates]);
     }
 
     choose(item) {
