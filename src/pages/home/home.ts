@@ -74,8 +74,16 @@ export class HomePage {
         });
 
         this.genders = [
-            new Category("girls", "女の子", "", Im.Map({ gender: "girls" }), allItems),
-            new Category("boys", "男の子", "", Im.Map({ gender: "boys" }), allItems)
+            new Category("girls", allItems, {
+                title: "女の子",
+                message: "",
+                flags: { gender: "girls" }
+            }),
+            new Category("boys", allItems, {
+                title: "男の子",
+                message: "",
+                flags: { gender: "boys" }
+            })
         ];
 
         await Promise.all([news, cates]);

@@ -19,23 +19,35 @@ export class Category {
 
     static async news(s3file: S3File, srcList: Im.List<Item>): Promise<Category> {
         const v = (await Category.load(s3file, "news.json")) as Info.Category;
-        return new Category("news", v.title, v.message, Im.Map(v.flags), srcList);
+        return new Category("news", srcList, v);
     }
 
     static async byAll(s3file: S3File, srcList: Im.List<Item>): Promise<Im.List<Category>> {
         const json = (await Category.load(s3file, "categories.json")) as Info.Categories;
         const array = _.map(json, (v, key) => {
-            return new Category(key, v.title, v.message, Im.Map(v.flags), srcList);
+            return new Category(key, srcList, v);
         });
         return Im.List(array);
     }
 
     constructor(
         public readonly key: string,
-        public readonly title: string,
-        public readonly message: string,
-        public readonly flags: Im.Map<string, string>,
-        public readonly srcList: Im.List<Item>) {
+        public readonly srcList: Im.List<Item>,
+        private json: Info.Category
+    ) {
+        this._flags = Im.Map(json.flags);
+    }
+
+    private _flags: Im.Map<string, string>;
+
+    get title(): string {
+        return this.json.title;
+    }
+    get message(): string {
+        return this.json.message;
+    }
+    get flags(): Im.Map<string, string> {
+        return this._flags;
     }
 
     private cachedReslut: Im.List<Item>;
