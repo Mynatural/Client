@@ -38,22 +38,30 @@ page-home {
 
             .news {
                 width: 100%;
-                .top-message {
+                .item {
+                    background: transparent;
+                }
+                &>ion-item {
                     padding: 2rem;
                     * {
                         border: none;
                     }
-                    p {
+                    h1 {
                         margin: 0rem;
                         color: #387EF5;
                         @include font-mincho(3rem);
                     }
+                    p {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(2rem);
+                        white-space: normal;
+                    }
                 }
-                .item {
+                &>button {
                     &:first-child {
                         border: none;
                     }
-                    background: transparent;
 
                     h1 {
                         @include font-mincho(2rem);
@@ -68,6 +76,27 @@ page-home {
             .selector {
                 margin-top: 1rem;
                 margin-bottom: 1rem;
+            }
+
+            .categorized {
+                &>ion-list {
+                    &>ion-item {
+                        p {
+                            @include font-bold(1.4rem);
+                        }
+                    }
+                    &>button {
+                        h1 {
+                            @include font-mincho(1.8rem);
+                        }
+                        p.price {
+                            font-size: 1.2rem;
+                            .value {
+                                font-size: 1.3rem;
+                            }
+                        }
+                    }
+                }
             }
 
             .gender {

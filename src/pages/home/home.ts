@@ -26,11 +26,26 @@ export class HomePage {
     private _isReady = false;
 
     news: Category;
-    genders: Category[];
-    categories: Category[];
+
+    categories: { [key: string]: Category };
+    categoryKeys: string[];
+
+    genders: { [key: string]: Category };
+    genderKeys: string[];
 
     titleCategorySelect = "カテゴリー";
-    selectedCategory: Category;
+    readonly unselectedCategoryKey = "選択なし";
+    _selectedCategoryKey: string = null;
+    get selectedCategoryKey(): string {
+        return this._selectedCategoryKey;
+    }
+    set selectedCategoryKey(v: string) {
+        if (!_.has(this.categories, v)) {
+            v = null;
+        }
+        logger.debug(() => `Setting selectedCategoryKey: ${v}`);
+        this._selectedCategoryKey = v;
+    }
 
     priceName = "ベース価格";
     priceUnit = "￥";
@@ -51,45 +66,54 @@ export class HomePage {
         return this._isReady;
     }
 
+    private async loadNews(allItems: Im.List<Item>): Promise<Category> {
+        try {
+            return await Category.loadNews(this.s3file, allItems);
+        } catch (ex) {
+            logger.warn(() => `Failed to load News: ${ex}`);
+            return new Category({
+                title: "新作アイテム",
+                message: "",
+                flags: { priority: "news" }
+            }, allItems);
+        }
+    }
+
+    private async loadCategories(allItems: Im.List<Item>): Promise<{ [key: string]: Category }> {
+        try {
+            return (await Category.loadAll(this.s3file, allItems)).toObject();
+        } catch (ex) {
+            logger.warn(() => `Failed to load Categories: ${ex}`);
+            return {};
+        }
+    }
+
     private async categorize(items: Item[]) {
         const allItems = Im.List(items);
 
         const news = new Promise(async (resolve, reject) => {
-            try {
-                this.news = await Category.news(this.s3file, allItems);
-                resolve();
-            } catch (ex) {
-                logger.warn(() => `Failed to load News: ${ex}`);
-                this.news = new Category("news", allItems, {
-                    title: "新作アイテム",
-                    message: "",
-                    flags: { priority: "news" }
-                });
-                resolve();
-            }
+            this.news = await this.loadNews(allItems);
+            resolve();
         });
         const cates = new Promise(async (resolve, reject) => {
-            try {
-                this.categories = (await Category.byAll(this.s3file, allItems)).toArray();
-                resolve();
-            } catch (ex) {
-                this.categories = [];
-                resolve();
-            }
+            this.categories = await this.loadCategories(allItems);
+            this.categoryKeys = _.keys(this.categories);
+            resolve();
         });
 
-        this.genders = [
-            new Category("girls", allItems, {
+        this.genders = {
+            girls: new Category({
                 title: "女の子",
                 message: "",
                 flags: { gender: "girls" }
-            }),
-            new Category("boys", allItems, {
+            }, allItems),
+            boys: new Category({
                 title: "男の子",
                 message: "",
                 flags: { gender: "boys" }
-            })
-        ];
+            }, allItems)
+        };
+        this.genderKeys = _.keys(this.genders);
 
         await Promise.all([news, cates]);
     }

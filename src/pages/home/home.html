@@ -15,8 +15,9 @@
         <div *ngIf="isReady" class="lineup">
             <ion-spinner *ngIf="!news"></ion-spinner>
             <ion-list *ngIf="news" class="news">
-                <ion-item class="top-message">
-                    <p>{{ news.title }}</p>
+                <ion-item>
+                    <h1>{{ news.title }}</h1>
+                    <p>{{ news.message }}</p>
                 </ion-item>
                 <button ion-item *ngFor="let item of news.filter()" (click)="choose(item)">
                     <ion-thumbnail item-left>
@@ -33,45 +34,56 @@
                 </button>
             </ion-list>
 
-            <div class="selector">
+            <div *ngIf="categoryKeys" class="selector">
                 <ion-item>
                     <ion-label>{{ titleCategorySelect }}</ion-label>
-                    <ion-select [(ngModel)]="selectedCategory">
-                        <ion-option [value]="null" [selected]="selectedCategory === null">
-                            ---
-                        </ion-option>
-                        <ion-option *ngFor="let category of categories"
-                            [value]="category"
-                            [selected]="category.key === selectedCategory.key">
-                            {{ category.title }}
+                    <ion-select [(ngModel)]="selectedCategoryKey">
+                        <ion-option [value]="null" [selected]="selectedCategoryKey === null">{{ unselectedCategoryKey }}</ion-option>
+                        <ion-option *ngFor="let key of categoryKeys"
+                            [value]="key"
+                            [selected]="key === selectedCategoryKey">
+                            {{ categories[key].title }}
                         </ion-option>
                     </ion-select>
                 </ion-item>
             </div>
 
-            <div *ngIf="selectedCategory" class="categorized">
-                <ion-list [class]="selectedCategory.key">
-                    <button ion-item *ngFor="let item of selectedCategory.filter()" (click)="choose(item)">
+            <div *ngIf="selectedCategoryKey" class="categorized">
+                <ion-list [class]="selectedCategoryKey">
+                    <ion-item>
+                        <p>{{ categories[selectedCategoryKey].message }}</p>
+                    </ion-item>
+                    <button ion-item *ngFor="let item of categories[selectedCategoryKey].filter()" (click)="choose(item)">
                         <ion-thumbnail item-left>
                             <img [src]="item.titleImage.url">
                         </ion-thumbnail>
                         <h1>{{item.name}}</h1>
-                        <p class="price" text-right>{{priceName}} {{priceUnit}}{{item.price | number}}</p>
+                        <p class="price" text-right>
+                            {{priceName}}
+                            <span class="value">
+                                {{priceUnit}}{{item.price | number}}
+                            </span>
+                        </p>
                     </button>
                 </ion-list>
             </div>
 
-            <div *ngIf="!selectedCategory && genders" class="gender">
-                <ion-list *ngFor="let gender of genders" [class]="gender.key">
+            <div *ngIf="!selectedCategoryKey && genderKeys" class="gender">
+                <ion-list *ngFor="let key of genderKeys" [class]="key">
                     <ion-item>
-                        <h1>{{ gender.title }}</h1>
+                        <h1>{{ genders[key].title }}</h1>
                     </ion-item>
-                    <button ion-item *ngFor="let item of gender.filter()" (click)="choose(item)">
+                    <button ion-item *ngFor="let item of genders[key].filter()" (click)="choose(item)">
                         <ion-thumbnail item-left>
                             <img [src]="item.titleImage.url">
                         </ion-thumbnail>
                         <h1>{{item.name}}</h1>
-                        <p class="price" text-right>{{priceName}} {{priceUnit}}{{item.price | number}}</p>
+                        <p class="price" text-right>
+                            {{priceName}}
+                            <span class="value">
+                                {{priceUnit}}{{item.price | number}}
+                            </span>
+                        </p>
                     </button>
                 </ion-list>
             </div>
