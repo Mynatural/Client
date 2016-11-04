@@ -60,7 +60,12 @@ export class HomePage {
                 resolve();
             } catch (ex) {
                 logger.warn(() => `Failed to load News: ${ex}`);
-                reject(ex);
+                this.news = new Category("news", allItems, {
+                    title: "新作アイテム",
+                    message: "",
+                    flags: { priority: "news" }
+                });
+                resolve();
             }
         });
         const cates = new Promise(async (resolve, reject) => {
