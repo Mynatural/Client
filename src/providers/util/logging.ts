@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { AppVersion } from "ionic-native";
 import Im from "immutable";
 

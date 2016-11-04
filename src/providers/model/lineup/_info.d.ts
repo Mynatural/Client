@@ -2,6 +2,7 @@
 export type Item = {
     name: string,
     price: number,
+    flags: {[key: string]: string},
     description: string,
     specGroups: SpecGroup[],
     specs: Spec[],
@@ -52,4 +53,14 @@ export type Measurement = {
         max: number,
         step: number
     }
+}
+
+export type Categories = {
+    [key: string]: Category
+}
+
+export type Category = {
+    title: string,
+    message: string,
+    flags: {[key: string]: string}
 }

@@ -1,39 +1,133 @@
-page-home {
+@mixin price($size) {
+}
 
-    &>ion-content {
-        $rsize-in: 25%;
-        $rsize-out: 25%;
-        background-image: radial-gradient(#A4FFFF $rsize-in, transparent $rsize-out), radial-gradient(#FFB4B4 $rsize-in, transparent $rsize-out), radial-gradient(#B4FFB4 $rsize-in, transparent $rsize-out), radial-gradient(#FFFFB4 $rsize-in, transparent $rsize-out);
-        background-size: 100vw 100vw;
-        background-position: 15vw 10vw, -25vw -25vw, -50vw 15vw, 45vw -35vw;
+page-home {
+    .scroll-content {
+        background-image: linear-gradient(lightcyan, white);
+        background-size: 100vw 50vw;
         background-repeat: no-repeat;
     }
 
-    .top-message {
+    .main {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 2rem;
-        margin-bottom: 5rem;
-        p {
-            margin: 1rem;
-            color: #387EF5;
-            &.m0 {
-                @include font-extra-bold(3rem);
-            }
-            &.m1 {
-                @include font-extra-bold(2.5rem);
+
+        ion-spinner {
+            margin: 5rem auto 0 auto;
+            * {
+                stroke: lightpink;
             }
         }
-    }
-    .main {
-        height: 70%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
-        .slide-zoom {
-            height: 100%;
+        .lineup {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            h1 {
+                color: #444;
+                word-wrap: normal;
+            }
+            p.price {
+                word-wrap: normal;
+                color: pink;
+                @include font-normal(1rem);
+                .value {
+                    @include font-bold(1.1rem);
+                }
+            }
+
+            .news {
+                width: 100%;
+                .item {
+                    background: transparent;
+                }
+                &>ion-item {
+                    padding: 2rem;
+                    * {
+                        border: none;
+                    }
+                    h1 {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(3rem);
+                    }
+                    p {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(2rem);
+                        white-space: normal;
+                    }
+                }
+                &>button {
+                    &:first-child {
+                        border: none;
+                    }
+
+                    h1 {
+                        @include font-mincho(2rem);
+                    }
+                    p.desc {
+                        @include font-light(1.2rem);
+                        white-space: normal;
+                    }
+                }
+            }
+
+            .selector {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .categorized {
+                &>ion-list {
+                    &>ion-item {
+                        p {
+                            @include font-bold(1.4rem);
+                        }
+                    }
+                    &>button {
+                        h1 {
+                            @include font-mincho(1.8rem);
+                        }
+                        p.price {
+                            font-size: 1.2rem;
+                            .value {
+                                font-size: 1.3rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .gender {
+                display: flex;
+                justify-content: space-around;
+
+                .girls, .boys {
+                    &>ion-item {
+                        border: none;
+                        h1 {
+                            padding-left: 3rem;
+                            @include font-pop(2rem);
+                        }
+                    }
+                    &>button {
+                        ion-thumbnail {
+                            min-width: 3rem;
+                            min-height: 3rem;
+                            margin-right: 8px;
+                            img {
+                                max-width: 6rem;
+                            }
+                        }
+
+                        h1 {
+                            @include font-mincho(1.5rem);
+                            margin-bottom: 4px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
