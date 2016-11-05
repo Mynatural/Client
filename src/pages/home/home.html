@@ -36,23 +36,23 @@
     <div *ngIf="categoryKeys" class="selector">
         <ion-item>
             <ion-label>{{ titleCategorySelect }}</ion-label>
-            <ion-select [(ngModel)]="selectedCategoryKey">
-                <ion-option [value]="null" [selected]="selectedCategoryKey === null">{{ unselectedCategoryKey }}</ion-option>
+            <ion-select [(ngModel)]="categoryKey">
+                <ion-option [value]="null" [selected]="categoryKey === unselectedCategoryKey">{{ unselectedCategoryKey }}</ion-option>
                 <ion-option *ngFor="let key of categoryKeys"
                     [value]="key"
-                    [selected]="key === selectedCategoryKey">
+                    [selected]="key === categoryKey">
                     {{ categories[key].title }}
                 </ion-option>
             </ion-select>
         </ion-item>
     </div>
 
-    <div *ngIf="selectedCategoryKey" class="categorized">
-        <ion-list [class]="selectedCategoryKey">
+    <div *ngIf="selectedCategory" class="categorized">
+        <ion-list [class]="categoryKey">
             <ion-item>
-                <p>{{ categories[selectedCategoryKey].message }}</p>
+                <p>{{ selectedCategory.message }}</p>
             </ion-item>
-            <button ion-item *ngFor="let item of categories[selectedCategoryKey].filter()" (click)="choose(item)">
+            <button ion-item *ngFor="let item of selectedCategory.filter()" (click)="choose(item)">
                 <ion-thumbnail item-left>
                     <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
                 </ion-thumbnail>
@@ -67,7 +67,7 @@
         </ion-list>
     </div>
 
-    <div *ngIf="genderKeys && !selectedCategoryKey" class="gender">
+    <div *ngIf="genderKeys && !selectedCategory" class="gender">
         <ion-list *ngFor="let key of genderKeys" [class]="key">
             <ion-item>
                 <h1>{{ genders[key].title }}</h1>

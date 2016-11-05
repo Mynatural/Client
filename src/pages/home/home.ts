@@ -31,18 +31,12 @@ export class HomePage {
     genders: { [key: string]: Category };
     genderKeys: string[];
 
-    titleCategorySelect = "カテゴリー";
+    readonly titleCategorySelect = "カテゴリー";
     readonly unselectedCategoryKey = "選択なし";
-    _selectedCategoryKey: string = null;
-    get selectedCategoryKey(): string {
-        return this._selectedCategoryKey;
-    }
-    set selectedCategoryKey(v: string) {
-        if (!_.has(this.categories, v)) {
-            v = null;
-        }
-        logger.debug(() => `Setting selectedCategoryKey: ${v}`);
-        this._selectedCategoryKey = v;
+    categoryKey = this.unselectedCategoryKey;
+    get selectedCategory(): Category {
+        if (!_.has(this.categories, this.categoryKey)) return null;
+        return this.categories[this.categoryKey];
     }
 
     priceName = "ベース価格";
