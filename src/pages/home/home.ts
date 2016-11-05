@@ -18,8 +18,8 @@ const logger = new Logger("HomePage");
     templateUrl: 'home.html'
 })
 export class HomePage {
-    static title = "ホーム";
-    static icon = "home";
+    static readonly title = "ホーム";
+    static readonly icon = "home";
 
     readonly title = HomePage.title;
 
@@ -39,14 +39,14 @@ export class HomePage {
         return this.categories[this.categoryKey];
     }
 
-    priceName = "ベース価格";
-    priceUnit = "￥";
+    readonly priceName = "ベース価格";
+    readonly priceUnit = "￥";
 
     constructor(public nav: NavController, private s3file: S3File, private lineup: LineupController) {
         this.init();
     }
 
-    async init() {
+    private async init() {
         const itemGroup = await ItemGroup.byAll(this.lineup);
         const allItems = Im.List(itemGroup.availables);
 
