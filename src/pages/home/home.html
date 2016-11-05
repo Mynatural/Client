@@ -67,7 +67,7 @@
         </ion-list>
     </div>
 
-    <div *ngIf="!selectedCategoryKey && genderKeys" class="gender">
+    <div *ngIf="genderKeys && !selectedCategoryKey" class="gender">
         <ion-list *ngFor="let key of genderKeys" [class]="key">
             <ion-item>
                 <h1>{{ genders[key].title }}</h1>
