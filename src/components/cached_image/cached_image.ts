@@ -10,8 +10,11 @@ export type Status = "NO_IMAGE" | "LOADING" | "LOADED";
     templateUrl: "cached_image.html"
 })
 export class CachedImageComponent {
-
     @Input() target: CachedImage;
+
+    readonly NO_IMAGE: Status = "NO_IMAGE";
+    readonly LOADING: Status = "LOADING";
+    readonly LOADED: Status = "LOADED";
 
     get status(): Status {
         if (_.isNil(this.target)) {
@@ -24,13 +27,4 @@ export class CachedImageComponent {
         return this.LOADED;
     }
 
-    get NO_IMAGE(): Status {
-        return "NO_IMAGE";
-    }
-    get LOADING(): Status {
-        return "LOADING";
-    }
-    get LOADED(): Status {
-        return "LOADED";
-    }
 }
