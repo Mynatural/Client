@@ -1,5 +1,3 @@
-<ion-spinner *ngIf="status === LOADING"></ion-spinner>
+<ion-spinner *ngIf="status === LOADING" color="light"></ion-spinner>
 <img *ngIf="status === LOADED" [src]="target.url">
-<p class="no-image" *ngIf="status === NO_IMAGE">
-    NO IMAGE
-</p>
+<ion-icon name="close" *ngIf="status === NO_IMAGE"></ion-icon>

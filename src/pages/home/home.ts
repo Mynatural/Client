@@ -18,12 +18,10 @@ const logger = new Logger("HomePage");
     templateUrl: 'home.html'
 })
 export class HomePage {
-    static title = "ホーム";
-    static icon = "home";
+    static readonly title = "ホーム";
+    static readonly icon = "home";
 
     readonly title = HomePage.title;
-    private itemGroup: ItemGroup;
-    private _isReady = false;
 
     news: Category;
 
@@ -33,37 +31,46 @@ export class HomePage {
     genders: { [key: string]: Category };
     genderKeys: string[];
 
-    titleCategorySelect = "カテゴリー";
+    readonly titleCategorySelect = "カテゴリー";
     readonly unselectedCategoryKey = "選択なし";
-    _selectedCategoryKey: string = null;
-    get selectedCategoryKey(): string {
-        return this._selectedCategoryKey;
-    }
-    set selectedCategoryKey(v: string) {
-        if (!_.has(this.categories, v)) {
-            v = null;
-        }
-        logger.debug(() => `Setting selectedCategoryKey: ${v}`);
-        this._selectedCategoryKey = v;
+    categoryKey = this.unselectedCategoryKey;
+    get selectedCategory(): Category {
+        if (!_.has(this.categories, this.categoryKey)) return null;
+        return this.categories[this.categoryKey];
     }
 
-    priceName = "ベース価格";
-    priceUnit = "￥";
+    readonly priceName = "ベース価格";
+    readonly priceUnit = "￥";
 
-    constructor(public nav: NavController, private s3file: S3File, lineup: LineupController) {
-        ItemGroup.byAll(lineup).then((group) => {
-            this.itemGroup = group;
+    constructor(public nav: NavController, private s3file: S3File, private lineup: LineupController) {
+        this.init();
+    }
+
+    private async init() {
+        const itemGroup = await ItemGroup.byAll(this.lineup);
+        const allItems = Im.List(itemGroup.availables);
+
+        this.loadNews(allItems).then((v) => {
+            this.news = v;
         });
-    }
+        this.loadCategories(allItems).then((v) => {
+            this.categories = v;
+            this.categoryKeys = _.keys(this.categories);
+        });
 
-    get isReady(): boolean {
-        if (!this._isReady && !_.isNil(this.itemGroup)) {
-            if (_.every(this.itemGroup.availables, (item) => !item.titleImage.isLoading)) {
-                this.categorize(_.filter(this.itemGroup.availables, (item) => item.titleImage.url));
-                this._isReady = true;
-            }
-        }
-        return this._isReady;
+        this.genders = {
+            girls: new Category({
+                title: "女の子",
+                message: "",
+                flags: { gender: "girls" }
+            }, allItems),
+            boys: new Category({
+                title: "男の子",
+                message: "",
+                flags: { gender: "boys" }
+            }, allItems)
+        };
+        this.genderKeys = _.keys(this.genders);
     }
 
     private async loadNews(allItems: Im.List<Item>): Promise<Category> {
@@ -86,36 +93,6 @@ export class HomePage {
             logger.warn(() => `Failed to load Categories: ${ex}`);
             return {};
         }
-    }
-
-    private async categorize(items: Item[]) {
-        const allItems = Im.List(items);
-
-        const news = new Promise(async (resolve, reject) => {
-            this.news = await this.loadNews(allItems);
-            resolve();
-        });
-        const cates = new Promise(async (resolve, reject) => {
-            this.categories = await this.loadCategories(allItems);
-            this.categoryKeys = _.keys(this.categories);
-            resolve();
-        });
-
-        this.genders = {
-            girls: new Category({
-                title: "女の子",
-                message: "",
-                flags: { gender: "girls" }
-            }, allItems),
-            boys: new Category({
-                title: "男の子",
-                message: "",
-                flags: { gender: "boys" }
-            }, allItems)
-        };
-        this.genderKeys = _.keys(this.genders);
-
-        await Promise.all([news, cates]);
     }
 
     choose(item) {
