@@ -69,6 +69,10 @@ page-home {
         .selector {
             margin-top: 1rem;
             margin-bottom: 1rem;
+
+            ion-select {
+                color: gray;
+            }
         }
 
         .categorized {
