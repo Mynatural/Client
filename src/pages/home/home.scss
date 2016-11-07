@@ -29,6 +29,14 @@ page-home {
             }
         }
 
+        ion-list {
+            button.item.more {
+                p {
+                    text-align: right;
+                }
+            }
+        }
+
         .news {
             width: 100%;
             .item {
@@ -51,7 +59,7 @@ page-home {
                     white-space: normal;
                 }
             }
-            &>button {
+            &>button.product {
                 &:first-child {
                     border: none;
                 }
@@ -82,7 +90,7 @@ page-home {
                         @include font-bold(1.4rem);
                     }
                 }
-                &>button {
+                &>button.product {
                     h1 {
                         @include font-mincho(1.8rem);
                     }
@@ -108,7 +116,7 @@ page-home {
                         @include font-pop(2rem);
                     }
                 }
-                &>button {
+                &>button.product {
                     ion-thumbnail {
                         min-width: 3rem;
                         min-height: 3rem;

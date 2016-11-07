@@ -27,6 +27,7 @@ export class HomePage {
     readonly unselectedCategoryKey = "選択なし";
     readonly priceName = "ベース価格";
     readonly priceUnit = "￥";
+    readonly readMore = "MORE ...";
 
     news: Categorized;
     gendered: Categorized[];
