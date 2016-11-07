@@ -14,6 +14,7 @@ import { TermsPage } from "../pages/terms/terms";
 
 import { GistComponent } from "../components/gist/gist";
 import { CachedImageComponent } from "../components/cached_image/cached_image";
+import { ItemListComponent } from "../components/item_list/item_list";
 
 import { BootSettings } from "../providers/config/boot_settings";
 import { Configuration } from "../providers/config/configuration";
@@ -31,6 +32,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
         MyApp,
         GistComponent,
         CachedImageComponent,
+        ItemListComponent,
         CategorizedPage,
         CustomPage,
         SpecDialog,

@@ -11,4 +11,20 @@
 
 <ion-content>
 
+    <div *ngIf="categories" class="selector">
+        <ion-item>
+            <ion-label>{{ titleCategorySelect }}</ion-label>
+            <ion-select [(ngModel)]="category">
+                <ion-option *ngFor="let c of categories" [value]="c" [selected]="c === category">
+                    {{ c.title }}
+                </ion-option>
+            </ion-select>
+        </ion-item>
+    </div>
+
+    <fathens-item_list
+        [items]="category.items"
+        [message]="category.message">
+    </fathens-item_list>
+
 </ion-content>

@@ -2,10 +2,9 @@ import _ from "lodash";
 import Im from "immutable";
 
 import { Component } from "@angular/core";
-import { NavController } from "ionic-angular";
+import { NavParams } from "ionic-angular";
 
 import { CategoryController, Category } from "../../providers/model/lineup/category";
-import { Item } from "../../providers/model/lineup/item";
 import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("CategorizedPage");
@@ -16,6 +15,17 @@ const logger = new Logger("CategorizedPage");
 })
 export class CategorizedPage {
     readonly title = "カテゴリ別";
+    readonly titleCategorySelect = "カテゴリー";
+    readonly priceName = "ベース価格";
+    readonly priceUnit = "￥";
 
-    constructor(private ctgCtrl: CategoryController) { }
+    category: Category;
+    categories: Category[];
+
+    constructor(params: NavParams, private ctgCtrl: CategoryController) {
+        this.category = params.get("category");
+        ctgCtrl.loadAll().then((v) => {
+            this.categories = v.toArray();
+        });
+    }
 }

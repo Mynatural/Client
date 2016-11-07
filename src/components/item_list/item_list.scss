@@ -1,0 +1,26 @@
+fathens-item_list {
+    ion-list {
+        &>ion-item {
+            p {
+                @include font-bold(1.4rem);
+            }
+        }
+        &>button.item {
+            h1 {
+                @include font-mincho(1.8rem);
+            }
+            p.description {
+                @include font-light(1.2rem);
+                white-space: normal;
+            }
+            p.price {
+                word-wrap: normal;
+                color: pink;
+                @include font-normal(1.1rem);
+                .value {
+                    @include font-bold(1.2rem);
+                }
+            }
+        }
+    }
+}
