@@ -31,7 +31,7 @@
                 </span>
             </p>
         </button>
-        <button ion-item *ngIf="news.hasMore" class="more">
+        <button ion-item *ngIf="news.hasMore" class="more" (click)="more(news)">
             <p>{{ readMore }}</p>
         </button>
     </ion-list>
@@ -67,7 +67,7 @@
                     </span>
                 </p>
             </button>
-            <button ion-item *ngIf="categorized.hasMore" class="more">
+            <button ion-item *ngIf="categorized.hasMore" class="more" (click)="more(categorized)">
                 <p>{{ readMore }}</p>
             </button>
         </ion-list>

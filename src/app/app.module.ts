@@ -5,6 +5,7 @@ import { CustomIconsModule } from "ionic2-custom-icons";
 
 import { MyApp } from "./app.component";
 
+import { CategorizedPage } from "../pages/categorized/categorized";
 import { CustomPage } from "../pages/custom/custom";
 import { SpecDialog } from "../pages/custom/spec_dialog";
 import { HelpPage } from "../pages/help/help";
@@ -30,6 +31,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
         MyApp,
         GistComponent,
         CachedImageComponent,
+        CategorizedPage,
         CustomPage,
         SpecDialog,
         HelpPage,
@@ -44,6 +46,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
     entryComponents: [
         MyApp,
         GistComponent,
+        CategorizedPage,
         CustomPage,
         SpecDialog,
         HelpPage,

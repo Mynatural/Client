@@ -4,6 +4,7 @@ import Im from "immutable";
 import { Component } from "@angular/core";
 import { NavController } from "ionic-angular";
 
+import { CategorizedPage } from "../categorized/categorized";
 import { CustomPage } from "../custom/custom";
 import { CategoryController, Category } from "../../providers/model/lineup/category";
 import { Item } from "../../providers/model/lineup/item";
@@ -108,6 +109,13 @@ export class HomePage {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
             item: item
+        });
+    }
+
+    more(categorized: Categorized) {
+        logger.info(() => `More categorized: ${categorized.title}`);
+        this.nav.push(CategorizedPage, {
+            category: categorized.src
         });
     }
 }
