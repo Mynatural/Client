@@ -137,10 +137,6 @@ export class Categorized {
 
     private _items: Item[];
 
-    get isLoading(): boolean {
-        return _.isNil(this._items);
-    }
-
     get hasMore(): boolean {
         return this.src.items && this.src.items.size > this._limit;
     }

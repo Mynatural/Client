@@ -18,6 +18,9 @@
             <h1>{{ news.title }}</h1>
             <p>{{ news.message }}</p>
         </ion-item>
+        <ion-item *ngIf="!news.items" class="spinner">
+            <ion-spinner></ion-spinner>
+        </ion-item>
         <button ion-item *ngFor="let item of news.items" class="product" (click)="choose(item)">
             <ion-thumbnail item-left>
                 <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
@@ -55,6 +58,9 @@
             <ion-item>
                 <p>{{ categorized.message }}</p>
             </ion-item>
+            <ion-item *ngIf="!categorized.items" class="spinner">
+                <ion-spinner></ion-spinner>
+            </ion-item>
             <button ion-item *ngFor="let item of categorized.items" class="product" (click)="choose(item)">
                 <ion-thumbnail item-left>
                     <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
@@ -77,6 +83,9 @@
         <ion-list *ngFor="let gender of gendered" [class]="gender.key">
             <ion-item>
                 <h1>{{ gender.title }}</h1>
+            </ion-item>
+            <ion-item *ngIf="!gender.items" class="spinner">
+                <ion-spinner></ion-spinner>
             </ion-item>
             <button ion-item *ngFor="let item of gender.items" class="product" (click)="choose(item)">
                 <ion-thumbnail item-left>

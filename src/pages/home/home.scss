@@ -7,12 +7,18 @@ page-home {
         background-size: 100vw 50vw;
         background-repeat: no-repeat;
 
-        .spinner {
+        ion-spinner * {
+            stroke: lightpink;
+        }
+        div.spinner {
             display: flex;
             justify-content: center;
             margin-top: 5rem;
-            * {
-                stroke: lightpink;
+        }
+        ion-item.spinner {
+            ion-label {
+                display: flex;
+                justify-content: center;
             }
         }
 
