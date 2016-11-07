@@ -40,6 +40,7 @@ export class HomePage {
         return this._categoryKey;
     }
     set categoryKey(v: string) {
+        this._categoryKey = v;
         if (_.has(this.categories, v)) {
             const c = this.categories[v];
             c.filter().then((items) => {
@@ -53,7 +54,6 @@ export class HomePage {
         } else {
             this.categorized = null;
         }
-        this._categoryKey = v;
     }
 
     constructor(public nav: NavController, private s3file: S3File, private lineup: LineupController) {
