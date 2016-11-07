@@ -23,24 +23,36 @@ export class HomePage {
 
     readonly title = HomePage.title;
 
-    news: Category;
+    readonly titleCategorySelect = "カテゴリー";
+    readonly unselectedCategoryKey = "選択なし";
+    readonly priceName = "ベース価格";
+    readonly priceUnit = "￥";
+
+    news: Categorized;
+    gendered: Categorized[];
+    categorized: Categorized;
 
     categories: { [key: string]: Category };
     categoryKeys: string[];
 
-    genders: { [key: string]: Category };
-    genderKeys: string[];
-
-    readonly titleCategorySelect = "カテゴリー";
-    readonly unselectedCategoryKey = "選択なし";
-    categoryKey = this.unselectedCategoryKey;
-    get selectedCategory(): Category {
-        if (!_.has(this.categories, this.categoryKey)) return null;
-        return this.categories[this.categoryKey];
+    private _categoryKey = this.unselectedCategoryKey;
+    get categoryKey(): string {
+        return this._categoryKey;
     }
-
-    readonly priceName = "ベース価格";
-    readonly priceUnit = "￥";
+    set categoryKey(v: string) {
+        if (_.has(this.categories, v)) {
+            const c = this.categories[v];
+            c.filter().then((items) => {
+                this.categorized = {
+                    key: v,
+                    title: c.title,
+                    message: c.message,
+                    items: items
+                };
+            });
+        }
+        this._categoryKey = v;
+    }
 
     constructor(public nav: NavController, private s3file: S3File, private lineup: LineupController) {
         this.init();
@@ -50,15 +62,21 @@ export class HomePage {
         const itemGroup = await ItemGroup.byAll(this.lineup);
         const allItems = Im.List(itemGroup.availables);
 
-        this.loadNews(allItems).then((v) => {
-            this.news = v;
+        this.loadNews(allItems).then(async (v) => {
+            const items = await v.filter();
+            this.news = {
+                key: "news",
+                title: v.title,
+                message: v.message,
+                items: items
+            };
         });
         this.loadCategories(allItems).then((v) => {
             this.categories = v;
             this.categoryKeys = _.keys(this.categories);
         });
 
-        this.genders = {
+        const genders = {
             girls: new Category({
                 title: "女の子",
                 message: "",
@@ -70,7 +88,15 @@ export class HomePage {
                 flags: { gender: "boys" }
             }, allItems)
         };
-        this.genderKeys = _.keys(this.genders);
+        this.gendered = await Promise.all(_.map(genders, async (c, key) => {
+            const items = await c.filter();
+            return {
+                key: key,
+                title: c.title,
+                message: c.message,
+                items: items
+            };
+        }));
     }
 
     private async loadNews(allItems: Im.List<Item>): Promise<Category> {
@@ -101,4 +127,11 @@ export class HomePage {
             item: item
         });
     }
+}
+
+export type Categorized = {
+    key: string,
+    title: string,
+    message: string,
+    items: Item[]
 }

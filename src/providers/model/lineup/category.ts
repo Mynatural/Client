@@ -75,7 +75,7 @@ export class Category {
 
     private cachedReslut: Im.List<Item>;
 
-    filter(srcList?: Item[]): Item[] {
+    async filter(srcList?: Item[]): Promise<Item[]> {
         if (!srcList && this.cachedReslut) {
             return this.cachedReslut.toArray();
         }
