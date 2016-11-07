@@ -22,6 +22,7 @@ import { Cognito } from "../providers/aws/cognito";
 import { Dynamo } from "../providers/aws/dynamo/dynamo";
 import { FBConnect } from "../providers/facebook/fb_connect";
 import { FBJSSDK } from "../providers/facebook/fb_jssdk";
+import { CategoryController } from "../providers/model/lineup/category";
 import { LineupController } from "../providers/model/lineup/lineup";
 
 @NgModule({
@@ -60,6 +61,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
         Dynamo,
         FBConnect,
         FBJSSDK,
+        CategoryController,
         LineupController
     ]
 })
