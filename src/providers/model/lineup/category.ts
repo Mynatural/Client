@@ -39,30 +39,31 @@ export class CategoryController {
         return Base64.decodeJson(text);
     }
 
-    private async loadMap(key: string): Promise<Im.Map<string, Category>> {
-        const json = (await this.load(key)) as Info.Categories;
-        const srcList = await this.srcList;
-        const map = _.mapValues(json, (v) => new Category(v, srcList));
-        return Im.Map(map);
-    }
-
     private async save(key: string, obj: any): Promise<void> {
         const path = pathJson(key);
         const text = Base64.encodeJson(obj);
         await this.s3file.write(path, text);
     }
 
+    async byMap(json: Info.Categories): Promise<Im.Map<string, Category>> {
+        const srcList = await this.srcList;
+        const map = _.mapValues(json, (v) => new Category(this, v, srcList));
+        return Im.Map(map);
+    }
+
     async loadNews(): Promise<Category> {
         const v = (await this.load(newsJson)) as Info.Category;
-        return new Category(v, await this.srcList);
+        return new Category(this, v, await this.srcList);
     }
 
     async loadAll(): Promise<Im.Map<string, Category>> {
-        return this.loadMap(categoriesJson);
+        const json = await this.load(categoriesJson);
+        return this.byMap(json as Info.Categories);
     }
 
     async loadGenders(): Promise<Im.Map<string, Category>> {
-        return this.loadMap(gendersJson);
+        const json = await this.load(gendersJson);
+        return this.byMap(json as Info.Categories);
     }
 
     async saveNews(obj: Info.Category): Promise<void> {
@@ -79,7 +80,11 @@ export class CategoryController {
 }
 
 export class Category {
-    constructor(private json: Info.Category, public readonly srcList: Im.List<Item> = Im.List<Item>()) {
+    constructor(
+        private ctrl: CategoryController,
+        private json: Info.Category,
+        private _srcList?: Im.List<Item>
+    ) {
         this._flags = Im.Map(json.flags);
     }
 
@@ -117,15 +122,14 @@ export class Category {
     }
 
     private async filter(): Promise<Im.List<Item>> {
-        var result = this.srcList;
+        const srcList = this._srcList || await this.ctrl.srcList;
+        var result = srcList;
         this.flags.forEach((value, name) => {
             result = result.filter((item) => {
                 return _.isEqual(item.flags[name], value);
             }).toList();
         });
-        logger.debug(() => `Filtered items: ${this.srcList.size} -> ${result.size}`);
+        logger.debug(() => `Filtered items: ${srcList.size} -> ${result.size}`);
         return result;
     }
-
-
 }

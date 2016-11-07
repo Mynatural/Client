@@ -5,10 +5,8 @@ import { Component } from "@angular/core";
 import { NavController } from "ionic-angular";
 
 import { CustomPage } from "../custom/custom";
-import { S3File } from "../../providers/aws/s3file";
-import { LineupController } from "../../providers/model/lineup/lineup";
-import { Category } from "../../providers/model/lineup/category";
-import { ItemGroup, Item } from "../../providers/model/lineup/item";
+import { CategoryController, Category } from "../../providers/model/lineup/category";
+import { Item } from "../../providers/model/lineup/item";
 import { Logger } from "../../providers/util/logging";
 
 const logger = new Logger("HomePage");
@@ -51,61 +49,57 @@ export class HomePage {
         }
     }
 
-    constructor(public nav: NavController, private s3file: S3File, lineup: LineupController) {
-        ItemGroup.byAll(lineup).then((itemGroup) => {
-            const allItems = Im.List(itemGroup.availables);
-
-            this.loadNews(allItems).then(async (v) => {
-                this.news = await Categorized.fromCategory("news", v);
-            });
-            this.loadCategories(allItems).then((v) => {
-                this.categories = v.toObject();
-                this.categoryKeys = _.keys(this.categories);
-            });
-            this.loadGenders(allItems).then(async (v) => {
-                this.gendered = await Categorized.fromCategories(v);
-            });
+    constructor(public nav: NavController, private ctgCtrl: CategoryController) {
+        this.loadNews().then(async (v) => {
+            this.news = await Categorized.fromCategory("news", v);
+        });
+        this.loadCategories().then((v) => {
+            this.categories = v.toObject();
+            this.categoryKeys = _.keys(this.categories);
+        });
+        this.loadGenders().then(async (v) => {
+            this.gendered = await Categorized.fromCategories(v);
         });
     }
 
-    private async loadNews(allItems: Im.List<Item>): Promise<Category> {
+    private async loadNews(): Promise<Category> {
         try {
-            return await Category.loadNews(this.s3file, allItems);
+            return await this.ctgCtrl.loadNews();
         } catch (ex) {
             logger.warn(() => `Failed to load News: ${ex}`);
-            return new Category({
+            return new Category(this.ctgCtrl, {
                 title: "新作アイテム",
                 message: "",
                 flags: { priority: "news" }
-            }, allItems);
+            });
         }
     }
 
-    private async loadCategories(allItems: Im.List<Item>): Promise<Im.Map<string, Category>> {
+    private async loadCategories(): Promise<Im.Map<string, Category>> {
         try {
-            return await Category.loadAll(this.s3file, allItems);
+            return await this.ctgCtrl.loadAll();
         } catch (ex) {
             logger.warn(() => `Failed to load Categories: ${ex}`);
             return Im.Map<string, Category>({});
         }
     }
 
-    private async loadGenders(allItems: Im.List<Item>): Promise<Im.Map<string, Category>> {
+    private async loadGenders(): Promise<Im.Map<string, Category>> {
         try {
-            return await Category.loadGenders(this.s3file, allItems);
+            return await this.ctgCtrl.loadGenders();
         } catch (ex) {
             logger.warn(() => `Failed to load Categories: ${ex}`);
-            return Im.Map({
-                girls: new Category({
+            return this.ctgCtrl.byMap({
+                girls: {
                     title: "女の子",
                     message: "",
                     flags: { gender: "girls" }
-                }, allItems),
-                boys: new Category({
+                },
+                boys: {
                     title: "男の子",
                     message: "",
                     flags: { gender: "boys" }
-                }, allItems)
+                }
             });
         }
     }
@@ -120,7 +114,7 @@ export class HomePage {
 
 export class Categorized {
     static async fromCategory(key: string, c: Category, limit = 5): Promise<Categorized> {
-        return new Categorized(key, c.title, c.message, await c.filter(), limit);
+        return new Categorized(key, c, limit);
     }
     static async fromCategories(src: Im.Map<string, Category>, limit = 5): Promise<Categorized[]> {
         const list = src.map((c, key) => Categorized.fromCategory(key, c, limit));
@@ -129,17 +123,34 @@ export class Categorized {
 
     constructor(
         readonly key: string,
-        readonly title: string,
-        readonly message: string,
-        private _items: Item[],
+        readonly src: Category,
         private _limit: number = 5
-    ) {
-        this.items = _.take(_items, _limit);
+    ) { }
+
+    private _items: Item[];
+
+    get isLoading(): boolean {
+        return _.isNil(this._items);
     }
 
-    items: Item[];
-
     get hasMore(): boolean {
-        return _.size(this._items) > this._limit;
+        return this.src.items && this.src.items.size > this._limit;
+    }
+
+    get title(): string {
+        return this.src.title;
+    }
+
+    get message(): string {
+        return this.src.message;
+    }
+
+    get items(): Item[] {
+        if (_.isNil(this._items)) {
+            if (this.src.items) {
+                this._items = _.take(this.src.items.toArray(), this._limit);
+            }
+        }
+        return this._items;
     }
 }
