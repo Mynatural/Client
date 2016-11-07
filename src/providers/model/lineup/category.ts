@@ -80,7 +80,8 @@ export class Category {
             return this.cachedReslut.toArray();
         }
 
-        var result = srcList || this.srcList.toArray();
+        srcList = srcList || this.srcList.toArray();
+        var result = srcList;
         this.flags.forEach((value, name) => {
             result = _.filter(result, (item) => {
                 return _.isEqual(item.flags[name], value);
