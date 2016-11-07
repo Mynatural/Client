@@ -121,10 +121,10 @@ export class HomePage {
 }
 
 export class Categorized {
-    static async fromCategory(key: string, c: Category, limit = 5): Promise<Categorized> {
+    static async fromCategory(key: string, c: Category, limit?: number): Promise<Categorized> {
         return new Categorized(key, c, limit);
     }
-    static async fromCategories(src: Im.Map<string, Category>, limit = 5): Promise<Categorized[]> {
+    static async fromCategories(src: Im.Map<string, Category>, limit?: number): Promise<Categorized[]> {
         const list = src.map((c, key) => Categorized.fromCategory(key, c, limit));
         return Promise.all(list.toArray());
     }
