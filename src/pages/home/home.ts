@@ -44,12 +44,7 @@ export class HomePage {
         if (_.has(this.categories, v)) {
             const c = this.categories[v];
             c.filter().then((items) => {
-                this.categorized = {
-                    key: v,
-                    title: c.title,
-                    message: c.message,
-                    items: items
-                };
+                this.categorized = new Categorized(v, c.title, c.message, items);
             });
         } else {
             this.categorized = null;
@@ -66,12 +61,7 @@ export class HomePage {
 
         this.loadNews(allItems).then(async (v) => {
             const items = await v.filter();
-            this.news = {
-                key: "news",
-                title: v.title,
-                message: v.message,
-                items: items
-            };
+            this.news = new Categorized("news", v.title, v.message, items);
         });
         this.loadCategories(allItems).then((v) => {
             this.categories = v;
@@ -92,12 +82,7 @@ export class HomePage {
         };
         this.gendered = await Promise.all(_.map(genders, async (c, key) => {
             const items = await c.filter();
-            return {
-                key: key,
-                title: c.title,
-                message: c.message,
-                items: items
-            };
+            return new Categorized(key, c.title, c.message, items);
         }));
     }
 
@@ -131,9 +116,20 @@ export class HomePage {
     }
 }
 
-export type Categorized = {
-    key: string,
-    title: string,
-    message: string,
-    items: Item[]
+export class Categorized {
+    constructor(
+        readonly key: string,
+        readonly title: string,
+        readonly message: string,
+        private _items: Item[],
+        private _limit: number = 5
+    ) {
+        this.items = _.take(_items, _limit);
+    }
+
+    items: Item[];
+
+    get hasMore(): boolean {
+        return _.size(this._items) > this._limit;
+    }
 }
