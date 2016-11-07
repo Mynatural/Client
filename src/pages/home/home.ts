@@ -50,6 +50,8 @@ export class HomePage {
                     items: items
                 };
             });
+        } else {
+            this.categorized = null;
         }
         this._categoryKey = v;
     }
