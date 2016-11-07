@@ -108,7 +108,7 @@ page-home {
             display: flex;
             justify-content: space-around;
 
-            .girls, .boys {
+            ion-list {
                 &>ion-item {
                     border: none;
                     h1 {
@@ -123,6 +123,7 @@ page-home {
                         margin-right: 8px;
                         img {
                             max-width: 6rem;
+                            max-height: 6rem;
                         }
                     }
 
