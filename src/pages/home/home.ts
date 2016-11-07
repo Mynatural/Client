@@ -39,51 +39,32 @@ export class HomePage {
     get categoryKey(): string {
         return this._categoryKey;
     }
-    set categoryKey(v: string) {
-        this._categoryKey = v;
-        if (_.has(this.categories, v)) {
-            const c = this.categories[v];
-            c.filter().then((items) => {
-                this.categorized = new Categorized(v, c.title, c.message, items);
+    set categoryKey(key: string) {
+        this._categoryKey = key;
+        if (_.has(this.categories, key)) {
+            Categorized.fromCategory(key, this.categories[key]).then((v) => {
+                this.categorized = v;
             });
         } else {
             this.categorized = null;
         }
     }
 
-    constructor(public nav: NavController, private s3file: S3File, private lineup: LineupController) {
-        this.init();
-    }
+    constructor(public nav: NavController, private s3file: S3File, lineup: LineupController) {
+        ItemGroup.byAll(lineup).then((itemGroup) => {
+            const allItems = Im.List(itemGroup.availables);
 
-    private async init() {
-        const itemGroup = await ItemGroup.byAll(this.lineup);
-        const allItems = Im.List(itemGroup.availables);
-
-        this.loadNews(allItems).then(async (v) => {
-            const items = await v.filter();
-            this.news = new Categorized("news", v.title, v.message, items);
+            this.loadNews(allItems).then(async (v) => {
+                this.news = await Categorized.fromCategory("news", v);
+            });
+            this.loadCategories(allItems).then((v) => {
+                this.categories = v.toObject();
+                this.categoryKeys = _.keys(this.categories);
+            });
+            this.loadGenders(allItems).then(async (v) => {
+                this.gendered = await Categorized.fromCategories(v);
+            });
         });
-        this.loadCategories(allItems).then((v) => {
-            this.categories = v;
-            this.categoryKeys = _.keys(this.categories);
-        });
-
-        const genders = {
-            girls: new Category({
-                title: "女の子",
-                message: "",
-                flags: { gender: "girls" }
-            }, allItems),
-            boys: new Category({
-                title: "男の子",
-                message: "",
-                flags: { gender: "boys" }
-            }, allItems)
-        };
-        this.gendered = await Promise.all(_.map(genders, async (c, key) => {
-            const items = await c.filter();
-            return new Categorized(key, c.title, c.message, items);
-        }));
     }
 
     private async loadNews(allItems: Im.List<Item>): Promise<Category> {
@@ -99,12 +80,32 @@ export class HomePage {
         }
     }
 
-    private async loadCategories(allItems: Im.List<Item>): Promise<{ [key: string]: Category }> {
+    private async loadCategories(allItems: Im.List<Item>): Promise<Im.Map<string, Category>> {
         try {
-            return (await Category.loadAll(this.s3file, allItems)).toObject();
+            return await Category.loadAll(this.s3file, allItems);
         } catch (ex) {
             logger.warn(() => `Failed to load Categories: ${ex}`);
-            return {};
+            return Im.Map<string, Category>({});
+        }
+    }
+
+    private async loadGenders(allItems: Im.List<Item>): Promise<Im.Map<string, Category>> {
+        try {
+            return await Category.loadGenders(this.s3file, allItems);
+        } catch (ex) {
+            logger.warn(() => `Failed to load Categories: ${ex}`);
+            return Im.Map({
+                girls: new Category({
+                    title: "女の子",
+                    message: "",
+                    flags: { gender: "girls" }
+                }, allItems),
+                boys: new Category({
+                    title: "男の子",
+                    message: "",
+                    flags: { gender: "boys" }
+                }, allItems)
+            });
         }
     }
 
@@ -117,6 +118,14 @@ export class HomePage {
 }
 
 export class Categorized {
+    static async fromCategory(key: string, c: Category, limit = 5): Promise<Categorized> {
+        return new Categorized(key, c.title, c.message, await c.filter(), limit);
+    }
+    static async fromCategories(src: Im.Map<string, Category>, limit = 5): Promise<Categorized[]> {
+        const list = src.map((c, key) => Categorized.fromCategory(key, c, limit));
+        return Promise.all(list.toArray());
+    }
+
     constructor(
         readonly key: string,
         readonly title: string,

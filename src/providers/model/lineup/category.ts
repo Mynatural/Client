@@ -12,6 +12,7 @@ const logger = new Logger("Lineup.Category");
 
 const newsJson = "news.json";
 const categoriesJson = "categories.json";
+const gendersJson = "genders.json";
 
 function pathJson(key: string): string {
     return _.join([ROOT, LINEUP, key], "/");
@@ -22,6 +23,12 @@ export class Category {
         const path = pathJson(key);
         const text = await s3file.read(path);
         return Base64.decodeJson(text);
+    }
+
+    private static async loadMap(s3file: S3File, name: string, srcList: Im.List<Item> = Im.List<Item>()): Promise<Im.Map<string, Category>> {
+        const json = (await Category.load(s3file, name)) as Info.Categories;
+        const map = _.mapValues(json, (v) => new Category(v, srcList));
+        return Im.Map(map);
     }
 
     private static async save(s3file: S3File, key: string, obj: any): Promise<void> {
@@ -36,9 +43,11 @@ export class Category {
     }
 
     static async loadAll(s3file: S3File, srcList: Im.List<Item> = Im.List<Item>()): Promise<Im.Map<string, Category>> {
-        const json = (await Category.load(s3file, categoriesJson)) as Info.Categories;
-        const map = _.mapValues(json, (v) => new Category(v, srcList));
-        return Im.Map(map);
+        return Category.loadMap(s3file, categoriesJson, srcList);
+    }
+
+    static async loadGenders(s3file: S3File, srcList: Im.List<Item> = Im.List<Item>()): Promise<Im.Map<string, Category>> {
+        return Category.loadMap(s3file, gendersJson, srcList);
     }
 
     static async saveNews(s3file: S3File, obj: Info.Category): Promise<void> {
@@ -47,6 +56,10 @@ export class Category {
 
     static async saveAll(s3file: S3File, obj: Info.Categories): Promise<void> {
         await Category.save(s3file, categoriesJson, obj);
+    }
+
+    static async saveGenders(s3file: S3File, obj: Info.Categories): Promise<void> {
+        await Category.save(s3file, gendersJson, obj);
     }
 
     constructor(private json: Info.Category, public readonly srcList: Im.List<Item> = Im.List<Item>()) {
