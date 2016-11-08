@@ -15,7 +15,7 @@
     </div>
 
     <div *ngIf="news" class="news">
-        <fathens-item_list class="no-topborder"
+        <fathens-item_list
             [items]="news.items"
             [title]="news.title"
             [message]="news.message"
@@ -42,7 +42,7 @@
     </div>
 
     <div *ngIf="categorized" class="categorized">
-        <fathens-item_list class="no-topborder"
+        <fathens-item_list
             [items]="categorized.items"
             [message]="categorized.message"
             [withDesc]="false"
@@ -55,7 +55,7 @@
     </div>
 
     <div *ngIf="gendered && !categorized" class="gender">
-        <fathens-item_list *ngFor="let gender of gendered" [class]="gender.key" class="no-topborder"
+        <fathens-item_list *ngFor="let gender of gendered" [class]="gender.key"
             [items]="gender.items"
             [title]="gender.title"
             [withDesc]="false"
