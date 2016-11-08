@@ -1,8 +1,8 @@
 <ion-list>
-    <ion-item>
-        <h1 *ngIf="title">{{ title }}</h1>
-        <p *ngIf="message">{{ message }}</p>
-    </ion-item>
+    <ion-list-header>
+        <h1 class="title" *ngIf="title">{{ title }}</h1>
+        <p class="message" *ngIf="message">{{ message }}</p>
+    </ion-list-header>
 
     <ion-item *ngIf="!items" class="spinner">
         <ion-spinner></ion-spinner>

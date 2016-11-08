@@ -1,8 +1,21 @@
 fathens-item_list {
     ion-list {
-        &>ion-item {
-            p {
+        &>ion-list-header.item {
+            border: none;
+            h1.title {
+                @include font-bold(1.8rem);
+            }
+            p.message {
                 @include font-bold(1.4rem);
+            }
+        }
+        &>ion-item.spinner {
+            ion-label {
+                display: flex;
+                justify-content: center;
+            }
+            ion-spinner * {
+                stroke: gray;
             }
         }
         &>button.item {
