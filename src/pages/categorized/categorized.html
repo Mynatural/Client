@@ -24,7 +24,8 @@
 
     <fathens-item_list
         [items]="category.items"
-        [message]="category.message">
+        [message]="category.message"
+        (choose)="choose($event)">
     </fathens-item_list>
 
 </ion-content>
