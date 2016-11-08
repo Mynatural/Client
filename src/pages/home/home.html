@@ -14,7 +14,7 @@
         <ion-spinner></ion-spinner>
     </div>
 
-    <div *ngIf="news" class="news">
+    <div *ngIf="news" class="news" [ngClass]="{ hasMore: news.hasMore}">
         <fathens-item_list
             [items]="news.items"
             [title]="news.title"
@@ -41,7 +41,7 @@
         </ion-item>
     </div>
 
-    <div *ngIf="categorized" class="categorized">
+    <div *ngIf="categorized" class="categorized" [ngClass]="{ hasMore: categorized.hasMore}">
         <fathens-item_list
             [items]="categorized.items"
             [message]="categorized.message"

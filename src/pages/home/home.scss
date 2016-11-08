@@ -1,6 +1,3 @@
-@mixin price($size) {
-}
-
 page-home {
     .scroll-content {
         background-image: linear-gradient(lightcyan, white);
@@ -21,12 +18,38 @@ page-home {
             word-wrap: normal;
         }
 
-        button.item.more {
-            .item-inner {
-                border: none;
+        .hasMore {
+            $borderColor: $list-md-border-color;
+
+            fathens-item_list {
+                ion-list {
+                    margin-bottom: 0;
+
+                    .item-block:last-child {
+                        border-bottom: none;
+                    }
+                }
             }
-            p {
-                text-align: right;
+            button.item.more {
+                position: relative;
+                margin-bottom: 16px;
+                border-bottom: 1px solid $borderColor;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 1px;
+                    background-image: linear-gradient(to right, transparent, $borderColor, $borderColor);
+                }
+
+                .item-inner {
+                    border: none;
+                }
+                p {
+                    text-align: right;
+                }
             }
         }
 
@@ -37,8 +60,6 @@ page-home {
             }
 
             ion-list {
-                margin-bottom: 0;
-
                 ion-list-header {
                     padding: 2rem;
                     h1 {
