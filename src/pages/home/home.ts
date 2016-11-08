@@ -105,7 +105,7 @@ export class HomePage {
         }
     }
 
-    choose(item) {
+    choose(item: Item) {
         logger.info(() => `Choose ${item.key}`);
         this.nav.push(CustomPage, {
             item: item
