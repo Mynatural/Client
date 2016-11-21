@@ -29,23 +29,23 @@
     "@angular/platform-browser-dynamic": "2.1.1",
     "@angular/platform-server": "2.1.1",
     "@ionic/storage": "1.1.6",
-    "immutable": "^3.8.1",
-    "ionic-angular": "2.0.0-rc.2",
-    "ionic-native": "2.2.6",
+    "immutable": "~3.8.1",
+    "ionic-angular": "2.0.0-rc.3",
+    "ionic-native": "^2.2.6",
     "ionic2-custom-icons": "^0.3.0",
-    "ionicons": "3.0.0",
-    "lodash": "^4.16.4",
+    "ionicons": "~3.0.0",
+    "lodash": "~4.16.4",
     "rxjs": "5.0.0-beta.12",
-    "zone.js": "0.6.21"
+    "zone.js": "~0.6.26"
   },
   "devDependencies": {
     "@ionic/app-scripts": "latest",
-    "@types/aws-sdk": "0.0.38",
+    "@types/aws-sdk": "^0.0.38",
     "@types/lodash": "^4.14.37",
-    "babel-plugin-lodash": "^3.2.9",
+    "babel-plugin-lodash": "~3.2.9",
     "babel-polyfill": "6.16.0",
-    "babel-preset-es2015-rollup": "^1.2.0",
-    "rollup-plugin-babel": "^2.6.1",
-    "typescript": "^2.0.3"
+    "babel-preset-es2015-rollup": "~1.2.0",
+    "rollup-plugin-babel": "~2.6.1",
+    "typescript": "~2.0.6"
   }
 }
