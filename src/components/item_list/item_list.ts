@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { Item } from "../../providers/model/lineup/item";

@@ -1,6 +1,3 @@
-import _ from "lodash";
-import Im from "immutable";
-
 import { Component } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 
