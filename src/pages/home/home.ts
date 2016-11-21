@@ -78,7 +78,7 @@ export class HomePage {
 
     private async loadCategories(): Promise<Im.Map<string, Category>> {
         try {
-            return await this.ctgCtrl.loadAll();
+            return await this.ctgCtrl.loadGenerals();
         } catch (ex) {
             logger.warn(() => `Failed to load Categories: ${ex}`);
             return Im.Map<string, Category>({});

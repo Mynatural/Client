@@ -26,7 +26,7 @@ export class CategorizedPage {
 
     constructor(params: NavParams, private nav: NavController, private ctgCtrl: CategoryController) {
         this.category = params.get("category");
-        ctgCtrl.loadAll().then((v) => {
+        ctgCtrl.loadGenerals().then((v) => {
             this.categories = v.toArray();
         });
     }
