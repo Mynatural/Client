@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import { Component } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 
@@ -25,6 +27,9 @@ export class CategorizedPage {
         this.category = params.get("category");
         ctgCtrl.loadGenerals().then((v) => {
             this.categories = v.toArray();
+            if (!_.find(this.categories, { title: this.category.title })) {
+                this.categories.unshift(this.category);
+            }
         });
     }
 
