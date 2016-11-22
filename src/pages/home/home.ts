@@ -52,7 +52,7 @@ export class HomePage {
 
     constructor(public nav: NavController, private ctgCtrl: CategoryController) {
         this.loadNews().then(async (v) => {
-            this.news = await Categorized.fromCategory("news", v);
+            this.news = await Categorized.fromCategory("news", v, 3);
         });
         this.loadCategories().then((v) => {
             this.categories = v.toObject();
