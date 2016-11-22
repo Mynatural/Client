@@ -22,6 +22,7 @@ export class HomePage {
 
     readonly title = HomePage.title;
 
+    readonly messageCategorySelect = "その他のラインナップ";
     readonly titleCategorySelect = "カテゴリー";
     readonly unselectedCategoryKey = "選択なし";
     readonly priceName = "ベース価格";

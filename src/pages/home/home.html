@@ -28,6 +28,9 @@
     </div>
 
     <div *ngIf="categoryKeys" class="selector">
+        <span class="message">
+            <p>{{ messageCategorySelect }}</p>
+        </span>
         <ion-item>
             <ion-label>{{ titleCategorySelect }}</ion-label>
             <ion-select [(ngModel)]="categoryKey">
