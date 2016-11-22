@@ -1,96 +1,95 @@
-@mixin price($size) {
-}
-
 page-home {
     .scroll-content {
         background-image: linear-gradient(lightcyan, white);
         background-size: 100vw 50vw;
         background-repeat: no-repeat;
 
-        .spinner {
+        * {
+            background: transparent;
+        }
+
+        ion-spinner * {
+            stroke: lightpink;
+        }
+        div.spinner {
             display: flex;
             justify-content: center;
             margin-top: 5rem;
-            * {
-                stroke: lightpink;
-            }
         }
 
         h1 {
             color: #444;
             word-wrap: normal;
         }
-        p.price {
-            word-wrap: normal;
-            color: pink;
-            @include font-normal(1rem);
-            .value {
-                @include font-bold(1.1rem);
+
+        .hasMore {
+            $borderColor: $list-md-border-color;
+
+            button.item.more {
+                position: relative;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 1px;
+                    background-image: linear-gradient(to right, transparent, $borderColor, $borderColor);
+                }
+
+                .item-inner {
+                    border: none;
+                }
+                p {
+                    text-align: right;
+                }
             }
         }
 
         .news {
             width: 100%;
-            .item {
-                background: transparent;
-            }
-            &>ion-item {
-                padding: 2rem;
-                * {
-                    border: none;
-                }
-                h1 {
-                    margin: 0rem;
-                    color: #387EF5;
-                    @include font-mincho(3rem);
-                }
-                p {
-                    margin: 0rem;
-                    color: #387EF5;
-                    @include font-mincho(2rem);
-                    white-space: normal;
-                }
-            }
-            &>button {
-                &:first-child {
-                    border: none;
-                }
+            margin-bottom: 2rem;
+            border-bottom: solid 1px lightgray;
 
-                h1 {
-                    @include font-mincho(2rem);
+            ion-list {
+                margin-bottom: 0;
+
+                ion-list-header {
+                    padding: 2rem;
+                    h1 {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(3rem);
+                    }
+                    p {
+                        margin: 0rem;
+                        color: #387EF5;
+                        @include font-mincho(2rem);
+                        white-space: normal;
+                    }
                 }
-                p.desc {
-                    @include font-light(1.2rem);
-                    white-space: normal;
+                button.item {
+                    h1 {
+                        @include font-mincho(2rem);
+                    }
                 }
             }
         }
 
         .selector {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-
+            .message {
+                color: gray;
+            }
             ion-select {
                 color: gray;
             }
         }
 
         .categorized {
-            &>ion-list {
-                &>ion-item {
+            ion-list {
+                ion-list-header {
                     p {
                         @include font-bold(1.4rem);
-                    }
-                }
-                &>button {
-                    h1 {
-                        @include font-mincho(1.8rem);
-                    }
-                    p.price {
-                        font-size: 1.2rem;
-                        .value {
-                            font-size: 1.3rem;
-                        }
                     }
                 }
             }
@@ -100,27 +99,26 @@ page-home {
             display: flex;
             justify-content: space-around;
 
-            .girls, .boys {
-                &>ion-item {
-                    border: none;
+            ion-list {
+                ion-list-header {
                     h1 {
                         padding-left: 3rem;
                         @include font-pop(2rem);
                     }
                 }
-                &>button {
+                button.item {
                     ion-thumbnail {
                         min-width: 3rem;
                         min-height: 3rem;
                         margin-right: 8px;
                         img {
                             max-width: 6rem;
+                            max-height: 6rem;
                         }
                     }
 
                     h1 {
                         @include font-mincho(1.5rem);
-                        margin-bottom: 4px;
                     }
                 }
             }

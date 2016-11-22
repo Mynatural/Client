@@ -13,31 +13,28 @@
     <div *ngIf="!news" class="spinner">
         <ion-spinner></ion-spinner>
     </div>
-    <ion-list *ngIf="news" class="news">
-        <ion-item>
-            <h1>{{ news.title }}</h1>
-            <p>{{ news.message }}</p>
-        </ion-item>
-        <button ion-item *ngFor="let item of news.filter()" (click)="choose(item)">
-            <ion-thumbnail item-left>
-                <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
-            </ion-thumbnail>
-            <h1>{{item.name}}</h1>
-            <p class="desc">{{item.description}}</p>
-            <p class="price" text-right>
-                {{priceName}}
-                <span class="value">
-                    {{priceUnit}}{{item.price | number}}
-                </span>
-            </p>
+
+    <div *ngIf="news" class="news" [ngClass]="{ hasMore: news.hasMore}">
+        <fathens-item_list
+            [items]="news.items"
+            [title]="news.title"
+            [message]="news.message"
+            (choose)="choose($event)">
+        </fathens-item_list>
+
+        <button ion-item *ngIf="news.hasMore" class="more" (click)="more(news)">
+            <p>{{ readMore }}</p>
         </button>
-    </ion-list>
+    </div>
 
     <div *ngIf="categoryKeys" class="selector">
+        <span class="message">
+            <p>{{ messageCategorySelect }}</p>
+        </span>
         <ion-item>
             <ion-label>{{ titleCategorySelect }}</ion-label>
             <ion-select [(ngModel)]="categoryKey">
-                <ion-option [value]="null" [selected]="categoryKey === unselectedCategoryKey">{{ unselectedCategoryKey }}</ion-option>
+                <ion-option [value]="unselectedCategoryKey" [selected]="categoryKey === unselectedCategoryKey">{{ unselectedCategoryKey }}</ion-option>
                 <ion-option *ngFor="let key of categoryKeys"
                     [value]="key"
                     [selected]="key === categoryKey">
@@ -47,43 +44,25 @@
         </ion-item>
     </div>
 
-    <div *ngIf="selectedCategory" class="categorized">
-        <ion-list [class]="categoryKey">
-            <ion-item>
-                <p>{{ selectedCategory.message }}</p>
-            </ion-item>
-            <button ion-item *ngFor="let item of selectedCategory.filter()" (click)="choose(item)">
-                <ion-thumbnail item-left>
-                    <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
-                </ion-thumbnail>
-                <h1>{{item.name}}</h1>
-                <p class="price" text-right>
-                    {{priceName}}
-                    <span class="value">
-                        {{priceUnit}}{{item.price | number}}
-                    </span>
-                </p>
-            </button>
-        </ion-list>
+    <div *ngIf="categorized" class="categorized" [ngClass]="{ hasMore: categorized.hasMore}">
+        <fathens-item_list
+            [items]="categorized.items"
+            [message]="categorized.message"
+            [withDesc]="false"
+            (choose)="choose($event)">
+        </fathens-item_list>
+
+        <button ion-item *ngIf="categorized.hasMore" class="more" (click)="more(categorized)">
+            <p>{{ readMore }}</p>
+        </button>
     </div>
 
-    <div *ngIf="genderKeys && !selectedCategory" class="gender">
-        <ion-list *ngFor="let key of genderKeys" [class]="key">
-            <ion-item>
-                <h1>{{ genders[key].title }}</h1>
-            </ion-item>
-            <button ion-item *ngFor="let item of genders[key].filter()" (click)="choose(item)">
-                <ion-thumbnail item-left>
-                    <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
-                </ion-thumbnail>
-                <h1>{{item.name}}</h1>
-                <p class="price" text-right>
-                    {{priceName}}
-                    <span class="value">
-                        {{priceUnit}}{{item.price | number}}
-                    </span>
-                </p>
-            </button>
-        </ion-list>
+    <div *ngIf="gendered && !categorized" class="gender">
+        <fathens-item_list *ngFor="let gender of gendered" [class]="gender.key"
+            [items]="gender.items"
+            [title]="gender.title"
+            [withDesc]="false"
+            (choose)="choose($event)">
+        </fathens-item_list>
     </div>
 </ion-content>

@@ -1,0 +1,42 @@
+fathens-item_list {
+    ion-list {
+        p.description {
+            white-space: normal;
+        }
+
+        &>ion-list-header.item {
+            border: none;
+            h1.title {
+                @include font-bold(1.8rem);
+            }
+            p.description {
+                @include font-bold(1.4rem);
+            }
+        }
+        &>ion-item.spinner {
+            ion-label {
+                display: flex;
+                justify-content: center;
+            }
+            ion-spinner * {
+                stroke: gray;
+            }
+        }
+        &>button.item {
+            h1 {
+                @include font-mincho(1.8rem);
+            }
+            p.description {
+                @include font-light(1.2rem);
+            }
+            p.price {
+                word-wrap: normal;
+                color: pink;
+                @include font-normal(1.1rem);
+                .value {
+                    @include font-bold(1.2rem);
+                }
+            }
+        }
+    }
+}

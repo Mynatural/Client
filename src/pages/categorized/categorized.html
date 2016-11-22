@@ -1,0 +1,31 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button icon-only menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            {{title}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+    <div *ngIf="categories" class="selector">
+        <ion-item>
+            <ion-label>{{ titleCategorySelect }}</ion-label>
+            <ion-select [(ngModel)]="category">
+                <ion-option *ngFor="let c of categories" [value]="c" [selected]="c === category">
+                    {{ c.title }}
+                </ion-option>
+            </ion-select>
+        </ion-item>
+    </div>
+
+    <fathens-item_list
+        [items]="category.items"
+        [message]="category.message"
+        (choose)="choose($event)">
+    </fathens-item_list>
+
+</ion-content>

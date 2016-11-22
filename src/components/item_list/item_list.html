@@ -1,0 +1,26 @@
+<ion-list>
+    <ion-list-header>
+        <h1 class="title" *ngIf="title">{{ title }}</h1>
+        <p class="description" *ngIf="message">{{ message }}</p>
+    </ion-list-header>
+
+    <ion-item *ngIf="!items" class="spinner">
+        <ion-spinner></ion-spinner>
+    </ion-item>
+
+    <button ion-item *ngFor="let item of items" (click)="choose.emit(item)">
+        <ion-thumbnail item-left>
+            <fathens-cached_image [target]="item.titleImage"></fathens-cached_image>
+        </ion-thumbnail>
+
+        <h1>{{ item.name }}</h1>
+        <p class="description" *ngIf="withDesc">{{ item.description }}</p>
+
+        <p class="price" text-right *ngIf="withPrice">
+            {{ priceName }}
+            <span class="value">
+                {{ priceUnit }}{{ item.price | number }}
+            </span>
+        </p>
+    </button>
+</ion-list>
