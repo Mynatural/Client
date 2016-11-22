@@ -1,11 +1,15 @@
 fathens-item_list {
     ion-list {
+        p.description {
+            white-space: normal;
+        }
+
         &>ion-list-header.item {
             border: none;
             h1.title {
                 @include font-bold(1.8rem);
             }
-            p.message {
+            p.description {
                 @include font-bold(1.4rem);
             }
         }
@@ -24,7 +28,6 @@ fathens-item_list {
             }
             p.description {
                 @include font-light(1.2rem);
-                white-space: normal;
             }
             p.price {
                 word-wrap: normal;
