@@ -61,17 +61,21 @@ export class Cognito {
             logger.debug(() => `Refreshing credential: ${cred}`);
 
             if (await this.pref.getSocial(PROVIDER_KEY_FACEBOOK)) {
-                await this.joinFacebook();
-            } else {
                 try {
-                    await this.refresh();
+                    await this.joinFacebook();
+                    return;
                 } catch (ex) {
-                    logger.warn(() => `Retry to initialize cognito by clearing identityId...`);
-                    getCredentials().params.IdentityId = null;
-                    await this.refresh();
+                    logger.warn(() => `Could not join to Facebook. Try later. ${ex}`);
                 }
-                withFabric((fabric) => fabric.Answers.eventLogin({ method: "Cognito" }));
             }
+            try {
+                await this.refresh();
+            } catch (ex) {
+                logger.warn(() => `Retry to initialize cognito by clearing identityId...`);
+                getCredentials().params.IdentityId = null;
+                await this.refresh();
+            }
+            withFabric((fabric) => fabric.Answers.eventLogin({ method: "Cognito" }));
         } catch (ex) {
             logger.fatal(() => `Failed to initialize: ${JSON.stringify(ex, null, 4)}`);
             withFabric((fabric) => fabric.Crashlytics.crash(JSON.stringify(ex)));
