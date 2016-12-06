@@ -125,8 +125,15 @@ export class Logger {
     }
 
     private async output(level: LogLevel, msg: () => string) {
+        function getMsg(): string {
+            try {
+                return msg();
+            } catch (ex) {
+                return `Failed to get msg: ${ex}`;
+            }
+        }
         if (level.isNone || await this.limit <= level.index) {
-            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${msg()}`);
+            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${getMsg()}`);
         }
     }
 
