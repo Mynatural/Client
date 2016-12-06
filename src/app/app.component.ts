@@ -3,6 +3,7 @@ import { Component, ViewChild } from "@angular/core";
 import { App, Platform, Nav } from "ionic-angular";
 import { StatusBar, Splashscreen } from "ionic-native";
 
+import { AccountPage } from "../pages/account/account";
 import { HomePage } from "../pages/home/home";
 import { HelpPage } from "../pages/help/help";
 import { TermsPage } from "../pages/terms/terms";
@@ -18,7 +19,7 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage = HomePage;
-    pages = [HomePage, HelpPage, TermsPage];
+    pages = [HomePage, AccountPage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
     isDevel = false;
