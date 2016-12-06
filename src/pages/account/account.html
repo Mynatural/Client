@@ -10,5 +10,32 @@
 </ion-header>
 
 <ion-content>
+    <ion-list>
+        <ion-list-header>
+            {{ titleConnections }}
+        </ion-list-header>
+        <ion-item>
+            <img class="logo" src="assets/sns/FB-f-Logo__blue_72.png" item-left>
+            <ion-label>Facebook</ion-label>
+            <ion-toggle [(ngModel)]="facebook"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <img class="logo" src="assets/sns/Instagram-v051916-72.png" item-left>
+            <ion-label>Instagram</ion-label>
+            <ion-toggle [(ngModel)]="instagram"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <img class="logo" src="assets/sns/LINE_Icon-72.png" item-left>
+            <ion-label>LINE</ion-label>
+            <ion-toggle [(ngModel)]="line"></ion-toggle>
+        </ion-item>
+    </ion-list>
+    <ion-list>
+        <ion-list-header>
+            {{ titlePoints }}
+        </ion-list-header>
+        <ion-item>
 
+        </ion-item>
+    </ion-list>
 </ion-content>
