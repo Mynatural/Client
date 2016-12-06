@@ -11,8 +11,7 @@ const logger = new Logger("FBConnect");
 @Injectable()
 export class FBConnect {
     constructor(private fbjs: FBJSSDK) {
-        logger.debug(() => `Cordova: ${Device.device.cordova}`);
-        if (Device.device.cordova) {
+        if (Device.device && Device.device.cordova) {
             this.plugin = (window as any).plugin.FBConnect;
             this.plugin["logger"] = new Logger("FBConnectPlugin");
         } else {
