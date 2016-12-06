@@ -29,7 +29,11 @@ module.exports = {
     },
     {
       src: '.tmp-custom-icons/fonts/',
-      dest: 'www/assets/fonts/'
+      dest: '{{WWW}}/assets/fonts/'
+    },
+    {
+      src: 'node_modules/ionic-angular/fonts/',
+      dest: '{{WWW}}/assets/fonts/'
     }
   ]
 };
