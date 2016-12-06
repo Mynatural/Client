@@ -41,25 +41,29 @@ export class FBJSSDK implements FBConnectPlugin {
         });
     }
 
-    private async invoke<T>(proc: (fb: FBJSSDKPlugin, callback: (result: T) => void) => void) {
+    private async invoke<T>(proc: (fb: FBJSSDKPlugin, callback: (result: T) => void, reject: () => void) => void) {
         await this.initialize();
         return new Promise<T>((resolve, reject) => {
-            proc((window as any).FB, resolve);
+            proc((window as any).FB, resolve, reject);
         });
     }
 
     login(arg?: string): Promise<string> {
-        return this.invoke<string>((fb, callback) => {
+        return this.invoke<string>((fb, callback, reject) => {
             const args = ["public_profile"];
             if (arg) args.push(arg);
             fb.login((res) => {
-                callback(res.authResponse.accessToken);
+                if (res.authResponse) {
+                    callback(res.authResponse.accessToken);
+                } else {
+                    reject();
+                }
             }, { scope: args.join(",") });
         });
     }
 
     logout(): Promise<void> {
-        return this.invoke<void>((fb, callback) => {
+        return this.invoke<void>((fb, callback, reject) => {
             fb.logout(callback);
         });
     }
@@ -69,7 +73,7 @@ export class FBJSSDK implements FBConnectPlugin {
     }
 
     getToken(): Promise<FBConnectToken> {
-        return this.invoke<FBConnectToken>((fb, callback) => {
+        return this.invoke<FBConnectToken>((fb, callback, reject) => {
             fb.getLoginStatus((res) => {
                 if (res.status === "connected") {
                     callback({
