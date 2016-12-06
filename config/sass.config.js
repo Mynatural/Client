@@ -41,10 +41,11 @@ module.exports = {
    * paths to search for sass imports by just name.
    */
   includePaths: [
+    'node_modules/ionic2-custom-icons/directive/scss/',
+    '.tmp-custom-icons/scss/',
     'node_modules/ionic-angular/themes',
     'node_modules/ionicons/dist/scss',
-    'node_modules/ionic2-custom-icons/directive/scss/',
-    '.tmp-custom-icons/scss/'
+    'node_modules/ionic-angular/fonts'
   ],
 
   /**
@@ -72,8 +73,8 @@ module.exports = {
    * to be imported so their values override default variables.
    */
   variableSassFiles: [
-    '{{SRC}}/theme/variables.scss',
-    '.tmp-custom-icons/scss/variables.scss'
+    '.tmp-custom-icons/scss/variables.scss',
+    '{{SRC}}/theme/variables.scss'
   ],
 
   /**
