@@ -29,7 +29,7 @@ module.exports = {
     },
     {
       src: '.tmp-custom-icons/fonts/',
-      dest: 'www/assets/fonts/'
+      dest: '{{WWW}}/assets/fonts/'
     }
   ]
 };
