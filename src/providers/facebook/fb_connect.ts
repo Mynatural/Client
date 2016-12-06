@@ -12,9 +12,11 @@ const logger = new Logger("FBConnect");
 export class FBConnect {
     constructor(private fbjs: FBJSSDK) {
         if (Device.device && Device.device.cordova) {
+            logger.debug(() => `Using native FBConnectPlugin`);
             this.plugin = (window as any).plugin.FBConnect;
             this.plugin["logger"] = new Logger("FBConnectPlugin");
         } else {
+            logger.debug(() => `Using browser FBSDK`);
             this.plugin = this.fbjs;
         }
     }
