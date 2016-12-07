@@ -126,6 +126,22 @@ export class Cognito {
         await this.removeToken(PROVIDER_KEY_FACEBOOK);
     }
 
+    async joinLINE() {
+        throw "Unsupported auth with LINE."
+    }
+
+    async dropLINE() {
+        throw "Unsupported auth with LINE."
+    }
+
+    async joinTwitter() {
+        throw "Unsupported auth with Twitter."
+    }
+
+    async dropTwitter() {
+        throw "Unsupported auth with Twitter."
+    }
+
     private async setToken(service: string, token: string): Promise<void> {
         logger.info(() => `SignIn: ${service}`);
         const p = getCredentials().params;
@@ -180,5 +196,15 @@ export class CognitoIdentity {
 
     get isJoinFacebook(): boolean {
         return this.isJoin(PROVIDER_KEY_FACEBOOK);
+    }
+
+    get isJoinLINE(): boolean {
+        logger.warn(() => `Unsupported auth with LINE.`);
+        return false;
+    }
+
+    get isJoinTwitter(): boolean {
+        logger.warn(() => `Unsupported auth with Twitter.`);
+        return false;
     }
 }
