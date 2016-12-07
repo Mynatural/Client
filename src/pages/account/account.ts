@@ -50,36 +50,30 @@ export class SocialConnection {
         private disconnect: () => Promise<void>
     ) {
         logger.debug(() => `Creating SocialConnection: ${this.name}`);
+        this.isConnected().then((v) => {
+            this.toggle = v;
+        })
     }
 
-    private _isConnected: boolean = false;
-    private _isConnectedWait: Promise<boolean>;
+    toggle: boolean = false;
 
-    get toggle(): boolean {
-        if (_.isNil(this._isConnectedWait)) {
-            this._isConnectedWait = this.isConnected();
-            this._isConnectedWait.then((v) => {
-                this._isConnected = v;
-            })
+    async update() {
+        if (this.toggle === await this.isConnected()) {
+            logger.info(() => `Nothing to do, ${this.name} connection is already '${this.toggle}'`);
+            return;
         }
-        return this._isConnected;
-    }
-
-    set toggle(v: boolean) {
-        this.update(v);
-    }
-
-    private async update(doConnect: boolean) {
         try {
-            if (doConnect) {
+            if (this.toggle) {
                 await this.connect();
             } else {
                 await this.disconnect();
             }
         } catch (ex) {
-            logger.warn(() => `Failed to update social connection: ${ex}`);
-        } finally {
-            this._isConnected = await this.isConnected();
+            logger.warn(() => `Failed to update ${this.name} connection(${this.toggle}): ${ex}`);
         }
+        setTimeout(async () => {
+            this.toggle = await this.isConnected();
+            logger.debug(() => `Updated ${this.name} connection: ${this.toggle}`);
+        }, 100);
     }
 }
