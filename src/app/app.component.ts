@@ -18,7 +18,7 @@ const logger = new Logger("MyApp");
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage = HomePage;
+    rootPage = null;
     pages = [HomePage, AccountPage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
@@ -31,6 +31,7 @@ export class MyApp {
     private async init() {
         await this.platform.ready();
         logger.info(() => `Platform is ready.`);
+        this.rootPage = HomePage;
 
         Splashscreen.hide();
         if (this.platform.is("android")) {
