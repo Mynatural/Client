@@ -1,6 +1,6 @@
 {
-  "name": "mynatural",
-  "description": "Mynatural: An Ionic project",
+  "name": "chacorte",
+  "description": "Client of Chacorte",
   "scripts": {
     "prebuild": "ionic2-custom-icons",
     "prewatch": "ionic2-custom-icons",
