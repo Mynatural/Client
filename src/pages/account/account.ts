@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 import { Component } from "@angular/core";
 
 import { Cognito } from "../../providers/aws/cognito";
