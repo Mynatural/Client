@@ -94,9 +94,9 @@ def prepare(app_id)
     'phonegap-plugin-push@~1.8.3',
     "https://github.com/fathens/Cordova-Plugin-FBConnect.git --variable APP_ID=#{ENV['FACEBOOK_APP_ID']} --variable APP_NAME=#{ENV['APPLICATION_NAME']}",
     "https://github.com/fathens/Cordova-Plugin-Fabric.git --variable API_KEY=#{ENV['FABRIC_API_KEY']}",
-    "https://github.com/fathens/Cordova-Plugin-Crashlytics.git",
-    "https://github.com/fathens/Cordova-Plugin-Answers.git",
-    "https://github.com/fathens/Cordova-Plugin-Digits.git --variable FABRIC_TWITTER_KEY=#{ENV['FABRIC_TWITTER_KEY']} --variable FABRIC_TWITTER_SECRET=#{ENV['FABRIC_TWITTER_SECRET']}"
+    "https://github.com/fathens/Cordova-Plugin-FabricCrashlytics.git",
+    "https://github.com/fathens/Cordova-Plugin-FabricAnswers.git",
+    "https://github.com/fathens/Cordova-Plugin-FabricDigits.git --variable FABRIC_TWITTER_KEY=#{ENV['FABRIC_TWITTER_KEY']} --variable FABRIC_TWITTER_SECRET=#{ENV['FABRIC_TWITTER_SECRET']}"
   ])
 end
 
