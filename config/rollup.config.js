@@ -3,6 +3,7 @@ var commonjs = require('rollup-plugin-commonjs');
 var globals = require('rollup-plugin-node-globals');
 var builtins = require('rollup-plugin-node-builtins');
 var json = require('rollup-plugin-json');
+
 var babel = require('rollup-plugin-babel');
 
 // https://github.com/rollup/rollup/wiki/JavaScript-API
@@ -13,13 +14,13 @@ var rollupConfig = {
    * be included, along with the minimum necessary code
    * from its dependencies
    */
-  entry: '{{SRC}}/app/main.dev.ts',
+  entry: process.env.IONIC_APP_ENTRY_POINT,
 
   /**
    * sourceMap: If true, a separate sourcemap file will
    * be created.
    */
-  sourceMap: true,
+  sourceMap: process.env.IONIC_GENERATE_SOURCE_MAP ? true : false,
 
   /**
    * format: The format of the generated bundle
@@ -29,7 +30,7 @@ var rollupConfig = {
   /**
    * dest: the output filename for the bundle in the buildDir
    */
-  dest: 'main.js',
+  dest: process.env.IONIC_OUTPUT_JS_FILE_NAME,
 
   globals: {
     'aws-sdk': 'AWS'
@@ -57,12 +58,6 @@ var rollupConfig = {
 
 };
 
-
-if (process.env.IONIC_ENV === 'prod') {
-  // production mode
-  rollupConfig.entry = '{{TMP}}/app/main.prod.ts';
-  rollupConfig.sourceMap = false;
-}
 
 
 module.exports = rollupConfig;
