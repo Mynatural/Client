@@ -2,50 +2,38 @@
   "name": "chacorte",
   "description": "Client of Chacorte",
   "scripts": {
-    "prebuild": "ionic2-custom-icons",
-    "prewatch": "ionic2-custom-icons",
-    "build": "ionic-app-scripts build",
-    "watch": "ionic-app-scripts watch",
-    "serve:before": "watch",
-    "emulate:before": "build",
-    "deploy:before": "build",
-    "build:before": "build",
-    "run:before": "build"
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve",
+    "custom_icons": "ionic2-custom-icons"
   },
   "config": {
     "ionic_copy": "config/copy.config.js",
     "ionic_sass": "config/sass.config.js",
-    "custom_icons": "config/custom-icons.config.js",
-    "ionic_rollup": "config/rollup.config.js"
+    "custom_icons": "config/custom-icons.config.js"
   },
   "dependencies": {
-    "@angular/common": "2.1.1",
-    "@angular/compiler": "2.1.1",
-    "@angular/compiler-cli": "2.1.1",
-    "@angular/core": "2.1.1",
-    "@angular/forms": "2.1.1",
-    "@angular/http": "2.1.1",
-    "@angular/platform-browser": "2.1.1",
-    "@angular/platform-browser-dynamic": "2.1.1",
-    "@angular/platform-server": "2.1.1",
-    "@ionic/storage": "1.1.6",
+    "@angular/common": "2.2.1",
+    "@angular/compiler": "2.2.1",
+    "@angular/compiler-cli": "2.2.1",
+    "@angular/core": "2.2.1",
+    "@angular/forms": "2.2.1",
+    "@angular/http": "2.2.1",
+    "@angular/platform-browser": "2.2.1",
+    "@angular/platform-browser-dynamic": "2.2.1",
+    "@angular/platform-server": "2.2.1",
+    "@ionic/storage": "~1.1.6",
     "immutable": "~3.8.1",
-    "ionic-angular": "2.0.0-rc.3",
-    "ionic-native": "2.2.6",
+    "ionic-angular": "2.0.0-rc.4",
+    "ionic-native": "~2.2.6",
     "ionic2-custom-icons": "^0.3.0",
     "ionicons": "~3.0.0",
     "lodash": "~4.16.4",
     "rxjs": "5.0.0-beta.12",
-    "zone.js": "~0.7.1"
+    "zone.js": "^0.6.26"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "0.0.46",
-    "@types/aws-sdk": "^0.0.38",
+    "@ionic/app-scripts": "0.0.48",
     "@types/lodash": "^4.14.37",
-    "babel-plugin-lodash": "~3.2.9",
-    "babel-polyfill": "6.16.0",
-    "babel-preset-es2015-rollup": "~1.2.0",
-    "rollup-plugin-babel": "~2.6.1",
-    "typescript": "~2.0.6"
+    "typescript": "~2.0.10"
   }
 }

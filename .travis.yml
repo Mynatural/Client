@@ -15,7 +15,7 @@ env:
   - PLATFORM=ios
 before_install:
 - rvm use 2.3.1
-- nvm install 6.9.1
+- nvm install 6.9.2
 - brew update || brew update
 - brew install git-lfs && git-lfs install && git-lfs pull
 - sudo easy_install pip && sudo pip install awscli
