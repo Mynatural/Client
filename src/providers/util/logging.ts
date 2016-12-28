@@ -1,5 +1,4 @@
 import _ from "lodash";
-import { AppVersion } from "ionic-native";
 import Im from "immutable";
 
 declare const plugin: any;
@@ -58,23 +57,15 @@ export class LogLevel {
 }
 
 export class Logger {
-    private static _isDebel: Promise<boolean>;
+    private static hasConsole = !_.isEqual(typeof console, "undefined");
+    private static _isDebel: boolean;
     private static _level: Promise<LogLevel>;
 
     static async isDevel(): Promise<boolean> {
         if (_.isNil(Logger._isDebel)) {
-            async function obtain() {
-                try {
-                    const version: string = await AppVersion.getVersionNumber();
-                    const last = _.last(version.match(/[0-9]/g));
-                    return _.toInteger(last) % 2 !== 0;
-                } catch (ex) {
-                    return true;
-                }
-            }
-            Logger._isDebel = obtain();
+            Logger._isDebel = Logger.hasConsole;
         }
-        return await Logger._isDebel;
+        return Logger._isDebel;
     }
 
     static async getDefaultLevel(): Promise<LogLevel> {
@@ -91,7 +82,7 @@ export class Logger {
         if (!_.isEqual(typeof plugin, "undefined") && !_.isNil(plugin.Fabric)) {
             plugin.Fabric.Crashlytics.log(text);
         }
-        if (!_.isEqual(typeof console, "undefined")) {
+        if (Logger.hasConsole) {
             console.log(text);
         }
     }
@@ -125,8 +116,15 @@ export class Logger {
     }
 
     private async output(level: LogLevel, msg: () => string) {
+        function getMsg(): string {
+            try {
+                return msg();
+            } catch (ex) {
+                return `Failed to get msg: ${ex}`;
+            }
+        }
         if (level.isNone || await this.limit <= level.index) {
-            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${msg()}`);
+            Logger.output(`${dateString()}: ${level.mark}: ${this.tag}: ${getMsg()}`);
         }
     }
 

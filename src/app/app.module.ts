@@ -8,6 +8,7 @@ import { MyApp } from "./app.component";
 import { CategorizedPage } from "../pages/categorized/categorized";
 import { CustomPage } from "../pages/custom/custom";
 import { SpecDialog } from "../pages/custom/spec_dialog";
+import { AccountPage } from "../pages/account/account";
 import { HelpPage } from "../pages/help/help";
 import { HomePage } from "../pages/home/home";
 import { TermsPage } from "../pages/terms/terms";
@@ -37,6 +38,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
         CustomPage,
         SpecDialog,
         HelpPage,
+        AccountPage,
         HomePage,
         TermsPage
     ],
@@ -51,6 +53,7 @@ import { LineupController } from "../providers/model/lineup/lineup";
         CategorizedPage,
         CustomPage,
         SpecDialog,
+        AccountPage,
         HelpPage,
         HomePage,
         TermsPage

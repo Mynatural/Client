@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Device } from "ionic-native";
+import { Platform } from 'ionic-angular';
 import { Injectable } from "@angular/core";
 
 import { S3File } from "../aws/s3file";
@@ -12,7 +12,7 @@ export class Configuration {
     private static unauthorized: Promise<Unauthorized> = null;
     private static authorized: Promise<Authorized> = null;
 
-    constructor(private s3: S3File) { }
+    constructor(private platform: Platform, private s3: S3File) { }
 
     private async loadS3(path: string): Promise<{ [key: string]: any }> {
         logger.info(() => `Loading settings file: ${path}`);
@@ -22,7 +22,7 @@ export class Configuration {
     get server(): Promise<Unauthorized> {
         if (_.isNil(Configuration.unauthorized)) {
             const p = this.loadS3("unauthorized/client.json");
-            Configuration.unauthorized = p.then((m) => new Unauthorized(m));
+            Configuration.unauthorized = p.then((m) => new Unauthorized(this.platform, m));
         }
         return Configuration.unauthorized;
     }
@@ -37,7 +37,7 @@ export class Configuration {
 }
 
 export class Unauthorized {
-    constructor(private src: { [key: string]: any }) { }
+    constructor(private platform: Platform, private src: { [key: string]: any }) { }
 
     get appName(): string {
         return this.src["appName"];
@@ -52,7 +52,7 @@ export class Unauthorized {
     }
 
     get snsPlatformArn(): string {
-        const s = Device.device.platform === "Android" ? "google" : "apple";
+        const s = this.platform.is("android") ? "google" : "apple";
         return this.src["snsPlatformArn"][s];
     }
 

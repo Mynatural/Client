@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Device } from "ionic-native";
+import { Platform } from 'ionic-angular';
 
 import { Logger } from "../util/logging";
 
@@ -10,12 +10,13 @@ const logger = new Logger("FBConnect");
 
 @Injectable()
 export class FBConnect {
-    constructor(private fbjs: FBJSSDK) {
-        logger.debug(() => `Cordova: ${Device.device.cordova}`);
-        if (Device.device.cordova) {
+    constructor(platform: Platform, private fbjs: FBJSSDK) {
+        if (platform.is("cordova")) {
+            logger.debug(() => `Using native FBConnectPlugin`);
             this.plugin = (window as any).plugin.FBConnect;
             this.plugin["logger"] = new Logger("FBConnectPlugin");
         } else {
+            logger.debug(() => `Using browser FBSDK`);
             this.plugin = this.fbjs;
         }
     }

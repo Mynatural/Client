@@ -61,17 +61,21 @@ export class Cognito {
             logger.debug(() => `Refreshing credential: ${cred}`);
 
             if (await this.pref.getSocial(PROVIDER_KEY_FACEBOOK)) {
-                await this.joinFacebook();
-            } else {
                 try {
-                    await this.refresh();
+                    await this.joinFacebook();
+                    return;
                 } catch (ex) {
-                    logger.warn(() => `Retry to initialize cognito by clearing identityId...`);
-                    getCredentials().params.IdentityId = null;
-                    await this.refresh();
+                    logger.warn(() => `Could not join to Facebook. Try later. ${ex}`);
                 }
-                withFabric((fabric) => fabric.Answers.eventLogin({ method: "Cognito" }));
             }
+            try {
+                await this.refresh();
+            } catch (ex) {
+                logger.warn(() => `Retry to initialize cognito by clearing identityId...`);
+                getCredentials().params.IdentityId = null;
+                await this.refresh();
+            }
+            withFabric((fabric) => fabric.Answers.eventLogin({ method: "Cognito" }));
         } catch (ex) {
             logger.fatal(() => `Failed to initialize: ${JSON.stringify(ex, null, 4)}`);
             withFabric((fabric) => fabric.Crashlytics.crash(JSON.stringify(ex)));
@@ -120,6 +124,22 @@ export class Cognito {
 
     async dropFacebook() {
         await this.removeToken(PROVIDER_KEY_FACEBOOK);
+    }
+
+    async joinLINE() {
+        throw "Unsupported auth with LINE."
+    }
+
+    async dropLINE() {
+        throw "Unsupported auth with LINE."
+    }
+
+    async joinTwitter() {
+        throw "Unsupported auth with Twitter."
+    }
+
+    async dropTwitter() {
+        throw "Unsupported auth with Twitter."
     }
 
     private async setToken(service: string, token: string): Promise<void> {
@@ -176,5 +196,15 @@ export class CognitoIdentity {
 
     get isJoinFacebook(): boolean {
         return this.isJoin(PROVIDER_KEY_FACEBOOK);
+    }
+
+    get isJoinLINE(): boolean {
+        logger.warn(() => `Unsupported auth with LINE.`);
+        return false;
+    }
+
+    get isJoinTwitter(): boolean {
+        logger.warn(() => `Unsupported auth with Twitter.`);
+        return false;
     }
 }

@@ -3,6 +3,7 @@ import { Component, ViewChild } from "@angular/core";
 import { App, Platform, Nav } from "ionic-angular";
 import { StatusBar, Splashscreen } from "ionic-native";
 
+import { AccountPage } from "../pages/account/account";
 import { HomePage } from "../pages/home/home";
 import { HelpPage } from "../pages/help/help";
 import { TermsPage } from "../pages/terms/terms";
@@ -17,8 +18,8 @@ const logger = new Logger("MyApp");
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage = HomePage;
-    pages = [HomePage, HelpPage, TermsPage];
+    rootPage = null;
+    pages = [HomePage, AccountPage, HelpPage, TermsPage];
     menuTitle = "もくじ";
 
     isDevel = false;
@@ -30,6 +31,7 @@ export class MyApp {
     private async init() {
         await this.platform.ready();
         logger.info(() => `Platform is ready.`);
+        this.rootPage = HomePage;
 
         Splashscreen.hide();
         if (this.platform.is("android")) {
