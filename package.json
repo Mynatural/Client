@@ -36,10 +36,6 @@
     "@ionic/app-scripts": "0.0.48",
     "@types/aws-sdk": "^0.0.38",
     "@types/lodash": "^4.14.37",
-    "babel-plugin-lodash": "~3.2.9",
-    "babel-polyfill": "6.16.0",
-    "babel-preset-es2015-rollup": "~1.2.0",
-    "rollup-plugin-babel": "~2.6.1",
     "typescript": "~2.0.10"
   }
 }
