@@ -9,8 +9,7 @@
   "config": {
     "ionic_copy": "config/copy.config.js",
     "ionic_sass": "config/sass.config.js",
-    "custom_icons": "config/custom-icons.config.js",
-    "ionic_webpack": "config/webpack.config.js"
+    "custom_icons": "config/custom-icons.config.js"
   },
   "dependencies": {
     "@angular/common": "2.2.1",
